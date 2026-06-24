@@ -1,0 +1,54 @@
+package br.com.schmittsolucoes.cacasobmedida.data.database.access.puzzle
+
+import androidx.room.Dao
+import androidx.room.Query
+import br.com.schmittsolucoes.cacasobmedida.data.database.access.RoomLocalDataSource
+import br.com.schmittsolucoes.cacasobmedida.data.model.WordSearchPuzzleEntity
+import br.com.schmittsolucoes.cacasobmedida.domain.model.PuzzleRecord
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface WordSearchPuzzleRoomDAO: WordSearchPuzzleLocalDataSource, RoomLocalDataSource<WordSearchPuzzleEntity> {
+
+    @Query("select * from word_search_puzzle")
+    override fun selectAll(): Flow<List<WordSearchPuzzleEntity>>
+
+    @Query("select * from word_search_puzzle where id = :id")
+    override suspend fun selectById(id: String): WordSearchPuzzleEntity
+
+    @Query("""
+        select puzzle.id 
+        from word_search_puzzle puzzle
+        inner join puzzle_session session on session.puzzle_id = puzzle.id
+        where (
+            select 1
+            from word
+            where word.puzzle_id = puzzle.id
+            and word.found_date is null
+        )
+        group by puzzle.id
+        order by session.started_at desc
+        limit 1
+    """)
+    override fun selectLastUnfinished(): Flow<String?>
+
+    @Query("""
+        select puzzle.id as id,
+               puzzle.name as puzzleName,
+               (
+                    select count(word.id)
+                    from word
+                    where word.puzzle_id = puzzle.id
+               ) as wordsCount,
+               (
+                    select sum(session.ended_at - session.started_at)
+                    from puzzle_session session
+                    where session.puzzle_id = puzzle.id 
+                    and session.ended_at is not null
+               ) as duration
+        from word_search_puzzle puzzle
+        order by duration desc, wordsCount desc
+        limit 3
+    """)
+    override fun selectRecords(): Flow<List<PuzzleRecord>>
+}
