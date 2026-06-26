@@ -11,14 +11,16 @@ import br.com.schmittsolucoes.cacasobmedida.presentation.home.composables.HomeSc
 const val homeScreenRoute = "home"
 
 fun NavGraphBuilder.homeScreen(
-    onContinueGameClick: (String) -> Unit = {}
+    onContinueGameClick: (String) -> Unit,
+    onWordSearchClick: () -> Unit
 ) {
     composable(route = homeScreenRoute) {
         val viewModel = hiltViewModel<HomeViewModel>()
 
         HomeScreen(
             viewModel = viewModel,
-            onContinueGameClick = onContinueGameClick
+            onContinueGameClick = onContinueGameClick,
+            onWordSearchClick = onWordSearchClick
         )
     }
 }

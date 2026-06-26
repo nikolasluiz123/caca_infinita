@@ -17,13 +17,18 @@ import br.com.schmittsolucoes.cacasobmedida.R
 import br.com.schmittsolucoes.cacasobmedida.presentation.theme.CacaSobMedidaTheme
 
 @Composable
-fun HomeBottomNavBar(modifier: Modifier = Modifier) {
+fun HomeBottomNavBar(
+    modifier: Modifier = Modifier,
+    onHomeClick: () -> Unit = {},
+    onWordSearchClick: () -> Unit = {},
+    isHomeSelected: Boolean = true
+) {
     NavigationBar(
         modifier = modifier.clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)),
     ) {
         NavigationBarItem(
-            selected = true,
-            onClick = { },
+            selected = isHomeSelected,
+            onClick = onHomeClick,
             icon = {
                 Icon(
                     painter = painterResource(R.drawable.ic_home),
@@ -33,8 +38,8 @@ fun HomeBottomNavBar(modifier: Modifier = Modifier) {
             label = { Text(stringResource(R.string.home_tab)) },
         )
         NavigationBarItem(
-            selected = false,
-            onClick = { },
+            selected = !isHomeSelected,
+            onClick = onWordSearchClick,
             icon = {
                 Icon(
                     painter = painterResource(R.drawable.ic_puzzle_list),

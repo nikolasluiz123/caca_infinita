@@ -26,12 +26,14 @@ import br.com.schmittsolucoes.cacasobmedida.presentation.theme.CacaSobMedidaThem
 fun HomeScreen(
     viewModel: HomeViewModel,
     onContinueGameClick: (String) -> Unit = {},
+    onWordSearchClick: () -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     HomeScreen(
         state = state,
-        onContinueGameClick = onContinueGameClick
+        onContinueGameClick = onContinueGameClick,
+        onWordSearchClick = onWordSearchClick
     )
 }
 
@@ -39,9 +41,15 @@ fun HomeScreen(
 fun HomeScreen(
     state: HomeUIState = HomeUIState(),
     onContinueGameClick: (String) -> Unit = {},
+    onWordSearchClick: () -> Unit = {},
 ) {
     Scaffold(
-        bottomBar = { HomeBottomNavBar() },
+        bottomBar = {
+            HomeBottomNavBar(
+                onWordSearchClick = onWordSearchClick,
+                isHomeSelected = true
+            )
+        },
     ) { paddingValues ->
         Column(
             modifier = Modifier
