@@ -17,7 +17,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.schmittsolucoes.cacasobmedida.presentation.home.HomeUIState
 import br.com.schmittsolucoes.cacasobmedida.presentation.home.HomeViewModel
 import br.com.schmittsolucoes.cacasobmedida.presentation.home.composables.components.ContinueGameButton
-import br.com.schmittsolucoes.cacasobmedida.presentation.home.composables.components.HomeBottomNavBar
 import br.com.schmittsolucoes.cacasobmedida.presentation.home.composables.components.PersonalRecordsSection
 import br.com.schmittsolucoes.cacasobmedida.presentation.home.composables.components.UserLevelStatusCard
 import br.com.schmittsolucoes.cacasobmedida.presentation.theme.CacaSobMedidaTheme
@@ -26,14 +25,12 @@ import br.com.schmittsolucoes.cacasobmedida.presentation.theme.CacaSobMedidaThem
 fun HomeScreen(
     viewModel: HomeViewModel,
     onContinueGameClick: (String) -> Unit = {},
-    onWordSearchClick: () -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     HomeScreen(
         state = state,
-        onContinueGameClick = onContinueGameClick,
-        onWordSearchClick = onWordSearchClick
+        onContinueGameClick = onContinueGameClick
     )
 }
 
@@ -41,16 +38,8 @@ fun HomeScreen(
 fun HomeScreen(
     state: HomeUIState = HomeUIState(),
     onContinueGameClick: (String) -> Unit = {},
-    onWordSearchClick: () -> Unit = {},
 ) {
-    Scaffold(
-        bottomBar = {
-            HomeBottomNavBar(
-                onWordSearchClick = onWordSearchClick,
-                isHomeSelected = true
-            )
-        },
-    ) { paddingValues ->
+    Scaffold { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()

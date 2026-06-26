@@ -6,7 +6,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import br.com.schmittsolucoes.cacasobmedida.presentation.home.navigation.homeScreen
 import br.com.schmittsolucoes.cacasobmedida.presentation.home.navigation.homeScreenRoute
-import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.navigation.navigateToWordSearchGeneratedPuzzles
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.navigation.wordSearchGeneratedPuzzlesScreen
 
 @Composable
@@ -22,8 +21,7 @@ fun AppNavHost(
         homeScreen(
             onContinueGameClick = { puzzleId ->
 
-            },
-            onWordSearchClick = navController::navigateToWordSearchGeneratedPuzzles
+            }
         )
         wordSearchGeneratedPuzzlesScreen(navController = navController)
     }

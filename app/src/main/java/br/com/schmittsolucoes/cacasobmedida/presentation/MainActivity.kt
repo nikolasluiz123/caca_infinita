@@ -14,8 +14,16 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import br.com.schmittsolucoes.cacasobmedida.presentation.home.composables.components.HomeBottomNavBar
+import br.com.schmittsolucoes.cacasobmedida.presentation.home.navigation.homeScreenRoute
+import br.com.schmittsolucoes.cacasobmedida.presentation.home.navigation.navigateToHome
+import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.navigation.navigateToWordSearchGeneratedPuzzles
+import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.navigation.wordSearchGeneratedPuzzlesRoute
 import br.com.schmittsolucoes.cacasobmedida.presentation.theme.CacaSobMedidaTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -35,8 +43,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             CacaSobMedidaTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    App {
-                        AppNavHost(navController = rememberNavController())
+                    val navController = rememberNavController()
+                    App(navController = navController) {
+                        AppNavHost(navController = navController)
                     }
                 }
             }
@@ -45,8 +54,28 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun App(content: @Composable () -> Unit = { }) {
-    Scaffold { paddingValues ->
+fun App(
+    navController: NavHostController,
+    content: @Composable () -> Unit = { }
+) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    Scaffold(
+        bottomBar = {
+            if (currentRoute == homeScreenRoute || currentRoute == wordSearchGeneratedPuzzlesRoute) {
+                HomeBottomNavBar(
+                    onHomeClick = {
+                        navController.navigateToHome()
+                    },
+                    onWordSearchClick = {
+                        navController.navigateToWordSearchGeneratedPuzzles()
+                    },
+                    isHomeSelected = currentRoute == homeScreenRoute
+                )
+            }
+        }
+    ) { paddingValues ->
         Box(
             modifier = Modifier
                 .padding(paddingValues)
@@ -61,6 +90,6 @@ fun App(content: @Composable () -> Unit = { }) {
 @Composable
 fun AppPreview() {
     CacaSobMedidaTheme {
-        App()
+        App(navController = rememberNavController())
     }
 }

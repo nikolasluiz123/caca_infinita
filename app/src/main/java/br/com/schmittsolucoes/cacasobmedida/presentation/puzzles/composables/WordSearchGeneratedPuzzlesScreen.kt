@@ -14,7 +14,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.schmittsolucoes.cacasobmedida.R
-import br.com.schmittsolucoes.cacasobmedida.presentation.home.composables.components.HomeBottomNavBar
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.WordSearchUiState
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.WordSearchViewModel
 import br.com.schmittsolucoes.cacasobmedida.presentation.theme.CacaSobMedidaTheme
@@ -22,28 +21,19 @@ import br.com.schmittsolucoes.cacasobmedida.presentation.theme.CacaSobMedidaThem
 @Composable
 fun WordSearchGeneratedPuzzlesScreen(
     viewModel: WordSearchViewModel,
-    onHomeClick: () -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     WordSearchGeneratedPuzzlesScreen(
-        state = state,
-        onHomeClick = onHomeClick
+        state = state
     )
 }
 
 @Composable
 fun WordSearchGeneratedPuzzlesScreen(
     state: WordSearchUiState,
-    onHomeClick: () -> Unit = {},
 ) {
     Scaffold(
-        bottomBar = {
-            HomeBottomNavBar(
-                onHomeClick = onHomeClick,
-                isHomeSelected = false
-            )
-        },
         floatingActionButton = {
             FloatingActionButton(onClick = { }) {
                 Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = null)
