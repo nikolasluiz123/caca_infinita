@@ -1,6 +1,6 @@
 package br.com.schmittsolucoes.cacasobmedida.domain.usecase
 
-import br.com.schmittsolucoes.cacasobmedida.data.database.transaction.DatabaseTransaction
+import br.com.schmittsolucoes.cacasobmedida.core.database.transaction.DatabaseTransaction
 import br.com.schmittsolucoes.cacasobmedida.domain.model.Word
 import br.com.schmittsolucoes.cacasobmedida.domain.repository.WordRepository
 import kotlinx.coroutines.Dispatchers

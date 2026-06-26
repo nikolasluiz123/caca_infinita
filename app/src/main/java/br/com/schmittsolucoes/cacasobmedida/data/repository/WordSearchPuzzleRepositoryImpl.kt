@@ -3,7 +3,7 @@ package br.com.schmittsolucoes.cacasobmedida.data.repository
 import br.com.schmittsolucoes.cacasobmedida.data.database.access.puzzle.WordSearchPuzzleLocalDataSource
 import br.com.schmittsolucoes.cacasobmedida.data.database.access.puzzle.word.WordLocalDataSource
 import br.com.schmittsolucoes.cacasobmedida.data.database.access.user.UserLocalDataSource
-import br.com.schmittsolucoes.cacasobmedida.data.database.transaction.DatabaseTransaction
+import br.com.schmittsolucoes.cacasobmedida.core.database.transaction.DatabaseTransaction
 import br.com.schmittsolucoes.cacasobmedida.data.repository.mapper.toDomain
 import br.com.schmittsolucoes.cacasobmedida.data.repository.mapper.toEntity
 import br.com.schmittsolucoes.cacasobmedida.domain.model.PuzzleRecord

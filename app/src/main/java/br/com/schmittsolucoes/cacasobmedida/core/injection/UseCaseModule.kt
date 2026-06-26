@@ -1,7 +1,7 @@
 package br.com.schmittsolucoes.cacasobmedida.core.injection
 
 import android.net.Uri
-import br.com.schmittsolucoes.cacasobmedida.data.database.transaction.DatabaseTransaction
+import br.com.schmittsolucoes.cacasobmedida.core.database.transaction.DatabaseTransaction
 import br.com.schmittsolucoes.cacasobmedida.domain.calculator.GridDimensionCalculator
 import br.com.schmittsolucoes.cacasobmedida.domain.generator.PuzzleGenerator
 import br.com.schmittsolucoes.cacasobmedida.domain.generator.PuzzleNameGenerator

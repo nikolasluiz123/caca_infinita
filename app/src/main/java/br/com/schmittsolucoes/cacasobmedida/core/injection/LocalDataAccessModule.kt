@@ -7,7 +7,7 @@ import br.com.schmittsolucoes.cacasobmedida.data.database.access.puzzle.WordSear
 import br.com.schmittsolucoes.cacasobmedida.data.database.access.puzzle.session.PuzzleSessionLocalDataSource
 import br.com.schmittsolucoes.cacasobmedida.data.database.access.puzzle.word.WordLocalDataSource
 import br.com.schmittsolucoes.cacasobmedida.data.database.access.user.UserLocalDataSource
-import br.com.schmittsolucoes.cacasobmedida.data.database.transaction.DatabaseTransaction
+import br.com.schmittsolucoes.cacasobmedida.core.database.transaction.DatabaseTransaction
 import br.com.schmittsolucoes.cacasobmedida.data.database.transaction.RoomDatabaseTransaction
 import dagger.Module
 import dagger.Provides
