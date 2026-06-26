@@ -10,4 +10,15 @@
     <string name="home_tab">Início</string>
     <string name="word_search_tab">Caça Palavras</string>
     <string name="no_records_message">Nenhum recorde ainda. Escolha um caça palavras, comece a jogar e vão aparecer aqui!</string>
+
+    <string name="no_word_search_found_title">Nenhum caça-palavras encontrado</string>
+    <string name="no_word_search_found_subtitle">Você ainda não adicionou nenhum caça-palavras.</string>
+
+    <string name="add_word_search_title">Adicionar Caça-Palavras</string>
+    <string name="add_word_search_open_camera_title">Abrir Câmera</string>
+    <string name="add_word_search_open_camera_subtitle">Tirar foto de um texto</string>
+    <string name="add_word_search_load_image_title">Carregar Imagem</string>
+    <string name="add_word_search_load_image_subtitle">Escolher uma foto da galeria</string>
+    <string name="add_word_search_load_pdf_title">Carregar PDF</string>
+    <string name="add_word_search_load_pdf_subtitle">Escolher um arquivo PDF</string>
 </resources>
