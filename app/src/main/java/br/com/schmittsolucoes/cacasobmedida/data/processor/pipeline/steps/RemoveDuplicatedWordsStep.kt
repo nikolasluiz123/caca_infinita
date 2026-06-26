@@ -1,6 +1,8 @@
 package br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps
 
-class RemoveDuplicatedWordsStep: TextResultProcessorStep {
+import javax.inject.Inject
+
+class RemoveDuplicatedWordsStep @Inject constructor(): TextResultProcessorStep {
     override fun process(text: String): String {
         TODO("Not yet implemented")
     }

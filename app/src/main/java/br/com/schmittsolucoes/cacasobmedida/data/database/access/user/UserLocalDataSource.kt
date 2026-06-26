@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface UserLocalDataSource : LocalDataSource<UserEntity> {
     fun selectFirstObservable(): Flow<UserEntity>
     fun selectFirst(): UserEntity
+    suspend fun selectExistsUser(): Boolean
 }

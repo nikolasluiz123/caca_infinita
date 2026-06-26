@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Caça Sob Medida</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="user_level_status_card_label_current_status">STATUS ATUAL</string>
+    <string name="user_level_status_card_level_label">Nível %d</string>
+    <string name="user_level_status_card_xp_to_next_level">%d / %d XP</string>
+    <string name="continue_game">Continuar Jogo</string>
+    <string name="personal_records">Recordes Pessoais</string>
+    <string name="words_label">%d palavras</string>
+    <string name="home_tab">Início</string>
+    <string name="word_search_tab">Caça Palavras</string>
+    <string name="no_records_message">Nenhum recorde ainda. Escolha um caça palavras, comece a jogar e vão aparecer aqui!</string>
 </resources>

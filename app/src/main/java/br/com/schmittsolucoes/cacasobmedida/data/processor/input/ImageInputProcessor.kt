@@ -4,7 +4,9 @@ import br.com.schmittsolucoes.cacasobmedida.data.extractor.image.ImageTextExtrac
 import br.com.schmittsolucoes.cacasobmedida.domain.processor.input.InputProcessor
 import java.io.File
 
-class ImageInputProcessor(
+import javax.inject.Inject
+
+class ImageInputProcessor @Inject constructor(
     private val extractor: ImageTextExtractor
 ): InputProcessor<File> {
 

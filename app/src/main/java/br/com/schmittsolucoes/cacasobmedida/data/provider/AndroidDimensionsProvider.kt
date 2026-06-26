@@ -2,7 +2,9 @@ package br.com.schmittsolucoes.cacasobmedida.data.provider
 
 import br.com.schmittsolucoes.cacasobmedida.domain.provider.DeviceDimensionsProvider
 
-class AndroidDimensionsProvider: DeviceDimensionsProvider {
+import javax.inject.Inject
+
+class AndroidDimensionsProvider @Inject constructor(): DeviceDimensionsProvider {
 
     override fun getAvailableWidth(): Float {
         TODO("Not yet implemented")

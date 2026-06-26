@@ -8,7 +8,9 @@ import br.com.schmittsolucoes.cacasobmedida.domain.repository.PuzzleSessionRepos
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class PuzzleSessionRepositoryImpl(
+import javax.inject.Inject
+
+class PuzzleSessionRepositoryImpl @Inject constructor(
     private val puzzleSessionLocalDataSource: PuzzleSessionLocalDataSource
 ): PuzzleSessionRepository {
     override suspend fun save(session: PuzzleSession) {

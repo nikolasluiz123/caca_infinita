@@ -13,7 +13,9 @@ import br.com.schmittsolucoes.cacasobmedida.domain.repository.WordSearchPuzzleRe
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class WordSearchPuzzleRepositoryImpl(
+import javax.inject.Inject
+
+class WordSearchPuzzleRepositoryImpl @Inject constructor(
     private val wordSearchPuzzleLocalDataSource: WordSearchPuzzleLocalDataSource,
     private val wordLocalDataSource: WordLocalDataSource,
     private val userLocalDataSource: UserLocalDataSource,

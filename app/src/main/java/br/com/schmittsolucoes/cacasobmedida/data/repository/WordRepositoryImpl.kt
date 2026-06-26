@@ -6,9 +6,9 @@ import br.com.schmittsolucoes.cacasobmedida.data.repository.mapper.toEntity
 import br.com.schmittsolucoes.cacasobmedida.domain.model.Word
 import br.com.schmittsolucoes.cacasobmedida.domain.repository.WordRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class WordRepositoryImpl(
+class WordRepositoryImpl @Inject constructor(
     private val wordLocalDataSource: WordLocalDataSource
 ): WordRepository {
     override suspend fun updateWord(word: Word) {

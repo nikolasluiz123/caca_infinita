@@ -1,0 +1,150 @@
+package br.com.schmittsolucoes.cacasobmedida.core.injection
+
+import android.net.Uri
+import br.com.schmittsolucoes.cacasobmedida.data.database.transaction.DatabaseTransaction
+import br.com.schmittsolucoes.cacasobmedida.domain.calculator.GridDimensionCalculator
+import br.com.schmittsolucoes.cacasobmedida.domain.generator.PuzzleGenerator
+import br.com.schmittsolucoes.cacasobmedida.domain.generator.PuzzleNameGenerator
+import br.com.schmittsolucoes.cacasobmedida.domain.processor.input.InputProcessor
+import br.com.schmittsolucoes.cacasobmedida.domain.processor.pipeline.TextProcessorPipeline
+import br.com.schmittsolucoes.cacasobmedida.domain.provider.DeviceDimensionsProvider
+import br.com.schmittsolucoes.cacasobmedida.domain.repository.PuzzleSessionRepository
+import br.com.schmittsolucoes.cacasobmedida.domain.repository.UserRepository
+import br.com.schmittsolucoes.cacasobmedida.domain.repository.WordRepository
+import br.com.schmittsolucoes.cacasobmedida.domain.repository.WordSearchPuzzleRepository
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.*
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import java.io.File
+
+@Module
+@InstallIn(SingletonComponent::class)
+object UseCaseModule {
+
+    @Provides
+    fun provideGenerateImagePuzzleUseCase(
+        @ImageProcessor inputProcessor: InputProcessor<File>,
+        dimensionsProvider: DeviceDimensionsProvider,
+        gridCalculator: GridDimensionCalculator,
+        @ImageProcessor textProcessor: TextProcessorPipeline,
+        puzzleGenerator: PuzzleGenerator
+    ): GeneratePuzzleUseCase<File> {
+        return GeneratePuzzleUseCase(
+            inputProcessor,
+            dimensionsProvider,
+            gridCalculator,
+            textProcessor,
+            puzzleGenerator
+        )
+    }
+
+    @Provides
+    fun provideGeneratePDFPuzzleUseCase(
+        @PDFProcessor inputProcessor: InputProcessor<Uri>,
+        dimensionsProvider: DeviceDimensionsProvider,
+        gridCalculator: GridDimensionCalculator,
+        @PDFProcessor textProcessor: TextProcessorPipeline,
+        puzzleGenerator: PuzzleGenerator
+    ): GeneratePuzzleUseCase<Uri> {
+        return GeneratePuzzleUseCase(
+            inputProcessor,
+            dimensionsProvider,
+            gridCalculator,
+            textProcessor,
+            puzzleGenerator
+        )
+    }
+
+    @Provides
+    fun provideGetAllPuzzlesUseCase(repository: WordSearchPuzzleRepository): GetAllPuzzlesUseCase {
+        return GetAllPuzzlesUseCase(repository)
+    }
+
+    @Provides
+    fun provideGetCountWordsUseCase(repository: WordRepository): GetCountWordsUseCase {
+        return GetCountWordsUseCase(repository)
+    }
+
+    @Provides
+    fun provideGetLastUnfinishedPuzzleUseCase(repository: WordSearchPuzzleRepository): GetLastUnfinishedPuzzleUseCase {
+        return GetLastUnfinishedPuzzleUseCase(repository)
+    }
+
+    @Provides
+    fun provideGetNextUserLevelUseCase(): GetNextUserLevelUseCase {
+        return GetNextUserLevelUseCase()
+    }
+
+    @Provides
+    fun provideGetPuzzleByIdUseCase(repository: WordSearchPuzzleRepository): GetPuzzleByIdUseCase {
+        return GetPuzzleByIdUseCase(repository)
+    }
+
+    @Provides
+    fun provideGetRecordPuzzlesUseCase(repository: WordSearchPuzzleRepository): GetRecordPuzzlesUseCase {
+        return GetRecordPuzzlesUseCase(repository)
+    }
+
+    @Provides
+    fun provideGetUserExperienceByFoundWordUseCase(
+        wordRepository: WordRepository,
+        puzzleSessionRepository: PuzzleSessionRepository
+    ): GetUserExperienceByFoundWordUseCase {
+        return GetUserExperienceByFoundWordUseCase(wordRepository, puzzleSessionRepository)
+    }
+
+    @Provides
+    fun provideGetUserUseCase(
+        userRepository: UserRepository,
+        getNextUserLevelUseCase: GetNextUserLevelUseCase
+    ): GetUserUseCase {
+        return GetUserUseCase(userRepository, getNextUserLevelUseCase)
+    }
+
+    @Provides
+    fun provideCreateUserIfNotExistsUseCase(
+        userRepository: UserRepository,
+        getNextUserLevelUseCase: GetNextUserLevelUseCase
+    ): CreateUserIfNotExistsUseCase {
+        return CreateUserIfNotExistsUseCase(userRepository, getNextUserLevelUseCase)
+    }
+
+    @Provides
+    fun provideGetWordsFromPuzzleUseCase(repository: WordRepository): GetWordsFromPuzzleUseCase {
+        return GetWordsFromPuzzleUseCase(repository)
+    }
+
+    @Provides
+    fun provideSaveGeneratedPuzzlesUseCase(
+        wordSearchPuzzleRepository: WordSearchPuzzleRepository,
+        puzzleNameGenerator: PuzzleNameGenerator
+    ): SaveGeneratedPuzzlesUseCase {
+        return SaveGeneratedPuzzlesUseCase(wordSearchPuzzleRepository, puzzleNameGenerator)
+    }
+
+    @Provides
+    fun provideUpdateFoundWordUseCase(
+        wordRepository: WordRepository,
+        updateUserExperienceUseCase: UpdateUserExperienceUseCase,
+        transaction: DatabaseTransaction
+    ): UpdateFoundWordUseCase {
+        return UpdateFoundWordUseCase(wordRepository, updateUserExperienceUseCase, transaction)
+    }
+
+    @Provides
+    fun provideUpdateUserExperienceUseCase(
+        getUserUseCase: GetUserUseCase,
+        userRepository: UserRepository,
+        getUserExperienceByFoundWordUseCase: GetUserExperienceByFoundWordUseCase,
+        getNextUserLevelUseCase: GetNextUserLevelUseCase
+    ): UpdateUserExperienceUseCase {
+        return UpdateUserExperienceUseCase(
+            getUserUseCase,
+            userRepository,
+            getUserExperienceByFoundWordUseCase,
+            getNextUserLevelUseCase
+        )
+    }
+}

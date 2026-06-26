@@ -8,7 +8,9 @@ import br.com.schmittsolucoes.cacasobmedida.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class UserRepositoryImpl(
+import javax.inject.Inject
+
+class UserRepositoryImpl @Inject constructor(
     private val userLocalDataSource: UserLocalDataSource
 ): UserRepository {
     override suspend fun save(user: User) {
@@ -24,5 +26,9 @@ class UserRepositoryImpl(
     override suspend fun getUser(calculateMaxLevelXP: (Long) -> Long): User {
         val entity = userLocalDataSource.selectFirst()
         return entity.toDomain(calculateMaxLevelXP(entity.level))
+    }
+
+    override suspend fun getExistsUser(): Boolean {
+        return userLocalDataSource.selectExistsUser()
     }
 }

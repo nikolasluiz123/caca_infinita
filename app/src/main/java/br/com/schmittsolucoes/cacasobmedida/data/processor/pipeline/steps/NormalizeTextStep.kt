@@ -1,6 +1,8 @@
 package br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps
 
-class NormalizeTextStep: TextResultProcessorStep {
+import javax.inject.Inject
+
+class NormalizeTextStep @Inject constructor(): TextResultProcessorStep {
     override fun process(text: String): String {
         TODO("Not yet implemented")
     }

@@ -3,7 +3,9 @@ package br.com.schmittsolucoes.cacasobmedida.data.calculator
 import br.com.schmittsolucoes.cacasobmedida.domain.calculator.GridDimensionCalculator
 import br.com.schmittsolucoes.cacasobmedida.domain.model.GridDimensions
 
-class AndroidGridDimensionCalculator: GridDimensionCalculator {
+import javax.inject.Inject
+
+class AndroidGridDimensionCalculator @Inject constructor(): GridDimensionCalculator {
     override fun calculate(
         availableWidthDp: Float,
         availableHeightDp: Float,

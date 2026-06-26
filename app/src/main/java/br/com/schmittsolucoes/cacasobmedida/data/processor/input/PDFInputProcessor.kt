@@ -4,7 +4,9 @@ import android.net.Uri
 import br.com.schmittsolucoes.cacasobmedida.data.extractor.pdf.PDFTextExtractor
 import br.com.schmittsolucoes.cacasobmedida.domain.processor.input.InputProcessor
 
-class PDFInputProcessor(
+import javax.inject.Inject
+
+class PDFInputProcessor @Inject constructor(
     private val extractor: PDFTextExtractor
 ): InputProcessor<Uri> {
 
