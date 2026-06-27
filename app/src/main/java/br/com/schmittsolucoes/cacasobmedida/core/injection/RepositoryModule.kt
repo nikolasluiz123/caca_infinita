@@ -1,9 +1,11 @@
 package br.com.schmittsolucoes.cacasobmedida.core.injection
 
+import br.com.schmittsolucoes.cacasobmedida.data.repository.AssetPromptRepositoryImpl
 import br.com.schmittsolucoes.cacasobmedida.data.repository.PuzzleSessionRepositoryImpl
 import br.com.schmittsolucoes.cacasobmedida.data.repository.UserRepositoryImpl
 import br.com.schmittsolucoes.cacasobmedida.data.repository.WordRepositoryImpl
 import br.com.schmittsolucoes.cacasobmedida.data.repository.WordSearchPuzzleRepositoryImpl
+import br.com.schmittsolucoes.cacasobmedida.domain.repository.PromptRepository
 import br.com.schmittsolucoes.cacasobmedida.domain.repository.PuzzleSessionRepository
 import br.com.schmittsolucoes.cacasobmedida.domain.repository.UserRepository
 import br.com.schmittsolucoes.cacasobmedida.domain.repository.WordRepository
@@ -33,4 +35,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindPuzzleSessionRepository(impl: PuzzleSessionRepositoryImpl): PuzzleSessionRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindPromptRepository(impl: AssetPromptRepositoryImpl): PromptRepository
 }

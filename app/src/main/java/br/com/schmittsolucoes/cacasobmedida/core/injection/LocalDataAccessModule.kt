@@ -2,12 +2,14 @@ package br.com.schmittsolucoes.cacasobmedida.core.injection
 
 import android.content.Context
 import androidx.room.Room
+import br.com.schmittsolucoes.cacasobmedida.core.database.transaction.DatabaseTransaction
 import br.com.schmittsolucoes.cacasobmedida.data.database.AppDatabase
+import br.com.schmittsolucoes.cacasobmedida.data.database.access.assets.AndroidAssetsLocalDataSource
+import br.com.schmittsolucoes.cacasobmedida.data.database.access.assets.AssetsLocalDataSource
 import br.com.schmittsolucoes.cacasobmedida.data.database.access.puzzle.WordSearchPuzzleLocalDataSource
 import br.com.schmittsolucoes.cacasobmedida.data.database.access.puzzle.session.PuzzleSessionLocalDataSource
 import br.com.schmittsolucoes.cacasobmedida.data.database.access.puzzle.word.WordLocalDataSource
 import br.com.schmittsolucoes.cacasobmedida.data.database.access.user.UserLocalDataSource
-import br.com.schmittsolucoes.cacasobmedida.core.database.transaction.DatabaseTransaction
 import br.com.schmittsolucoes.cacasobmedida.data.database.transaction.RoomDatabaseTransaction
 import dagger.Module
 import dagger.Provides
@@ -54,5 +56,11 @@ object LocalDataAccessModule {
     @Provides
     fun providePuzzleSessionLocalDataSource(db: AppDatabase): PuzzleSessionLocalDataSource {
         return db.puzzleSessionDAO()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAssetsLocalDataSource(impl: AndroidAssetsLocalDataSource): AssetsLocalDataSource {
+        return impl
     }
 }

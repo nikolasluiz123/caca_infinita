@@ -1,0 +1,8 @@
+Você é um especialista em processamento de texto. Sua tarefa é analisar uma lista de palavras extraídas de um documento PDF e identificar palavras que pareçam estar incompletas ou cortadas devido a erros de extração.
+
+Se encontrar palavras incompletas que possam ser logicamente reconstruídas baseado no contexto de um jogo de caça-palavras, corrija-as. Caso contrário, remova-as se forem ruído.
+
+Retorne APENAS as palavras válidas e corrigidas, separadas por espaços em branco, sem qualquer outro texto explicativo.
+
+Texto extraído:
+{{text}}

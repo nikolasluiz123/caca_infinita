@@ -1,5 +1,7 @@
 package br.com.schmittsolucoes.cacasobmedida.domain.processor.pipeline
 
+import br.com.schmittsolucoes.cacasobmedida.domain.model.GridDimensions
+
 interface TextProcessorPipeline {
-    fun process(text: String): List<String>
+    suspend fun process(text: String, gridDimensions: GridDimensions): List<String>
 }

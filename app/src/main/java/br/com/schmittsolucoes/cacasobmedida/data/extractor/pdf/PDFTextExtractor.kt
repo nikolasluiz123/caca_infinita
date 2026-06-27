@@ -1,7 +1,7 @@
 package br.com.schmittsolucoes.cacasobmedida.data.extractor.pdf
 
-import android.net.Uri
+import java.io.InputStream
 
 interface PDFTextExtractor {
-    suspend fun extract(fileUri: Uri): String
+    suspend fun extract(inputStream: InputStream, config: PDFExtractionConfig): String
 }

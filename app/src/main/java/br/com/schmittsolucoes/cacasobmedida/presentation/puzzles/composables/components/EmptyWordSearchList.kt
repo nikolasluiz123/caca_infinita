@@ -1,5 +1,6 @@
 package br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.composables.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.schmittsolucoes.cacasobmedida.R
 import br.com.schmittsolucoes.cacasobmedida.presentation.theme.CacaSobMedidaTheme
-import android.content.res.Configuration
 
 @Composable
 fun EmptyWordSearchList(

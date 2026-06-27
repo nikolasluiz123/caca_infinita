@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import br.com.schmittsolucoes.cacasobmedida.data.database.access.RoomLocalDataSource
 import br.com.schmittsolucoes.cacasobmedida.data.model.WordEntity
-import br.com.schmittsolucoes.cacasobmedida.domain.model.Word
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -1,9 +1,9 @@
 package br.com.schmittsolucoes.cacasobmedida.data.repository
 
+import br.com.schmittsolucoes.cacasobmedida.core.database.transaction.DatabaseTransaction
 import br.com.schmittsolucoes.cacasobmedida.data.database.access.puzzle.WordSearchPuzzleLocalDataSource
 import br.com.schmittsolucoes.cacasobmedida.data.database.access.puzzle.word.WordLocalDataSource
 import br.com.schmittsolucoes.cacasobmedida.data.database.access.user.UserLocalDataSource
-import br.com.schmittsolucoes.cacasobmedida.core.database.transaction.DatabaseTransaction
 import br.com.schmittsolucoes.cacasobmedida.data.repository.mapper.toDomain
 import br.com.schmittsolucoes.cacasobmedida.data.repository.mapper.toEntity
 import br.com.schmittsolucoes.cacasobmedida.domain.model.PuzzleRecord
@@ -12,7 +12,6 @@ import br.com.schmittsolucoes.cacasobmedida.domain.model.result.puzzle.PuzzleRes
 import br.com.schmittsolucoes.cacasobmedida.domain.repository.WordSearchPuzzleRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-
 import javax.inject.Inject
 
 class WordSearchPuzzleRepositoryImpl @Inject constructor(
@@ -52,5 +51,9 @@ class WordSearchPuzzleRepositoryImpl @Inject constructor(
 
     override fun getRecords(): Flow<List<PuzzleRecord>> {
         return wordSearchPuzzleLocalDataSource.selectRecords()
+    }
+
+    override suspend fun getCount(): Long {
+        return wordSearchPuzzleLocalDataSource.selectCount()
     }
 }

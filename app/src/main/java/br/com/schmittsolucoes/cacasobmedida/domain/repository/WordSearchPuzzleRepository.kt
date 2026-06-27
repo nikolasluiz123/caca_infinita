@@ -11,4 +11,5 @@ interface WordSearchPuzzleRepository {
     fun getAllPuzzles(): Flow<List<WordSearchPuzzle>>
     fun getLastUnfinished(): Flow<String?>
     fun getRecords(): Flow<List<PuzzleRecord>>
+    suspend fun getCount(): Long
 }

@@ -1,9 +1,12 @@
 package br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.composables
 
 import android.content.res.Configuration
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -14,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,20 +35,31 @@ fun WordSearchGeneratedPuzzlesScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val pdfPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenMultipleDocuments(),
+        onResult = { uris ->
+            viewModel.onPdfsSelected(uris)
+        }
+    )
+
     WordSearchGeneratedPuzzlesScreen(
-        state = state
+        state = state,
+        onLoadPdfClick = {
+            pdfPickerLauncher.launch(arrayOf("application/pdf"))
+        }
     )
 }
 
 @Composable
 fun WordSearchGeneratedPuzzlesScreen(
     state: WordSearchUiState,
+    onLoadPdfClick: () -> Unit = {},
 ) {
     WordSearchGeneratedPuzzlesScreen(
         state = state,
         onOpenCameraClick = {},
         onLoadImageClick = {},
-        onLoadPdfClick = {},
+        onLoadPdfClick = onLoadPdfClick,
     )
 }
 
@@ -72,6 +87,12 @@ fun WordSearchGeneratedPuzzlesScreen(
                 .padding(paddingValues)
         ) {
             EmptyWordSearchList()
+
+            if (state.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
         }
 
         if (showBottomSheet) {

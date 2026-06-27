@@ -6,7 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Update
 import androidx.room.Upsert
 
-interface RoomLocalDataSource<T>: LocalDataSource<T> {
+interface RoomLocalDataSource<T>: EntityLocalDataSource<T> {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     override suspend fun insert(entity: List<T>)
 

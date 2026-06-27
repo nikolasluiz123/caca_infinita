@@ -72,4 +72,8 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+
+    implementation(libs.pdf.box.android)
+    implementation(libs.lucene.analysis.common)
+    implementation(libs.litertlm.android)
 }

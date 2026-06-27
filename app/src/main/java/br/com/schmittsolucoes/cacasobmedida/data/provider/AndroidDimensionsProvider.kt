@@ -1,28 +1,30 @@
 package br.com.schmittsolucoes.cacasobmedida.data.provider
 
+import android.content.Context
 import br.com.schmittsolucoes.cacasobmedida.domain.provider.DeviceDimensionsProvider
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import javax.inject.Inject
 
-class AndroidDimensionsProvider @Inject constructor(): DeviceDimensionsProvider {
+class AndroidDimensionsProvider @Inject constructor(
+    @param:ApplicationContext private val context: Context
+): DeviceDimensionsProvider {
 
     override fun getAvailableWidth(): Float {
-        TODO("Not yet implemented")
+        return context.resources.configuration.screenWidthDp.toFloat()
     }
 
     override fun getAvailableHeight(): Float {
-        TODO("Not yet implemented")
+        return context.resources.configuration.screenHeightDp.toFloat()
     }
 
-    override fun getCellSize(): Float {
-        TODO("Not yet implemented")
-    }
+    override fun getCellSize(): Float = 40f
 
-    override fun getHorizontalPadding(): Float {
-        TODO("Not yet implemented")
-    }
+    override fun getPaddingStart(): Float = 12f
 
-    override fun getVerticalPadding(): Float {
-        TODO("Not yet implemented")
-    }
+    override fun getPaddingEnd(): Float = 12f
+
+    override fun getPaddingTop(): Float = 12f
+
+    override fun getPaddingBottom(): Float = 64f
 }

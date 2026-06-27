@@ -1,7 +1,28 @@
 package br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps
 
-class RemoveStopWordsStep(private val stopWords: Set<String>): TextResultProcessorStep {
-    override fun process(text: String): String {
-        TODO("Not yet implemented")
+/**
+ * Etapa responsável por filtrar palavras irrelevantes (Stop Words).
+ *
+ * Utiliza um conjunto de palavras fornecido por um [br.com.schmittsolucoes.cacasobmedida.data.provider.StopWordsProvider]
+ * para limpar o texto de conectivos e termos sem valor semântico para o jogo.
+ *
+ * @property stopWords O conjunto de palavras a serem removidas (devem estar em caixa alta).
+ */
+class RemoveStopWordsStep(private val stopWords: Set<String>) : TextResultProcessorStep {
+    /**
+     * Filtra o texto removendo tokens que pertencem ao conjunto de stop words.
+     *
+     * O processamento:
+     * 1. Divide o texto em palavras usando o Regex `\\s+`.
+     * 2. Filtra strings vazias e palavras que (em caixa alta) estejam presentes no conjunto [stopWords].
+     * 3. Reconstrói a string com os termos restantes.
+     *
+     * @param text O texto a ser filtrado.
+     * @return O texto limpo de palavras irrelevantes.
+     */
+    override suspend fun process(text: String): String {
+        return text.split(Regex("\\s+"))
+            .filter { word -> word.isNotBlank() && word.uppercase() !in stopWords }
+            .joinToString(" ")
     }
 }

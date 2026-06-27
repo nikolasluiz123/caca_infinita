@@ -4,7 +4,6 @@ import android.net.Uri
 import br.com.schmittsolucoes.cacasobmedida.core.database.transaction.DatabaseTransaction
 import br.com.schmittsolucoes.cacasobmedida.domain.calculator.GridDimensionCalculator
 import br.com.schmittsolucoes.cacasobmedida.domain.generator.PuzzleGenerator
-import br.com.schmittsolucoes.cacasobmedida.domain.generator.PuzzleNameGenerator
 import br.com.schmittsolucoes.cacasobmedida.domain.processor.input.InputProcessor
 import br.com.schmittsolucoes.cacasobmedida.domain.processor.pipeline.TextProcessorPipeline
 import br.com.schmittsolucoes.cacasobmedida.domain.provider.DeviceDimensionsProvider
@@ -12,7 +11,21 @@ import br.com.schmittsolucoes.cacasobmedida.domain.repository.PuzzleSessionRepos
 import br.com.schmittsolucoes.cacasobmedida.domain.repository.UserRepository
 import br.com.schmittsolucoes.cacasobmedida.domain.repository.WordRepository
 import br.com.schmittsolucoes.cacasobmedida.domain.repository.WordSearchPuzzleRepository
-import br.com.schmittsolucoes.cacasobmedida.domain.usecase.*
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.CreateUserIfNotExistsUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GeneratePDFPuzzleUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GeneratePuzzleUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetAllPuzzlesUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetCountWordsUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetLastUnfinishedPuzzleUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetNextUserLevelUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetPuzzleByIdUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetRecordPuzzlesUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetUserExperienceByFoundWordUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetUserUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetWordsFromPuzzleUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.SaveGeneratedPuzzlesUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.UpdateFoundWordUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.UpdateUserExperienceUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -47,8 +60,8 @@ object UseCaseModule {
         gridCalculator: GridDimensionCalculator,
         @PDFProcessor textProcessor: TextProcessorPipeline,
         puzzleGenerator: PuzzleGenerator
-    ): GeneratePuzzleUseCase<Uri> {
-        return GeneratePuzzleUseCase(
+    ): GeneratePDFPuzzleUseCase {
+        return GeneratePDFPuzzleUseCase(
             inputProcessor,
             dimensionsProvider,
             gridCalculator,
@@ -119,9 +132,8 @@ object UseCaseModule {
     @Provides
     fun provideSaveGeneratedPuzzlesUseCase(
         wordSearchPuzzleRepository: WordSearchPuzzleRepository,
-        puzzleNameGenerator: PuzzleNameGenerator
     ): SaveGeneratedPuzzlesUseCase {
-        return SaveGeneratedPuzzlesUseCase(wordSearchPuzzleRepository, puzzleNameGenerator)
+        return SaveGeneratedPuzzlesUseCase(wordSearchPuzzleRepository)
     }
 
     @Provides

@@ -7,7 +7,9 @@ interface GridDimensionCalculator {
         availableWidthDp: Float,
         availableHeightDp: Float,
         cellTargetSizeDp: Float,
-        horizontalPaddingDp: Float,
-        verticalPaddingDp: Float
+        paddingStartDp: Float,
+        paddingEndDp: Float,
+        paddingTopDp: Float,
+        paddingBottomDp: Float
     ): GridDimensions
 }

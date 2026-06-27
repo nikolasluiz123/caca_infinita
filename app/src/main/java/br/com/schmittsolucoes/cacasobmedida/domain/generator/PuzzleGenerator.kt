@@ -4,5 +4,5 @@ import br.com.schmittsolucoes.cacasobmedida.domain.model.GridDimensions
 import br.com.schmittsolucoes.cacasobmedida.domain.model.result.puzzle.PuzzleResult
 
 interface PuzzleGenerator {
-    fun generate(words: List<String>, dimensions: GridDimensions): List<PuzzleResult>
+    suspend fun generate(words: List<String>, dimensions: GridDimensions): List<PuzzleResult>
 }

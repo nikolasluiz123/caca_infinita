@@ -4,6 +4,8 @@ interface DeviceDimensionsProvider {
     fun getAvailableWidth(): Float
     fun getAvailableHeight(): Float
     fun getCellSize(): Float
-    fun getHorizontalPadding(): Float
-    fun getVerticalPadding(): Float
+    fun getPaddingStart(): Float
+    fun getPaddingEnd(): Float
+    fun getPaddingTop(): Float
+    fun getPaddingBottom(): Float
 }

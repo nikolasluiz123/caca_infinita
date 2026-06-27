@@ -51,4 +51,7 @@ interface WordSearchPuzzleRoomDAO: WordSearchPuzzleLocalDataSource, RoomLocalDat
         limit 3
     """)
     override fun selectRecords(): Flow<List<PuzzleRecord>>
+
+    @Query("select count(*) from word_search_puzzle")
+    override suspend fun selectCount(): Long
 }

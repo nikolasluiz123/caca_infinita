@@ -9,7 +9,7 @@ import br.com.schmittsolucoes.cacasobmedida.domain.provider.DeviceDimensionsProv
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class GeneratePuzzleUseCase<INPUT>(
+open class GeneratePuzzleUseCase<INPUT>(
     private val inputProcessor: InputProcessor<INPUT>,
     private val dimensionsProvider: DeviceDimensionsProvider,
     private val gridCalculator: GridDimensionCalculator,
@@ -23,11 +23,13 @@ class GeneratePuzzleUseCase<INPUT>(
             availableWidthDp = dimensionsProvider.getAvailableWidth(),
             availableHeightDp = dimensionsProvider.getAvailableHeight(),
             cellTargetSizeDp = dimensionsProvider.getCellSize(),
-            horizontalPaddingDp = dimensionsProvider.getHorizontalPadding(),
-            verticalPaddingDp = dimensionsProvider.getVerticalPadding()
+            paddingStartDp = dimensionsProvider.getPaddingStart(),
+            paddingEndDp = dimensionsProvider.getPaddingEnd(),
+            paddingTopDp = dimensionsProvider.getPaddingTop(),
+            paddingBottomDp = dimensionsProvider.getPaddingBottom()
         )
 
-        val words = textProcessor.process(text)
+        val words = textProcessor.process(text, gridDimensions)
 
         puzzleGenerator.generate(words, gridDimensions)
     }
