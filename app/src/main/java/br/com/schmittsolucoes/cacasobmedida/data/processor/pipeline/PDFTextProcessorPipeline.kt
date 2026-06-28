@@ -3,6 +3,7 @@ package br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline
 import android.util.Log
 import br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps.CleanNoiseStep
 import br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps.FilterByMaxLengthStep
+import br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps.FilterByMinLengthStep
 import br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps.LLMWordValidationStep
 import br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps.NormalizeTextStep
 import br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps.RemoveDuplicatedWordsStep
@@ -34,6 +35,7 @@ class PDFTextProcessorPipeline @Inject constructor(
 
         val steps = listOf(
             CleanNoiseStep(),
+            FilterByMinLengthStep(5),
             NormalizeTextStep(),
             RemoveDuplicatedWordsStep(),
             RemoveStopWordsStep(stopWords),
