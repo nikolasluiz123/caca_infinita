@@ -2,7 +2,6 @@
 agp = "9.2.1"
 coreKtx = "1.19.0"
 appcompat = "1.7.1"
-litertlmAndroid = "0.13.1"
 material = "1.14.0"
 mlkitText = "19.0.1"
 camerax = "1.6.1"
@@ -48,7 +47,6 @@ androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscree
 
 pdf-box-android = { group = "com.tom-roush", name = "pdfbox-android", version.ref = "pdfBoxVersion" }
 lucene-analysis-common = { group = "org.apache.lucene", name = "lucene-analysis-common", version.ref = "lucene" }
-litertlm-android = { module = "com.google.ai.edge.litertlm:litertlm-android", version.ref = "litertlmAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import br.com.schmittsolucoes.cacasobmedida.R
 import br.com.schmittsolucoes.cacasobmedida.domain.generator.PuzzleGenerator
-import br.com.schmittsolucoes.cacasobmedida.domain.generator.PuzzleNameGenerator
 import br.com.schmittsolucoes.cacasobmedida.domain.model.GridDimensions
 import br.com.schmittsolucoes.cacasobmedida.domain.model.enumeration.Direction
 import br.com.schmittsolucoes.cacasobmedida.domain.model.result.puzzle.Coordinate
@@ -28,7 +27,6 @@ import kotlin.random.Random
  */
 class HeuristicPuzzleGenerator @Inject constructor(
     @param:ApplicationContext private val context: Context,
-    private val puzzleNameGenerator: PuzzleNameGenerator,
     private val wordSearchPuzzleRepository: WordSearchPuzzleRepository,
 ) : PuzzleGenerator {
 
@@ -93,15 +91,6 @@ class HeuristicPuzzleGenerator @Inject constructor(
         }
 
         return results
-
-//        return try {
-//            puzzleNameGenerator.generate(results).also {
-//                Log.d("DEBUG_PROCESS", "$tag: Geração de grades heurística concluída")
-//            }
-//        } catch (_: Exception) {
-//            Log.d("DEBUG_PROCESS", "$tag: Geração de grades heurística concluída (com falha no gerador de nomes)")
-//            results
-//        }
     }
 
     /**

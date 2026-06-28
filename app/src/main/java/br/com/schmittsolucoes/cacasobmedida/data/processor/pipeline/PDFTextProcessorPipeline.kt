@@ -4,23 +4,19 @@ import android.util.Log
 import br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps.CleanNoiseStep
 import br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps.FilterByMaxLengthStep
 import br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps.FilterByMinLengthStep
-import br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps.LLMWordValidationStep
 import br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps.NormalizeTextStep
 import br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps.RemoveDuplicatedWordsStep
+import br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps.RemoveOverlappingWordsStep
 import br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps.RemoveStopWordsStep
 import br.com.schmittsolucoes.cacasobmedida.data.provider.StopWordsProvider
 import br.com.schmittsolucoes.cacasobmedida.domain.model.GridDimensions
 import br.com.schmittsolucoes.cacasobmedida.domain.processor.pipeline.TextProcessorPipeline
-import br.com.schmittsolucoes.cacasobmedida.domain.repository.PromptRepository
-import br.com.schmittsolucoes.cacasobmedida.domain.service.AIModelService
 import javax.inject.Inject
 import kotlin.math.floor
 import kotlin.math.sqrt
 
 class PDFTextProcessorPipeline @Inject constructor(
     private val stopWordsProvider: StopWordsProvider,
-    private val aiModelService: AIModelService,
-    private val promptRepository: PromptRepository
 ) : TextProcessorPipeline {
 
     override suspend fun process(text: String, gridDimensions: GridDimensions): List<String> {
@@ -40,7 +36,7 @@ class PDFTextProcessorPipeline @Inject constructor(
             RemoveDuplicatedWordsStep(),
             RemoveStopWordsStep(stopWords),
             FilterByMaxLengthStep(diagonal),
-            LLMWordValidationStep(aiModelService, promptRepository, 1)
+            RemoveOverlappingWordsStep()
         )
 
         var processedText = text

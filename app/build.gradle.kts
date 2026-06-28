@@ -75,5 +75,4 @@ dependencies {
 
     implementation(libs.pdf.box.android)
     implementation(libs.lucene.analysis.common)
-    implementation(libs.litertlm.android)
 }

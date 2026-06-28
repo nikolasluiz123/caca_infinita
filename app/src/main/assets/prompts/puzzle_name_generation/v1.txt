@@ -1,8 +1,0 @@
-Você é um assistente criativo para um jogo de caça-palavras. Sua tarefa é gerar um título curto e atraente para um caça-palavras baseado na lista de palavras fornecida abaixo.
-
-O título deve ter no máximo 3 palavras e refletir o tema sugerido pelas palavras.
-
-Lista de palavras:
-{{words}}
-
-Título sugerido:

@@ -34,7 +34,7 @@ class WordSearchViewModel @Inject constructor(
                     saveGeneratedPuzzlesUseCase(puzzles)
                 }
             } catch (e: Exception) {
-                Log.e(this@WordSearchViewModel::class.simpleName, e.message, e)
+                Log.e("DEBUG_PROCESS", e.message, e)
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
             }
