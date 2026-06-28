@@ -39,7 +39,7 @@ class LLMWordValidationStep(
             )
 
             val words = text.split(Regex("\\s+")).filter { it.isNotBlank() }
-            val batches = words.chunked(50)
+            val batches = words.chunked(100)
             val validatedWords = mutableListOf<String>()
 
             Log.d("DEBUG_PROCESS", "$tag: Processando ${words.size} palavras em ${batches.size} batches")
