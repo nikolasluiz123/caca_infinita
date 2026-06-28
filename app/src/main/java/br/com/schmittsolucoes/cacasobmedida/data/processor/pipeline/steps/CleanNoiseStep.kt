@@ -1,5 +1,7 @@
 package br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps
 
+import android.util.Log
+
 /**
  * Etapa responsável por remover "ruídos" do texto extraído.
  *
@@ -19,6 +21,12 @@ class CleanNoiseStep : TextResultProcessorStep {
      * @return O texto limpo contendo apenas letras e espaços.
      */
     override suspend fun process(text: String): String {
-        return text.replace(Regex("[^\\p{L}\\s]"), " ")
+        val tag = this@CleanNoiseStep::class.simpleName
+
+        Log.d(tag, "Iniciando step CleanNoise")
+
+        return text.replace(Regex("[^\\p{L}\\s]"), " ").also {
+            Log.d(tag, "Fim step CleanNoise")
+        }
     }
 }

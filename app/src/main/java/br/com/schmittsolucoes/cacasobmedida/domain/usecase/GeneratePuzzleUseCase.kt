@@ -1,5 +1,6 @@
 package br.com.schmittsolucoes.cacasobmedida.domain.usecase
 
+import android.util.Log
 import br.com.schmittsolucoes.cacasobmedida.domain.calculator.GridDimensionCalculator
 import br.com.schmittsolucoes.cacasobmedida.domain.generator.PuzzleGenerator
 import br.com.schmittsolucoes.cacasobmedida.domain.model.result.puzzle.PuzzleResult
@@ -17,6 +18,9 @@ open class GeneratePuzzleUseCase<INPUT>(
     private val puzzleGenerator: PuzzleGenerator,
 ) {
     suspend operator fun invoke(input: INPUT): List<PuzzleResult> = withContext(Dispatchers.IO) {
+        val tag = this@GeneratePuzzleUseCase::class.simpleName
+        Log.d(tag, "Iniciando processamento de quebra-cabeça")
+
         val text = inputProcessor.process(input)
 
         val gridDimensions = gridCalculator.calculate(
@@ -29,8 +33,12 @@ open class GeneratePuzzleUseCase<INPUT>(
             paddingBottomDp = dimensionsProvider.getPaddingBottom()
         )
 
+        Log.d(tag, "Grid Dimensions calculada: $gridDimensions")
+
         val words = textProcessor.process(text, gridDimensions)
 
-        puzzleGenerator.generate(words, gridDimensions)
+        puzzleGenerator.generate(words, gridDimensions).also {
+            Log.d(tag, "Processamento de quebra-cabeça concluído. Puzzles gerados: ${it.size}")
+        }
     }
 }

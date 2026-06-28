@@ -1,6 +1,7 @@
 package br.com.schmittsolucoes.cacasobmedida.data.service
 
 import android.content.Context
+import android.util.Log
 import br.com.schmittsolucoes.cacasobmedida.data.service.exceptions.AIModelServiceException
 import br.com.schmittsolucoes.cacasobmedida.domain.service.AIModelService
 import com.google.ai.edge.litertlm.Backend
@@ -20,6 +21,10 @@ class LiteRTAIModelService @Inject constructor(
     private val modelPath = File(context.filesDir, "models/gemma3-1b-it-int4.litertlm").absolutePath
 
     override suspend fun generate(prompt: String): Result<String> {
+        val tag = this@LiteRTAIModelService::class.simpleName
+
+        Log.d(tag, "Iniciando geração de resposta com LiteRT")
+        
         return runCatching {
             val currentEngine = engine ?: throw AIModelServiceException.EngineNotInitialized()
             val userMessage = Message.user(prompt)
@@ -34,9 +39,14 @@ class LiteRTAIModelService @Inject constructor(
                     }
                 }
 
-                responseBuilder.toString()
+                responseBuilder.toString().also {
+                    Log.d(tag, "Resposta LiteRT gerada com sucesso")
+                }
             }
-        }.recoverCatching { throw AIModelServiceException.InferenceFailed(it) }
+        }.recoverCatching { 
+            Log.e(tag, "Falha na inferência LiteRT: ${it.message}")
+            throw AIModelServiceException.InferenceFailed(it) 
+        }
     }
 
     override fun isReady(): Boolean {
@@ -44,6 +54,10 @@ class LiteRTAIModelService @Inject constructor(
     }
 
     override suspend fun initialize(): Result<Unit> {
+        val tag = this@LiteRTAIModelService::class.simpleName
+
+        Log.d(tag, "Inicializando motor LiteRT")
+        
         return runCatching {
             if (engine != null) return@runCatching
 
@@ -56,16 +70,26 @@ class LiteRTAIModelService @Inject constructor(
             val config = EngineConfig(
                 modelPath = modelPath,
                 backend = Backend.GPU(),
-                cacheDir = context.cacheDir.path
+                cacheDir = context.cacheDir.path,
+                maxNumTokens = 8096
             )
 
             val newEngine = Engine(config)
             newEngine.initialize()
             engine = newEngine
-        }.recoverCatching { throw AIModelServiceException.InitializationFailed(it) }
+
+            Log.d(tag, "Motor LiteRT inicializado com sucesso")
+        }.recoverCatching { 
+            Log.e(tag, "Falha na inicialização LiteRT: ${it.message}")
+            throw AIModelServiceException.InitializationFailed(it) 
+        }
     }
 
     override fun close() {
+        val tag = this@LiteRTAIModelService::class.simpleName
+
+        Log.d(tag, "Fechando motor LiteRT")
+
         engine?.close()
         engine = null
     }

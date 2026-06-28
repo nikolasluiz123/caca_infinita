@@ -1,5 +1,7 @@
 package br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps
 
+import android.util.Log
+
 /**
  * Etapa responsável por eliminar termos repetidos no texto.
  *
@@ -19,9 +21,15 @@ class RemoveDuplicatedWordsStep : TextResultProcessorStep {
      * @return O texto contendo apenas palavras exclusivas separadas por um único espaço.
      */
     override suspend fun process(text: String): String {
+        val tag = this@RemoveDuplicatedWordsStep::class.simpleName
+
+        Log.d(tag, "Iniciando step RemoveDuplicatedWords")
+
         return text.split(Regex("\\s+"))
             .filter { it.isNotBlank() }
             .distinct()
-            .joinToString(" ")
+            .joinToString(" ").also {
+                Log.d(tag, "Fim step RemoveDuplicatedWords")
+            }
     }
 }

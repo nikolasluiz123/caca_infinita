@@ -1,5 +1,7 @@
 package br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps
 
+import android.util.Log
+
 /**
  * Etapa responsável por filtrar palavras irrelevantes (Stop Words).
  *
@@ -21,8 +23,14 @@ class RemoveStopWordsStep(private val stopWords: Set<String>) : TextResultProces
      * @return O texto limpo de palavras irrelevantes.
      */
     override suspend fun process(text: String): String {
+        val tag = this@RemoveStopWordsStep::class.simpleName
+
+        Log.d(tag, "Iniciando step RemoveStopWords")
+
         return text.split(Regex("\\s+"))
             .filter { word -> word.isNotBlank() && word.uppercase() !in stopWords }
-            .joinToString(" ")
+            .joinToString(" ").also {
+                Log.d(tag, "Fim step RemoveStopWords")
+            }
     }
 }

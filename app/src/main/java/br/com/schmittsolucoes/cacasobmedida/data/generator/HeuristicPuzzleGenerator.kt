@@ -1,6 +1,7 @@
 package br.com.schmittsolucoes.cacasobmedida.data.generator
 
 import android.content.Context
+import android.util.Log
 import br.com.schmittsolucoes.cacasobmedida.R
 import br.com.schmittsolucoes.cacasobmedida.domain.generator.PuzzleGenerator
 import br.com.schmittsolucoes.cacasobmedida.domain.generator.PuzzleNameGenerator
@@ -40,6 +41,10 @@ class HeuristicPuzzleGenerator @Inject constructor(
     }
 
     override suspend fun generate(words: List<String>, dimensions: GridDimensions): List<PuzzleResult> {
+        val tag = this@HeuristicPuzzleGenerator::class.simpleName
+
+        Log.d(tag, "Iniciando geração de grade(s) heurística")
+        
         val results = mutableListOf<PuzzleResult>()
         val allWords = prepareAndSortWords(words)
 
@@ -74,21 +79,25 @@ class HeuristicPuzzleGenerator @Inject constructor(
                     existingPuzzlesCount + results.size + 1
                 )
 
-                results.add(
-                    PuzzleResult(
-                        name = fallbackName,
-                        grid = grid,
-                        placedWords = placedWords
-                    )
+                val result = PuzzleResult(
+                    name = fallbackName,
+                    grid = grid,
+                    placedWords = placedWords
                 )
+                
+                Log.d(tag, "Novo PuzzleResult gerado: ${result.name}. Palavras (${placedWords.size}): ${placedWords.joinToString { it.text }}")
+                results.add(result)
             } else {
                 break
             }
         }
 
         return try {
-            puzzleNameGenerator.generate(results)
+            puzzleNameGenerator.generate(results).also {
+                Log.d(tag, "Geração de grades heurística concluída")
+            }
         } catch (_: Exception) {
+            Log.d(tag, "Geração de grades heurística concluída (com falha no gerador de nomes)")
             results
         }
     }

@@ -1,5 +1,6 @@
 package br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps
 
+import android.util.Log
 import br.com.schmittsolucoes.cacasobmedida.domain.model.enumeration.AITask
 import br.com.schmittsolucoes.cacasobmedida.domain.repository.PromptRepository
 import br.com.schmittsolucoes.cacasobmedida.domain.service.AIModelService
@@ -18,9 +19,13 @@ class LLMWordValidationStep(
 ) : TextResultProcessorStep {
 
     override suspend fun process(text: String): String {
+        val tag = this@LLMWordValidationStep::class.simpleName
+        Log.d(tag, "Iniciando step de validação com LLM")
+        
         try {
             if (!aiModelService.isReady()) {
                 val initResult = aiModelService.initialize()
+                Log.d(tag, "Inicialização da IA: ${if (initResult.isSuccess) "Sucesso" else "Falha (${initResult.exceptionOrNull()?.message})"}")
 
                 if (initResult.isFailure) {
                     return text
@@ -35,7 +40,9 @@ class LLMWordValidationStep(
 
             val result = aiModelService.generate(prompt)
             
-            return result.getOrDefault(text)
+            return result.getOrDefault(text).also {
+                Log.d(tag, "Step de validação com LLM concluída")
+            }
         } finally {
             aiModelService.close()
         }

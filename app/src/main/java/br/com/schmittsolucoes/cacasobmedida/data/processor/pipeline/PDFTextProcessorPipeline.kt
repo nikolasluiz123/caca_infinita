@@ -1,5 +1,6 @@
 package br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline
 
+import android.util.Log
 import br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps.CleanNoiseStep
 import br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps.FilterByMaxLengthStep
 import br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps.LLMWordValidationStep
@@ -22,6 +23,9 @@ class PDFTextProcessorPipeline @Inject constructor(
 ) : TextProcessorPipeline {
 
     override suspend fun process(text: String, gridDimensions: GridDimensions): List<String> {
+        val tag = this@PDFTextProcessorPipeline::class.simpleName
+        Log.d(tag, "Iniciando pipeline de processamento de texto")
+
         val rowsSquared = gridDimensions.rows * gridDimensions.rows
         val columnsSquared = gridDimensions.columns * gridDimensions.columns
         val diagonal = floor(sqrt((rowsSquared + columnsSquared).toDouble())).toInt()
@@ -43,7 +47,9 @@ class PDFTextProcessorPipeline @Inject constructor(
             processedText = step.process(processedText)
         }
 
-        return tokenize(processedText)
+        return tokenize(processedText).also {
+            Log.d(tag, "Pipeline de processamento de texto concluída. Palavras encontradas: ${it.size}")
+        }
     }
 
     /**

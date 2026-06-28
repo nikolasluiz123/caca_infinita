@@ -1,5 +1,6 @@
 package br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps
 
+import android.util.Log
 import java.text.Normalizer
 
 /**
@@ -23,8 +24,15 @@ class NormalizeTextStep : TextResultProcessorStep {
      * @return O texto sem acentos e em letras maiúsculas.
      */
     override suspend fun process(text: String): String {
+        val tag = this@NormalizeTextStep::class.simpleName
+
+        Log.d(tag, "Iniciando step NormalizeText")
+
         val normalized = Normalizer.normalize(text, Normalizer.Form.NFD)
         val withoutAccents = normalized.replace(Regex("\\p{InCombiningDiacriticalMarks}+"), "")
-        return withoutAccents.uppercase()
+
+        return withoutAccents.uppercase().also {
+            Log.d(tag, "Fim step NormalizeText")
+        }
     }
 }

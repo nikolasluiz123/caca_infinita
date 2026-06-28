@@ -1,5 +1,7 @@
 package br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps
 
+import android.util.Log
+
 /**
  * Etapa que filtra palavras com base no comprimento máximo permitido pela grade.
  *
@@ -20,8 +22,14 @@ class FilterByMaxLengthStep(private val maxAllowedLength: Int) : TextResultProce
      * @return Uma String contendo apenas as palavras que respeitam o limite de tamanho.
      */
     override suspend fun process(text: String): String {
+        val tag = this@FilterByMaxLengthStep::class.simpleName
+
+        Log.d(tag, "Iniciando step FilterByMaxLength (Max: $maxAllowedLength)")
+
         return text.split(Regex("\\s+"))
             .filter { word -> word.isNotBlank() && word.length <= maxAllowedLength }
-            .joinToString(" ")
+            .joinToString(" ").also {
+                Log.d(tag, "Fim step FilterByMaxLength")
+            }
     }
 }
