@@ -24,13 +24,13 @@ class PDFTextProcessorPipeline @Inject constructor(
 
     override suspend fun process(text: String, gridDimensions: GridDimensions): List<String> {
         val tag = this@PDFTextProcessorPipeline::class.simpleName
-        Log.d(tag, "Iniciando pipeline de processamento de texto")
+        Log.d("DEBUG_PROCESS", "$tag: Iniciando pipeline de processamento de texto")
 
         val rowsSquared = gridDimensions.rows * gridDimensions.rows
         val columnsSquared = gridDimensions.columns * gridDimensions.columns
         val diagonal = floor(sqrt((rowsSquared + columnsSquared).toDouble())).toInt()
 
-        val stopWords = stopWordsProvider.getStopWords("pt")
+        val stopWords = stopWordsProvider.getStopWords()
 
         val steps = listOf(
             CleanNoiseStep(),
@@ -48,7 +48,7 @@ class PDFTextProcessorPipeline @Inject constructor(
         }
 
         return tokenize(processedText).also {
-            Log.d(tag, "Pipeline de processamento de texto concluída. Palavras encontradas: ${it.size}")
+            Log.d("DEBUG_PROCESS", "$tag: Pipeline de processamento de texto concluída. Palavras encontradas: ${it.size}")
         }
     }
 

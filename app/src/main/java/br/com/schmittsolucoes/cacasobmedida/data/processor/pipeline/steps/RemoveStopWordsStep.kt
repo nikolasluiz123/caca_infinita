@@ -25,12 +25,12 @@ class RemoveStopWordsStep(private val stopWords: Set<String>) : TextResultProces
     override suspend fun process(text: String): String {
         val tag = this@RemoveStopWordsStep::class.simpleName
 
-        Log.d(tag, "Iniciando step RemoveStopWords")
+        Log.d("DEBUG_PROCESS", "$tag: Iniciando step RemoveStopWords")
 
         return text.split(Regex("\\s+"))
             .filter { word -> word.isNotBlank() && word.uppercase() !in stopWords }
             .joinToString(" ").also {
-                Log.d(tag, "Fim step RemoveStopWords")
+                Log.d("DEBUG_PROCESS", "$tag: Fim step RemoveStopWords")
             }
     }
 }

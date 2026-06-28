@@ -12,7 +12,7 @@ class PDFBoxTextExtractor @Inject constructor(): PDFTextExtractor {
 
     override suspend fun extract(inputStream: InputStream, config: PDFExtractionConfig): String {
         val tag = this@PDFBoxTextExtractor::class.simpleName
-        Log.d(tag, "Iniciando extração de texto do PDF")
+        Log.d("DEBUG_PROCESS", "$tag: Iniciando extração de texto do PDF")
         
         val setting = MemoryUsageSetting.setupMixed(config.maxMainMemoryBytes)
         return PDDocument.load(inputStream, setting).use { document ->
@@ -21,7 +21,7 @@ class PDFBoxTextExtractor @Inject constructor(): PDFTextExtractor {
             }
 
             stripper.getText(document)?.also {
-                Log.d(tag, "Extração de texto do PDF concluída")
+                Log.d("DEBUG_PROCESS", "$tag: Extração de texto do PDF concluída")
             } ?: throw PDFTextExtractorException.ExtractionFailed()
         }
     }

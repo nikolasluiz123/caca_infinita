@@ -15,7 +15,7 @@ class LLMPuzzleNameGenerator @Inject constructor(
     override suspend fun generate(results: List<PuzzleResult>): List<PuzzleResult> {
         val tag = this@LLMPuzzleNameGenerator::class.simpleName
 
-        Log.d(tag, "Iniciando geração de nomes para os quebra-cabeças com LLM")
+        Log.d("DEBUG_PROCESS", "$tag: Iniciando geração de nomes para os quebra-cabeças com LLM")
         
         try {
             if (!aiModelService.isReady()) {
@@ -23,14 +23,14 @@ class LLMPuzzleNameGenerator @Inject constructor(
             }
 
             if (!aiModelService.isReady()) {
-                Log.d(tag, "IA não está pronta, ignorando geração de nomes")
+                Log.d("DEBUG_PROCESS", "$tag: IA não está pronta, ignorando geração de nomes")
                 return results
             }
 
             return results.map { result ->
                 val words = result.placedWords.joinToString(", ") { it.text }
                 
-                Log.d(tag, "Enviando palavras para gerar nome: $words")
+                Log.d("DEBUG_PROCESS", "$tag: Enviando palavras para gerar nome: $words")
 
                 val prompt = promptRepository.getPrompt(
                     task = AITask.PUZZLE_NAME_GENERATION,
@@ -41,13 +41,13 @@ class LLMPuzzleNameGenerator @Inject constructor(
                 val nameResult = aiModelService.generate(prompt)
                 val name = nameResult.getOrDefault(result.name)
 
-                Log.d(tag, "Nome gerado pela LLM: $name")
+                Log.d("DEBUG_PROCESS", "$tag: Nome gerado pela LLM: $name")
 
                 result.copy(name = name)
             }
         } finally {
             aiModelService.close()
-            Log.d(tag, "Fim da geração de nomes com LLM")
+            Log.d("DEBUG_PROCESS", "$tag: Fim da geração de nomes com LLM")
         }
     }
 }

@@ -17,9 +17,9 @@ open class GeneratePuzzleUseCase<INPUT>(
     private val textProcessor: TextProcessorPipeline,
     private val puzzleGenerator: PuzzleGenerator,
 ) {
-    suspend operator fun invoke(input: INPUT): List<PuzzleResult> = withContext(Dispatchers.IO) {
+    suspend operator fun invoke(input: INPUT): List<PuzzleResult> = withContext(Dispatchers.Default) {
         val tag = this@GeneratePuzzleUseCase::class.simpleName
-        Log.d(tag, "Iniciando processamento de quebra-cabeça")
+        Log.d("DEBUG_PROCESS", "$tag: Iniciando processamento de quebra-cabeça")
 
         val text = inputProcessor.process(input)
 
@@ -33,12 +33,12 @@ open class GeneratePuzzleUseCase<INPUT>(
             paddingBottomDp = dimensionsProvider.getPaddingBottom()
         )
 
-        Log.d(tag, "Grid Dimensions calculada: $gridDimensions")
+        Log.d("DEBUG_PROCESS", "$tag: Grid Dimensions calculada: $gridDimensions")
 
         val words = textProcessor.process(text, gridDimensions)
 
         puzzleGenerator.generate(words, gridDimensions).also {
-            Log.d(tag, "Processamento de quebra-cabeça concluído. Puzzles gerados: ${it.size}")
+            Log.d("DEBUG_PROCESS", "$tag: Processamento de quebra-cabeça concluído. Puzzles gerados: ${it.size}")
         }
     }
 }

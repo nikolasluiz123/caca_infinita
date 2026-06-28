@@ -12,8 +12,7 @@ interface StopWordsProvider {
     /**
      * Retorna um conjunto de palavras consideradas irrelevantes para o idioma especificado.
      *
-     * @param language O código do idioma (ex: "pt", "en").
      * @return Um [Set] contendo as stop words em caixa alta para facilitar a comparação.
      */
-    fun getStopWords(language: String): Set<String>
+    fun getStopWords(): Set<String>
 }

@@ -10,8 +10,10 @@ import br.com.schmittsolucoes.cacasobmedida.domain.model.PuzzleRecord
 import br.com.schmittsolucoes.cacasobmedida.domain.model.WordSearchPuzzle
 import br.com.schmittsolucoes.cacasobmedida.domain.model.result.puzzle.PuzzleResult
 import br.com.schmittsolucoes.cacasobmedida.domain.repository.WordSearchPuzzleRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class WordSearchPuzzleRepositoryImpl @Inject constructor(
@@ -53,7 +55,7 @@ class WordSearchPuzzleRepositoryImpl @Inject constructor(
         return wordSearchPuzzleLocalDataSource.selectRecords()
     }
 
-    override suspend fun getCount(): Long {
-        return wordSearchPuzzleLocalDataSource.selectCount()
+    override suspend fun getCount(): Long = withContext(Dispatchers.IO) {
+        wordSearchPuzzleLocalDataSource.selectCount()
     }
 }

@@ -26,13 +26,13 @@ class NormalizeTextStep : TextResultProcessorStep {
     override suspend fun process(text: String): String {
         val tag = this@NormalizeTextStep::class.simpleName
 
-        Log.d(tag, "Iniciando step NormalizeText")
+        Log.d("DEBUG_PROCESS", "$tag: Iniciando step NormalizeText")
 
         val normalized = Normalizer.normalize(text, Normalizer.Form.NFD)
         val withoutAccents = normalized.replace(Regex("\\p{InCombiningDiacriticalMarks}+"), "")
 
         return withoutAccents.uppercase().also {
-            Log.d(tag, "Fim step NormalizeText")
+            Log.d("DEBUG_PROCESS", "$tag: Fim step NormalizeText")
         }
     }
 }

@@ -23,10 +23,10 @@ class CleanNoiseStep : TextResultProcessorStep {
     override suspend fun process(text: String): String {
         val tag = this@CleanNoiseStep::class.simpleName
 
-        Log.d(tag, "Iniciando step CleanNoise")
+        Log.d("DEBUG_PROCESS", "$tag: Iniciando step CleanNoise")
 
         return text.replace(Regex("[^\\p{L}\\s]"), " ").also {
-            Log.d(tag, "Fim step CleanNoise")
+            Log.d("DEBUG_PROCESS", "$tag: Fim step CleanNoise")
         }
     }
 }

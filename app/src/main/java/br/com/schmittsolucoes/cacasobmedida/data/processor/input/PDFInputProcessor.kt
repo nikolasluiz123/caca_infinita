@@ -9,6 +9,8 @@ import br.com.schmittsolucoes.cacasobmedida.data.processor.input.exceptions.PDFI
 import br.com.schmittsolucoes.cacasobmedida.data.provider.FreeMemoryProvider
 import br.com.schmittsolucoes.cacasobmedida.domain.processor.input.InputProcessor
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class PDFInputProcessor @Inject constructor(
@@ -17,23 +19,23 @@ class PDFInputProcessor @Inject constructor(
     private val extractor: PDFTextExtractor
 ): InputProcessor<Uri> {
 
-    override suspend fun process(input: Uri): String {
+    override suspend fun process(input: Uri): String = withContext(Dispatchers.IO) {
         val tag = this@PDFInputProcessor::class.simpleName
-        Log.d(tag, "Iniciando processamento de PDF: $input")
+        Log.d("DEBUG_PROCESS", "$tag: Iniciando processamento de PDF: $input")
         
         val inputStream = context.contentResolver.openInputStream(input) 
             ?: throw PDFInputProcessorException.CouldNotOpenStream(input)
-            
-        return inputStream.use { stream ->
+
+        inputStream.use { stream ->
             val availableMemory = freeMemoryProvider.getAvailableMemory()
             val memoryLimit = (availableMemory * MEMORY_USAGE_PERCENTAGE).toLong()
-            
-            Log.d(tag, "Memória disponível: $availableMemory bytes. Limite para PDFBox: $memoryLimit bytes.")
-            
+
+            Log.d("DEBUG_PROCESS", "$tag: Memória disponível: $availableMemory bytes. Limite para PDFBox: $memoryLimit bytes.")
+
             val config = PDFExtractionConfig(maxMainMemoryBytes = memoryLimit)
 
             extractor.extract(stream, config).also {
-                Log.d(tag, "Fim do processamento de PDF")
+                Log.d("DEBUG_PROCESS", "$tag: Fim do processamento de PDF")
             }
         }
     }

@@ -24,12 +24,12 @@ class FilterByMaxLengthStep(private val maxAllowedLength: Int) : TextResultProce
     override suspend fun process(text: String): String {
         val tag = this@FilterByMaxLengthStep::class.simpleName
 
-        Log.d(tag, "Iniciando step FilterByMaxLength (Max: $maxAllowedLength)")
+        Log.d("DEBUG_PROCESS", "$tag: Iniciando step FilterByMaxLength (Max: $maxAllowedLength)")
 
         return text.split(Regex("\\s+"))
             .filter { word -> word.isNotBlank() && word.length <= maxAllowedLength }
             .joinToString(" ").also {
-                Log.d(tag, "Fim step FilterByMaxLength")
+                Log.d("DEBUG_PROCESS", "$tag: Fim step FilterByMaxLength")
             }
     }
 }

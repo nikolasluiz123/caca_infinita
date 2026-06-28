@@ -23,13 +23,13 @@ class RemoveDuplicatedWordsStep : TextResultProcessorStep {
     override suspend fun process(text: String): String {
         val tag = this@RemoveDuplicatedWordsStep::class.simpleName
 
-        Log.d(tag, "Iniciando step RemoveDuplicatedWords")
+        Log.d("DEBUG_PROCESS", "$tag: Iniciando step RemoveDuplicatedWords")
 
         return text.split(Regex("\\s+"))
             .filter { it.isNotBlank() }
             .distinct()
             .joinToString(" ").also {
-                Log.d(tag, "Fim step RemoveDuplicatedWords")
+                Log.d("DEBUG_PROCESS", "$tag: Fim step RemoveDuplicatedWords")
             }
     }
 }
