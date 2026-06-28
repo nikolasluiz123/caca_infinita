@@ -20,7 +20,7 @@ class LiteRTAIModelService @Inject constructor(
 ) : AIModelService {
 
     private var engine: Engine? = null
-    private val modelPath = File(context.filesDir, "models/gemma3-1b-it-int4.litertlm").absolutePath
+    private val modelPath = File(context.filesDir, "models/gemma-4-E2B-it.litertlm").absolutePath
 
     override suspend fun generate(prompt: String, data: String?): Result<String> {
         val tag = this@LiteRTAIModelService::class.simpleName
