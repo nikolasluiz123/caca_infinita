@@ -47,6 +47,12 @@ interface WordSearchPuzzleRoomDAO: WordSearchPuzzleLocalDataSource, RoomLocalDat
                     and session.ended_at is not null
                ) as duration
         from word_search_puzzle puzzle
+        where not exists (
+            select 1
+            from word
+            where word.puzzle_id = puzzle.id
+            and word.found_date is null
+        )
         order by duration desc, wordsCount desc
         limit 3
     """)
