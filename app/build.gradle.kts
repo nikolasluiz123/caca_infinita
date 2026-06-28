@@ -63,6 +63,7 @@ dependencies {
     ksp(libs.room.compiler)
 
     implementation(libs.mlkit.text.recognition)
+    implementation(libs.mlkit.language.id)
 
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
