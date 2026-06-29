@@ -4,6 +4,7 @@ import android.media.Image
 import androidx.annotation.OptIn
 import androidx.camera.core.ExperimentalGetImage
 import br.com.schmittsolucoes.cacasobmedida.domain.model.BoundingBox
+import br.com.schmittsolucoes.cacasobmedida.domain.model.DetectedLine
 import br.com.schmittsolucoes.cacasobmedida.domain.model.ImageDimension
 import br.com.schmittsolucoes.cacasobmedida.domain.model.enumeration.AnalyzerState
 import br.com.schmittsolucoes.cacasobmedida.domain.model.result.FrameAnalysisResult
@@ -14,8 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
-import kotlin.math.max
-import kotlin.math.min
 
 class MLKitTextFrameAnalyzer @Inject constructor(): FrameAnalyzer {
     private val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
@@ -41,55 +40,49 @@ class MLKitTextFrameAnalyzer @Inject constructor(): FrameAnalyzer {
 
             recognizer.process(image)
                 .addOnSuccessListener { visionText ->
-                    if (visionText.textBlocks.isEmpty()) {
+                    val lines = visionText.textBlocks.flatMap { block ->
+                        block.lines.mapNotNull { line ->
+                            line.boundingBox?.let { box ->
+                                val confidence = line.confidence
+
+                                val individualState = when {
+                                    confidence >= 0.7f -> AnalyzerState.ALIGNED
+                                    confidence >= 0.3f -> AnalyzerState.PARTIAL
+                                    else -> AnalyzerState.NOT_DETECTED
+                                }
+
+                                DetectedLine(
+                                    boundingBox = BoundingBox(
+                                        left = box.left.toFloat(),
+                                        top = box.top.toFloat(),
+                                        right = box.right.toFloat(),
+                                        bottom = box.bottom.toFloat()
+                                    ),
+                                    state = individualState,
+                                    confidence = confidence
+                                )
+                            }
+                        }
+                    }
+
+                    if (lines.isEmpty()) {
                         _state.value = FrameAnalysisResult(
                             state = AnalyzerState.NOT_DETECTED,
-                            boundingBox = null,
+                            lines = emptyList(),
                             sourceDimensions = imageDimensions
                         )
                     } else {
-                        var minLeft = Float.MAX_VALUE
-                        var minTop = Float.MAX_VALUE
-                        var maxRight = Float.MIN_VALUE
-                        var maxBottom = Float.MIN_VALUE
+                        val highConfidenceCount = lines.count { (it.confidence ?: 0f) >= 0.7f }
 
-                        var validBlocksCount = 0
-
-                        for (block in visionText.textBlocks) {
-                            block.boundingBox?.let { box ->
-                                minLeft = min(minLeft, box.left.toFloat())
-                                minTop = min(minTop, box.top.toFloat())
-                                maxRight = max(maxRight, box.right.toFloat())
-                                maxBottom = max(maxBottom, box.bottom.toFloat())
-                                validBlocksCount++
-                            }
+                        val globalState = if (highConfidenceCount >= 5) {
+                            AnalyzerState.ALIGNED
+                        } else {
+                            AnalyzerState.PARTIAL
                         }
-
-                        if (validBlocksCount == 0) {
-                            _state.value = FrameAnalysisResult(
-                                state = AnalyzerState.NOT_DETECTED,
-                                boundingBox = null,
-                                sourceDimensions = imageDimensions
-                            )
-                            return@addOnSuccessListener
-                        }
-
-                        val globalBoundingBox = BoundingBox(
-                            left = minLeft,
-                            top = minTop,
-                            right = maxRight,
-                            bottom = maxBottom
-                        )
-
-                        val boundingBoxArea = (maxRight - minLeft) * (maxBottom - minTop)
-                        val totalImageArea = imageDimensions.width * imageDimensions.height
-                        val areaRatio = boundingBoxArea / totalImageArea.toFloat()
-
-                        val isAligned = validBlocksCount >= 2 && areaRatio >= 0.10f
 
                         _state.value = FrameAnalysisResult(
-                            state = if (isAligned) AnalyzerState.ALIGNED else AnalyzerState.PARTIAL,
-                            boundingBox = globalBoundingBox,
+                            state = globalState,
+                            lines = lines,
                             sourceDimensions = imageDimensions
                         )
                     }
@@ -97,7 +90,7 @@ class MLKitTextFrameAnalyzer @Inject constructor(): FrameAnalyzer {
                 .addOnFailureListener {
                     _state.value = FrameAnalysisResult(
                         state = AnalyzerState.NOT_DETECTED,
-                        boundingBox = null,
+                        lines = emptyList(),
                         sourceDimensions = imageDimensions
                     )
                 }

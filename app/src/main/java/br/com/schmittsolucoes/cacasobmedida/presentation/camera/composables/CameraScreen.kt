@@ -64,7 +64,7 @@ fun CameraScreen(
 
             InteractiveOverlay(
                 analyzerState = state.analyzerState,
-                boundingBox = state.boundingBox,
+                detectedLines = state.detectedLines,
                 sourceDimensions = state.sourceDimensions,
                 modifier = Modifier.fillMaxSize()
             )

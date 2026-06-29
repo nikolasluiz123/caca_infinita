@@ -23,7 +23,7 @@ class CameraViewModel @Inject constructor(
         .combine(MutableStateFlow(false)) { analysisResult, _ ->
             CameraUiState(
                 analyzerState = analysisResult.state,
-                boundingBox = analysisResult.boundingBox,
+                detectedLines = analysisResult.lines,
                 sourceDimensions = analysisResult.sourceDimensions,
                 isCaptureButtonEnabled = analysisResult.state == AnalyzerState.ALIGNED
             )

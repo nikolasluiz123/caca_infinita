@@ -1,18 +1,19 @@
 package br.com.schmittsolucoes.cacasobmedida.presentation.components
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.drawscope.Stroke
-import br.com.schmittsolucoes.cacasobmedida.domain.model.BoundingBox
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.lerp
+import br.com.schmittsolucoes.cacasobmedida.domain.model.DetectedLine
 import br.com.schmittsolucoes.cacasobmedida.domain.model.ImageDimension
 import br.com.schmittsolucoes.cacasobmedida.domain.model.enumeration.AnalyzerState
 import kotlin.math.max
@@ -20,26 +21,19 @@ import kotlin.math.max
 @Composable
 fun InteractiveOverlay(
     analyzerState: AnalyzerState,
-    boundingBox: BoundingBox?,
+    detectedLines: List<DetectedLine>,
     sourceDimensions: ImageDimension?,
     modifier: Modifier = Modifier
 ) {
-    val outlineColor = when (analyzerState) {
-        AnalyzerState.NOT_DETECTED -> Color.Red
-        AnalyzerState.PARTIAL -> Color.Yellow
-        AnalyzerState.ALIGNED -> Color.Green
-    }
-
-    val animatedLeft by animateFloatAsState(targetValue = boundingBox?.left ?: 0f, label = "left")
-    val animatedTop by animateFloatAsState(targetValue = boundingBox?.top ?: 0f, label = "top")
-    val animatedRight by animateFloatAsState(targetValue = boundingBox?.right ?: 0f, label = "right")
-    val animatedBottom by animateFloatAsState(targetValue = boundingBox?.bottom ?: 0f, label = "bottom")
-
-    Canvas(modifier = modifier.fillMaxSize()) {
+    Canvas(
+        modifier = modifier
+            .fillMaxSize()
+            .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
+    ) {
         val canvasWidth = size.width
         val canvasHeight = size.height
 
-        if (boundingBox != null && sourceDimensions != null && analyzerState != AnalyzerState.NOT_DETECTED) {
+        if (detectedLines.isNotEmpty() && sourceDimensions != null && analyzerState != AnalyzerState.NOT_DETECTED) {
             drawRect(color = Color.Black.copy(alpha = 0.6f))
 
             val imageWidth = sourceDimensions.width.toFloat()
@@ -53,29 +47,53 @@ fun InteractiveOverlay(
             val offsetX = (scaledImageWidth - canvasWidth) / 2f
             val offsetY = (scaledImageHeight - canvasHeight) / 2f
 
-            val mappedLeft = (animatedLeft * scale) - offsetX
-            val mappedTop = (animatedTop * scale) - offsetY
-            val mappedRight = (animatedRight * scale) - offsetX
-            val mappedBottom = (animatedBottom * scale) - offsetY
+            detectedLines.forEach { line ->
+                val confidence = line.confidence ?: 0f
 
-            val rectWidth = mappedRight - mappedLeft
-            val rectHeight = mappedBottom - mappedTop
+                if (line.state != AnalyzerState.NOT_DETECTED && confidence >= 0.3f) {
+                    val box = line.boundingBox
+                    
+                    val mappedLeft = (box.left * scale) - offsetX
+                    val mappedTop = (box.top * scale) - offsetY
+                    val mappedRight = (box.right * scale) - offsetX
+                    val mappedBottom = (box.bottom * scale) - offsetY
 
-            drawRoundRect(
-                color = Color.Transparent,
-                topLeft = Offset(mappedLeft, mappedTop),
-                size = Size(rectWidth, rectHeight),
-                cornerRadius = CornerRadius(16f, 16f),
-                blendMode = BlendMode.Clear
-            )
+                    val rectWidth = mappedRight - mappedLeft
+                    val rectHeight = mappedBottom - mappedTop
 
-            drawRoundRect(
-                color = outlineColor,
-                topLeft = Offset(mappedLeft, mappedTop),
-                size = Size(rectWidth, rectHeight),
-                cornerRadius = CornerRadius(16f, 16f),
-                style = Stroke(width = 8f)
-            )
+                    val individualColor = getConfidenceColor(confidence)
+
+                    drawRoundRect(
+                        color = Color.Transparent,
+                        topLeft = Offset(mappedLeft, mappedTop),
+                        size = Size(rectWidth, rectHeight),
+                        cornerRadius = CornerRadius(8f, 8f),
+                        blendMode = BlendMode.Clear
+                    )
+
+                    drawRoundRect(
+                        color = individualColor,
+                        topLeft = Offset(mappedLeft, mappedTop),
+                        size = Size(rectWidth, rectHeight),
+                        cornerRadius = CornerRadius(8f, 8f),
+                        style = Stroke(width = 4f)
+                    )
+                }
+            }
         }
+    }
+}
+
+private fun getConfidenceColor(confidence: Float): Color {
+    return when {
+        confidence >= 0.7f -> {
+            val fraction = (confidence - 0.7f) / 0.3f
+            lerp(Color.Yellow, Color.Green, fraction.coerceIn(0f, 1f))
+        }
+        confidence >= 0.4f -> {
+            val fraction = (confidence - 0.4f) / 0.3f
+            lerp(Color.Red, Color.Yellow, fraction.coerceIn(0f, 1f))
+        }
+        else -> Color.Red
     }
 }
