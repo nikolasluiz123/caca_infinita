@@ -1,7 +1,7 @@
 package br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline
 
 import android.util.Log
-import br.com.schmittsolucoes.cacasobmedida.data.analyzer.LanguageTextAnalyzer
+import br.com.schmittsolucoes.cacasobmedida.data.analyzer.language.LanguageTextAnalyzer
 import br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps.CleanNoiseStep
 import br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps.FilterByMaxLengthStep
 import br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps.FilterByMinLengthStep

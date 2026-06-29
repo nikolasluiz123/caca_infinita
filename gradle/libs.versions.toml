@@ -17,6 +17,7 @@ hiltNavigationCompose = "1.3.0"
 splashscreen = "1.2.0"
 pdfBoxVersion = "2.0.27.0"
 lucene = "10.5.0"
+concurrentFuturesKtx = "1.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -51,6 +52,8 @@ androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscree
 
 pdf-box-android = { group = "com.tom-roush", name = "pdfbox-android", version.ref = "pdfBoxVersion" }
 lucene-analysis-common = { group = "org.apache.lucene", name = "lucene-analysis-common", version.ref = "lucene" }
+
+androidx-concurrent-futures-ktx = { group = "androidx.concurrent", name = "concurrent-futures-ktx", version.ref = "concurrentFuturesKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

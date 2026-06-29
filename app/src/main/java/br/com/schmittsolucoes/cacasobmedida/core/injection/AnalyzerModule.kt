@@ -1,10 +1,9 @@
 package br.com.schmittsolucoes.cacasobmedida.core.injection
 
-import androidx.camera.core.ImageProxy
-import br.com.schmittsolucoes.cacasobmedida.data.analyzer.FrameAnalyzer
-import br.com.schmittsolucoes.cacasobmedida.data.analyzer.LanguageTextAnalyzer
-import br.com.schmittsolucoes.cacasobmedida.data.analyzer.MLKitLanguageIdentifier
-import br.com.schmittsolucoes.cacasobmedida.data.analyzer.MLKitTextFrameAnalyzer
+import br.com.schmittsolucoes.cacasobmedida.data.analyzer.frame.FrameAnalyzer
+import br.com.schmittsolucoes.cacasobmedida.data.analyzer.language.LanguageTextAnalyzer
+import br.com.schmittsolucoes.cacasobmedida.data.analyzer.language.MLKitLanguageIdentifier
+import br.com.schmittsolucoes.cacasobmedida.data.analyzer.frame.MLKitTextFrameAnalyzer
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,7 +14,7 @@ import dagger.hilt.components.SingletonComponent
 abstract class AnalyzerModule {
 
     @Binds
-    abstract fun bindFrameAnalyzer(impl: MLKitTextFrameAnalyzer): FrameAnalyzer<ImageProxy>
+    abstract fun bindFrameAnalyzer(impl: MLKitTextFrameAnalyzer): FrameAnalyzer
 
     @Binds
     abstract fun bindLanguageAnalyzer(impl: MLKitLanguageIdentifier): LanguageTextAnalyzer

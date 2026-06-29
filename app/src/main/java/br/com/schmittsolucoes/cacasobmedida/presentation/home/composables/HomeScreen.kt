@@ -11,9 +11,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import br.com.schmittsolucoes.cacasobmedida.presentation.core.RequestAllPermissions
 import br.com.schmittsolucoes.cacasobmedida.presentation.home.HomeUIState
 import br.com.schmittsolucoes.cacasobmedida.presentation.home.HomeViewModel
 import br.com.schmittsolucoes.cacasobmedida.presentation.home.composables.components.ContinueGameButton
@@ -39,6 +41,8 @@ fun HomeScreen(
     state: HomeUIState = HomeUIState(),
     onContinueGameClick: (String) -> Unit = {},
 ) {
+    RequestAllPermissions(context = LocalContext.current)
+
     Scaffold { paddingValues ->
         Column(
             modifier = Modifier

@@ -1,4 +1,4 @@
-package br.com.schmittsolucoes.cacasobmedida.data.analyzer
+package br.com.schmittsolucoes.cacasobmedida.data.analyzer.language
 
 import com.google.mlkit.nl.languageid.LanguageIdentification
 import com.google.mlkit.nl.languageid.LanguageIdentificationOptions

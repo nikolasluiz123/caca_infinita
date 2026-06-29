@@ -32,6 +32,7 @@ import br.com.schmittsolucoes.cacasobmedida.presentation.theme.CacaSobMedidaThem
 @Composable
 fun WordSearchGeneratedPuzzlesScreen(
     viewModel: WordSearchViewModel,
+    onOpenCameraClick: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -44,6 +45,7 @@ fun WordSearchGeneratedPuzzlesScreen(
 
     WordSearchGeneratedPuzzlesScreen(
         state = state,
+        onOpenCameraClick = onOpenCameraClick,
         onLoadPdfClick = {
             pdfPickerLauncher.launch(arrayOf("application/pdf"))
         }
@@ -53,11 +55,12 @@ fun WordSearchGeneratedPuzzlesScreen(
 @Composable
 fun WordSearchGeneratedPuzzlesScreen(
     state: WordSearchUiState,
+    onOpenCameraClick: () -> Unit,
     onLoadPdfClick: () -> Unit = {},
 ) {
     WordSearchGeneratedPuzzlesScreen(
         state = state,
-        onOpenCameraClick = {},
+        onOpenCameraClick = onOpenCameraClick,
         onLoadImageClick = {},
         onLoadPdfClick = onLoadPdfClick,
     )
@@ -113,7 +116,8 @@ fun WordSearchGeneratedPuzzlesScreen(
 private fun WordSearchGeneratedPuzzlesScreenPreview() {
     CacaSobMedidaTheme {
         WordSearchGeneratedPuzzlesScreen(
-            state = WordSearchUiState()
+            state = WordSearchUiState(),
+            onOpenCameraClick = {}
         )
     }
 }

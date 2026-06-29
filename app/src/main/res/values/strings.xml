@@ -22,4 +22,7 @@
     <string name="add_word_search_load_pdf_title">Carregar PDF</string>
     <string name="add_word_search_load_pdf_subtitle">Escolher um arquivo PDF</string>
     <string name="puzzle_fallback_name">Caça-Palavras #%d</string>
+
+    <string name="back">Voltar</string>
+    <string name="camera_capture">Capturar</string>
 </resources>

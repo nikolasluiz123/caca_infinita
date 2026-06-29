@@ -1,7 +1,7 @@
 package br.com.schmittsolucoes.cacasobmedida.data.processor.pipeline.steps
 
 import android.util.Log
-import br.com.schmittsolucoes.cacasobmedida.data.analyzer.LanguageTextAnalyzer
+import br.com.schmittsolucoes.cacasobmedida.data.analyzer.language.LanguageTextAnalyzer
 
 /**
  * Etapa responsável por filtrar palavras que não pertencem ao idioma português.

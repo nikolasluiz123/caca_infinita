@@ -1,4 +1,4 @@
-package br.com.schmittsolucoes.cacasobmedida.data.analyzer
+package br.com.schmittsolucoes.cacasobmedida.data.analyzer.language
 
 interface LanguageTextAnalyzer {
     fun initialize()
