@@ -78,4 +78,5 @@ dependencies {
     implementation(libs.lucene.analysis.common)
 
     implementation(libs.androidx.concurrent.futures.ktx)
+    implementation(libs.kotlinx.coroutines.play.services)
 }

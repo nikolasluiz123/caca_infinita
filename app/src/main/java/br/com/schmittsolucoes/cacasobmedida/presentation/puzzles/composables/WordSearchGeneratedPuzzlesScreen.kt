@@ -43,9 +43,19 @@ fun WordSearchGeneratedPuzzlesScreen(
         }
     )
 
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenMultipleDocuments(),
+        onResult = { uris ->
+            viewModel.onImagesSelected(uris)
+        }
+    )
+
     WordSearchGeneratedPuzzlesScreen(
         state = state,
         onOpenCameraClick = onOpenCameraClick,
+        onLoadImageClick = {
+            imagePickerLauncher.launch(arrayOf("image/*"))
+        },
         onLoadPdfClick = {
             pdfPickerLauncher.launch(arrayOf("application/pdf"))
         }

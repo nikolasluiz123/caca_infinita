@@ -12,6 +12,7 @@ import br.com.schmittsolucoes.cacasobmedida.domain.repository.UserRepository
 import br.com.schmittsolucoes.cacasobmedida.domain.repository.WordRepository
 import br.com.schmittsolucoes.cacasobmedida.domain.repository.WordSearchPuzzleRepository
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.CreateUserIfNotExistsUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GenerateImagePuzzleUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GeneratePDFPuzzleUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GeneratePuzzleUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetAllPuzzlesUseCase
@@ -43,8 +44,8 @@ object UseCaseModule {
         gridCalculator: GridDimensionCalculator,
         @ImageProcessor textProcessor: TextProcessorPipeline,
         puzzleGenerator: PuzzleGenerator
-    ): GeneratePuzzleUseCase<File> {
-        return GeneratePuzzleUseCase(
+    ): GenerateImagePuzzleUseCase {
+        return GenerateImagePuzzleUseCase(
             inputProcessor,
             dimensionsProvider,
             gridCalculator,
