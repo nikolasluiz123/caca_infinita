@@ -17,28 +17,43 @@ open class GeneratePuzzleUseCase<INPUT>(
     private val textProcessor: TextProcessorPipeline,
     private val puzzleGenerator: PuzzleGenerator,
 ) {
-    suspend operator fun invoke(input: INPUT): List<PuzzleResult> = withContext(Dispatchers.Default) {
-        val tag = this@GeneratePuzzleUseCase::class.simpleName
-        Log.d("DEBUG_PROCESS", "$tag: Iniciando processamento de quebra-cabeça")
+    open suspend operator fun invoke(inputs: List<INPUT>): List<PuzzleResult> {
+        return withContext(Dispatchers.Default) {
+            val tag = this@GeneratePuzzleUseCase::class.simpleName
+            Log.d(
+                "DEBUG_PROCESS",
+                "$tag: Iniciando processamento de ${inputs.size} quebra-cabeça(s)"
+            )
 
-        val text = inputProcessor.process(input)
+            inputs.flatMap { input ->
+                val text = inputProcessor.process(input)
 
-        val gridDimensions = gridCalculator.calculate(
-            availableWidthDp = dimensionsProvider.getAvailableWidth(),
-            availableHeightDp = dimensionsProvider.getAvailableHeight(),
-            cellTargetSizeDp = dimensionsProvider.getCellSize(),
-            paddingStartDp = dimensionsProvider.getPaddingStart(),
-            paddingEndDp = dimensionsProvider.getPaddingEnd(),
-            paddingTopDp = dimensionsProvider.getPaddingTop(),
-            paddingBottomDp = dimensionsProvider.getPaddingBottom()
-        )
+                val gridDimensions = gridCalculator.calculate(
+                    availableWidthDp = dimensionsProvider.getAvailableWidth(),
+                    availableHeightDp = dimensionsProvider.getAvailableHeight(),
+                    cellTargetSizeDp = dimensionsProvider.getCellSize(),
+                    paddingStartDp = dimensionsProvider.getPaddingStart(),
+                    paddingEndDp = dimensionsProvider.getPaddingEnd(),
+                    paddingTopDp = dimensionsProvider.getPaddingTop(),
+                    paddingBottomDp = dimensionsProvider.getPaddingBottom()
+                )
 
-        Log.d("DEBUG_PROCESS", "$tag: Grid Dimensions calculada: $gridDimensions")
+                Log.d("DEBUG_PROCESS", "$tag: Grid Dimensions calculada: $gridDimensions")
 
-        val words = textProcessor.process(text, gridDimensions)
+                val words = textProcessor.process(text, gridDimensions)
 
-        puzzleGenerator.generate(words, gridDimensions).also {
-            Log.d("DEBUG_PROCESS", "$tag: Processamento de quebra-cabeça concluído. Puzzles gerados: ${it.size}")
+                puzzleGenerator.generate(words, gridDimensions).also {
+                    Log.d(
+                        "DEBUG_PROCESS",
+                        "$tag: Processamento de quebra-cabeça concluído para um input. Puzzles gerados: ${it.size}"
+                    )
+                }
+            }.also {
+                Log.d(
+                    "DEBUG_PROCESS",
+                    "$tag: Processamento total concluído. Total de puzzles: ${it.size}"
+                )
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package br.com.schmittsolucoes.cacasobmedida.presentation.camera
 
+import android.net.Uri
 import androidx.camera.core.ImageProxy
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -52,13 +53,9 @@ class CameraViewModel @Inject constructor(
             _isProcessing.update { true }
 
             try {
-                val file = File(path)
-                val puzzles = generateImagePuzzleUseCase(file)
+                val uri = Uri.fromFile(File(path))
+                val puzzles = generateImagePuzzleUseCase(listOf(uri), isFromCamera = true)
                 saveGeneratedPuzzlesUseCase(puzzles)
-                
-                if (file.exists()) {
-                    file.delete()
-                }
             } finally {
                 _isProcessing.update { false }
             }
