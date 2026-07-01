@@ -6,7 +6,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -17,17 +16,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.schmittsolucoes.cacasobmedida.R
+import br.com.schmittsolucoes.cacasobmedida.presentation.components.ErrorDialog
+import br.com.schmittsolucoes.cacasobmedida.presentation.components.LoadingOverlay
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.WordSearchUiState
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.WordSearchViewModel
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.composables.components.AddWordSearchBottomSheet
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.composables.components.EmptyWordSearchList
-import br.com.schmittsolucoes.cacasobmedida.presentation.components.ErrorDialog
 import br.com.schmittsolucoes.cacasobmedida.presentation.theme.CacaSobMedidaTheme
 
 @Composable
@@ -76,42 +75,42 @@ fun WordSearchGeneratedPuzzlesScreen(
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(value = false) }
 
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(onClick = { showBottomSheet = true }) {
-                Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = null)
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            floatingActionButton = {
+                FloatingActionButton(onClick = { showBottomSheet = true }) {
+                    Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = null)
+                }
             }
-        }
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            EmptyWordSearchList()
+        ) { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                EmptyWordSearchList()
+            }
 
-            if (state.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
+            if (showBottomSheet) {
+                AddWordSearchBottomSheet(
+                    sheetState = sheetState,
+                    onDismissRequest = { showBottomSheet = false },
+                    onOpenCameraClick = onOpenCameraClick,
+                    onLoadImageClick = onLoadImageClick,
+                    onLoadPdfClick = onLoadPdfClick
+                )
+            }
+
+            state.errorMessage?.let { message ->
+                ErrorDialog(
+                    message = message,
+                    onDismiss = onDismissErrorDialog
                 )
             }
         }
 
-        if (showBottomSheet) {
-            AddWordSearchBottomSheet(
-                sheetState = sheetState,
-                onDismissRequest = { showBottomSheet = false },
-                onOpenCameraClick = onOpenCameraClick,
-                onLoadImageClick = onLoadImageClick,
-                onLoadPdfClick = onLoadPdfClick
-            )
-        }
-
-        state.errorMessage?.let { message ->
-            ErrorDialog(
-                message = message,
-                onDismiss = onDismissErrorDialog
-            )
+        if (state.isLoading) {
+            LoadingOverlay()
         }
     }
 }
