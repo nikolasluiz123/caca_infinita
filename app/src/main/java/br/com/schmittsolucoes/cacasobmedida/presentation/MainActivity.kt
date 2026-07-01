@@ -16,9 +16,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import br.com.schmittsolucoes.cacasobmedida.presentation.components.ErrorDialog
 import br.com.schmittsolucoes.cacasobmedida.presentation.home.composables.components.HomeBottomNavBar
 import br.com.schmittsolucoes.cacasobmedida.presentation.home.navigation.homeScreenRoute
 import br.com.schmittsolucoes.cacasobmedida.presentation.home.navigation.navigateToHome
@@ -41,11 +43,20 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
+            val appErrorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
+
             CacaSobMedidaTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     val navController = rememberNavController()
                     App(navController = navController) {
                         AppNavHost(navController = navController)
+
+                        appErrorMessage?.let { message ->
+                            ErrorDialog(
+                                message = message,
+                                onDismiss = viewModel::onDismissErrorDialog
+                            )
+                        }
                     }
                 }
             }

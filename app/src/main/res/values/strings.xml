@@ -25,4 +25,8 @@
 
     <string name="back">Voltar</string>
     <string name="camera_capture">Capturar</string>
+
+    <string name="error_unexpected">Ocorreu um erro inesperado. Tente novamente.</string>
+    <string name="error_dialog_title">Erro</string>
+    <string name="error_dialog_ok">OK</string>
 </resources>

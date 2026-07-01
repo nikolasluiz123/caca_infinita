@@ -27,6 +27,7 @@ import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.WordSearchUiSta
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.WordSearchViewModel
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.composables.components.AddWordSearchBottomSheet
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.composables.components.EmptyWordSearchList
+import br.com.schmittsolucoes.cacasobmedida.presentation.components.ErrorDialog
 import br.com.schmittsolucoes.cacasobmedida.presentation.theme.CacaSobMedidaTheme
 
 @Composable
@@ -58,21 +59,8 @@ fun WordSearchGeneratedPuzzlesScreen(
         },
         onLoadPdfClick = {
             pdfPickerLauncher.launch(arrayOf("application/pdf"))
-        }
-    )
-}
-
-@Composable
-fun WordSearchGeneratedPuzzlesScreen(
-    state: WordSearchUiState,
-    onOpenCameraClick: () -> Unit,
-    onLoadPdfClick: () -> Unit = {},
-) {
-    WordSearchGeneratedPuzzlesScreen(
-        state = state,
-        onOpenCameraClick = onOpenCameraClick,
-        onLoadImageClick = {},
-        onLoadPdfClick = onLoadPdfClick,
+        },
+        onDismissErrorDialog = viewModel::onDismissErrorDialog
     )
 }
 
@@ -83,6 +71,7 @@ fun WordSearchGeneratedPuzzlesScreen(
     onOpenCameraClick: () -> Unit,
     onLoadImageClick: () -> Unit,
     onLoadPdfClick: () -> Unit,
+    onDismissErrorDialog: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(value = false) }
@@ -117,6 +106,13 @@ fun WordSearchGeneratedPuzzlesScreen(
                 onLoadPdfClick = onLoadPdfClick
             )
         }
+
+        state.errorMessage?.let { message ->
+            ErrorDialog(
+                message = message,
+                onDismiss = onDismissErrorDialog
+            )
+        }
     }
 }
 
@@ -127,7 +123,10 @@ private fun WordSearchGeneratedPuzzlesScreenPreview() {
     CacaSobMedidaTheme {
         WordSearchGeneratedPuzzlesScreen(
             state = WordSearchUiState(),
-            onOpenCameraClick = {}
+            onOpenCameraClick = {},
+            onLoadImageClick = {},
+            onLoadPdfClick = {},
+            onDismissErrorDialog = {}
         )
     }
 }

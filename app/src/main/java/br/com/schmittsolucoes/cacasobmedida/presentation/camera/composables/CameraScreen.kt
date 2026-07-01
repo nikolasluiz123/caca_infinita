@@ -30,6 +30,7 @@ import br.com.schmittsolucoes.cacasobmedida.R
 import br.com.schmittsolucoes.cacasobmedida.presentation.camera.CameraUiState
 import br.com.schmittsolucoes.cacasobmedida.presentation.camera.CameraViewModel
 import br.com.schmittsolucoes.cacasobmedida.presentation.components.CameraXPreview
+import br.com.schmittsolucoes.cacasobmedida.presentation.components.ErrorDialog
 import br.com.schmittsolucoes.cacasobmedida.presentation.components.InteractiveOverlay
 import br.com.schmittsolucoes.cacasobmedida.presentation.components.takePhoto
 import java.util.concurrent.Executors
@@ -59,7 +60,8 @@ fun CameraScreen(
                 onError = {  }
             )
         },
-        onBackClick = onBackClick
+        onBackClick = onBackClick,
+        onDismissErrorDialog = viewModel::onDismissErrorDialog
     )
 }
 
@@ -69,7 +71,8 @@ fun CameraScreen(
     imageCapture: ImageCapture,
     onFrameAnalyzed: (ImageProxy) -> Unit,
     onCaptureClick: () -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onDismissErrorDialog: () -> Unit = {}
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -145,6 +148,13 @@ fun CameraScreen(
                     }
                 }
             }
+        }
+
+        state.errorMessage?.let { message ->
+            ErrorDialog(
+                message = message,
+                onDismiss = onDismissErrorDialog
+            )
         }
     }
 }

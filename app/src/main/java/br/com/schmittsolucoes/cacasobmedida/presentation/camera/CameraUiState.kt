@@ -9,5 +9,6 @@ data class CameraUiState(
     val detectedLines: List<DetectedLine> = emptyList(),
     val sourceDimensions: ImageDimension? = null,
     val isCaptureButtonEnabled: Boolean = false,
-    val isProcessing: Boolean = false
+    val isProcessing: Boolean = false,
+    val errorMessage: String? = null
 )

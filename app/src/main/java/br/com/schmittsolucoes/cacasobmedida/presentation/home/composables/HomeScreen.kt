@@ -21,6 +21,7 @@ import br.com.schmittsolucoes.cacasobmedida.presentation.home.HomeViewModel
 import br.com.schmittsolucoes.cacasobmedida.presentation.home.composables.components.ContinueGameButton
 import br.com.schmittsolucoes.cacasobmedida.presentation.home.composables.components.PersonalRecordsSection
 import br.com.schmittsolucoes.cacasobmedida.presentation.home.composables.components.UserLevelStatusCard
+import br.com.schmittsolucoes.cacasobmedida.presentation.components.ErrorDialog
 import br.com.schmittsolucoes.cacasobmedida.presentation.theme.CacaSobMedidaTheme
 
 @Composable
@@ -32,7 +33,8 @@ fun HomeScreen(
 
     HomeScreen(
         state = state,
-        onContinueGameClick = onContinueGameClick
+        onContinueGameClick = onContinueGameClick,
+        onDismissErrorDialog = viewModel::onDismissErrorDialog
     )
 }
 
@@ -40,6 +42,7 @@ fun HomeScreen(
 fun HomeScreen(
     state: HomeUIState = HomeUIState(),
     onContinueGameClick: (String) -> Unit = {},
+    onDismissErrorDialog: () -> Unit = {}
 ) {
     RequestAllPermissions(context = LocalContext.current)
 
@@ -66,6 +69,13 @@ fun HomeScreen(
             PersonalRecordsSection(records = state.records)
 
             Spacer(modifier = Modifier.height(24.dp))
+        }
+
+        state.errorMessage?.let { message ->
+            ErrorDialog(
+                message = message,
+                onDismiss = onDismissErrorDialog
+            )
         }
     }
 }

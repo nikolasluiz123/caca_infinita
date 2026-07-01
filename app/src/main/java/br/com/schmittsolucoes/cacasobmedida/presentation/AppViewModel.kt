@@ -1,31 +1,44 @@
 package br.com.schmittsolucoes.cacasobmedida.presentation
 
 import android.app.Application
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import br.com.schmittsolucoes.cacasobmedida.R
 import br.com.schmittsolucoes.cacasobmedida.domain.manager.PDFTextExtractorManager
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.CreateUserIfNotExistsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AppViewModel @Inject constructor(
     private val createUserIfNotExistsUseCase: CreateUserIfNotExistsUseCase,
     private val pdfTextExtractorManager: PDFTextExtractorManager,
-    application: Application
-) : ViewModel() {
+    private val application: Application
+) : CommonViewModel() {
 
     private val _isInitializing = MutableStateFlow(true)
     val isInitializing = _isInitializing.asStateFlow()
 
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage = _errorMessage.asStateFlow()
+
     init {
-        viewModelScope.launch {
+        launch {
             pdfTextExtractorManager.initialize(application)
             createUserIfNotExistsUseCase()
             _isInitializing.value = false
         }
+    }
+
+    override fun getErrorMessageFrom(throwable: Throwable): String {
+        return application.getString(R.string.error_unexpected)
+    }
+
+    override fun onShowErrorDialog(message: String) {
+        _errorMessage.value = message
+    }
+
+    fun onDismissErrorDialog() {
+        _errorMessage.value = null
     }
 }
