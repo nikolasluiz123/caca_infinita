@@ -17,7 +17,7 @@ abstract class CommonViewModel: ViewModel() {
     }
 
     protected open fun onError(throwable: Throwable) {
-        Log.e(this::class.simpleName, throwable.stackTraceToString())
+        Log.e(this::class.simpleName, throwable.message, throwable)
     }
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
