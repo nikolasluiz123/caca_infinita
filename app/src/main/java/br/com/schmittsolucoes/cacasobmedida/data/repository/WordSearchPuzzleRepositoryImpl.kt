@@ -1,5 +1,7 @@
 package br.com.schmittsolucoes.cacasobmedida.data.repository
 
+import android.content.Context
+import br.com.schmittsolucoes.cacasobmedida.R
 import br.com.schmittsolucoes.cacasobmedida.core.database.transaction.DatabaseTransaction
 import br.com.schmittsolucoes.cacasobmedida.data.database.access.puzzle.WordSearchPuzzleLocalDataSource
 import br.com.schmittsolucoes.cacasobmedida.data.database.access.puzzle.word.WordLocalDataSource
@@ -10,6 +12,7 @@ import br.com.schmittsolucoes.cacasobmedida.domain.model.PuzzleRecord
 import br.com.schmittsolucoes.cacasobmedida.domain.model.WordSearchPuzzle
 import br.com.schmittsolucoes.cacasobmedida.domain.model.result.puzzle.PuzzleResult
 import br.com.schmittsolucoes.cacasobmedida.domain.repository.WordSearchPuzzleRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -17,6 +20,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class WordSearchPuzzleRepositoryImpl @Inject constructor(
+    @param:ApplicationContext private val context: Context,
     private val wordSearchPuzzleLocalDataSource: WordSearchPuzzleLocalDataSource,
     private val wordLocalDataSource: WordLocalDataSource,
     private val userLocalDataSource: UserLocalDataSource,
@@ -25,7 +29,14 @@ class WordSearchPuzzleRepositoryImpl @Inject constructor(
     override suspend fun insert(result: List<PuzzleResult>) {
         val user = userLocalDataSource.selectFirst()
 
-        val puzzleEntities = result.map { it.toEntity(user.id) }
+        val existingPuzzlesCount = getCount()
+
+        val fallbackName = context.getString(
+            R.string.puzzle_fallback_name,
+            existingPuzzlesCount + result.size + 1
+        )
+
+        val puzzleEntities = result.map { it.toEntity(fallbackName, user.id) }
 
         val wordEntities = result.zip(puzzleEntities).flatMap { (puzzleResult, puzzleEntity) ->
             puzzleResult.placedWords.map { it.toEntity(puzzleEntity.id) }

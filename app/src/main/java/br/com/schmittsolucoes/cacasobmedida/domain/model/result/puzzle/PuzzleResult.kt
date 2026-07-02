@@ -1,7 +1,6 @@
 package br.com.schmittsolucoes.cacasobmedida.domain.model.result.puzzle
 
 data class PuzzleResult(
-    val name: String,
     val grid: Array<CharArray>,
     val placedWords: List<PlacedWord>
 ) {

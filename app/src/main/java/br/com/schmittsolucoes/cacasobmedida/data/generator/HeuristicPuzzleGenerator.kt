@@ -50,8 +50,6 @@ class HeuristicPuzzleGenerator @Inject constructor(
         val targetWordsPerPuzzle = (totalArea / AREA_DIVISOR_FOR_WORD_COUNT)
             .coerceIn(MIN_WORDS_PER_PUZZLE, MAX_WORDS_PER_PUZZLE)
 
-        val existingPuzzlesCount = wordSearchPuzzleRepository.getCount()
-
         while (allWords.isNotEmpty()) {
             val grid = Array(dimensions.rows) { CharArray(dimensions.columns) { ' ' } }
             val placedWords = mutableListOf<PlacedWord>()
@@ -72,18 +70,12 @@ class HeuristicPuzzleGenerator @Inject constructor(
             if (placedWords.isNotEmpty()) {
                 fillEmptySpaces(grid)
 
-                val fallbackName = context.getString(
-                    R.string.puzzle_fallback_name,
-                    existingPuzzlesCount + results.size + 1
-                )
-
                 val result = PuzzleResult(
-                    name = fallbackName,
                     grid = grid,
                     placedWords = placedWords
                 )
                 
-                Log.d("DEBUG_PROCESS", "$tag: Novo PuzzleResult gerado: ${result.name}. Palavras (${placedWords.size}): ${placedWords.joinToString { it.text }}")
+                Log.d("DEBUG_PROCESS", "$tag: Novo PuzzleResult gerado: Palavras (${placedWords.size}): ${placedWords.joinToString { it.text }}")
                 results.add(result)
             } else {
                 break

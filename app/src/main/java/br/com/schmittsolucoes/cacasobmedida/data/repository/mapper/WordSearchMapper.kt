@@ -9,7 +9,7 @@ import br.com.schmittsolucoes.cacasobmedida.domain.model.WordSearchPuzzle
 import br.com.schmittsolucoes.cacasobmedida.domain.model.result.puzzle.PlacedWord
 import br.com.schmittsolucoes.cacasobmedida.domain.model.result.puzzle.PuzzleResult
 
-fun PuzzleResult.toEntity(userId: String): WordSearchPuzzleEntity {
+fun PuzzleResult.toEntity(name: String, userId: String): WordSearchPuzzleEntity {
     return WordSearchPuzzleEntity(
         grid = grid.joinToString("") { it.concatToString() },
         name = name,
