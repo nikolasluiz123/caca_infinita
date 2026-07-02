@@ -1,5 +1,6 @@
 package br.com.schmittsolucoes.cacasobmedida.data.processor.input
 
+import android.util.Log
 import br.com.schmittsolucoes.cacasobmedida.data.extractor.image.ImageTextExtractor
 import br.com.schmittsolucoes.cacasobmedida.domain.processor.input.InputProcessor
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +14,13 @@ class ImageInputProcessor @Inject constructor(
 ): InputProcessor<File> {
 
     override suspend fun process(input: File): String = withContext(Dispatchers.IO) {
+        val tag = this@ImageInputProcessor::class.simpleName
+        Log.d("DEBUG_PROCESS", "$tag: Iniciando processamento de imagem: ${input.absolutePath}")
+
         val result = extractor.recognizeText(input)
-        result.text
+
+        result.text.also {
+            Log.d("DEBUG_PROCESS", "$tag: Fim do processamento de imagem")
+        }
     }
 }

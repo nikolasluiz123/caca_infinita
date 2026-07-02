@@ -3,6 +3,7 @@ package br.com.schmittsolucoes.cacasobmedida.data.extractor.image
 import android.content.Context
 import android.graphics.Rect
 import android.net.Uri
+import android.util.Log
 import br.com.schmittsolucoes.cacasobmedida.domain.model.BoundingBox
 import br.com.schmittsolucoes.cacasobmedida.domain.model.result.text.TextBlock
 import br.com.schmittsolucoes.cacasobmedida.domain.model.result.text.TextElement
@@ -26,12 +27,17 @@ class MLKitTextRecognition @Inject constructor(
     private val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
     override suspend fun recognizeText(image: File): TextResult {
+        val tag = this@MLKitTextRecognition::class.simpleName
+        Log.d("DEBUG_PROCESS", "$tag: Iniciando extração de texto da imagem: ${image.name}")
+
         val imageUri = Uri.fromFile(image)
         val inputImage = InputImage.fromFilePath(context, imageUri)
 
         val mlKitText = recognizer.process(inputImage).await()
 
-        return mlKitText.toDomain()
+        return mlKitText.toDomain().also {
+            Log.d("DEBUG_PROCESS", "$tag: Extração de texto da imagem concluída. Texto extraído: \n ${it.text}")
+        }
     }
 }
 
