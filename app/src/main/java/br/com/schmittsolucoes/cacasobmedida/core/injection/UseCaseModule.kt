@@ -4,6 +4,7 @@ import android.net.Uri
 import br.com.schmittsolucoes.cacasobmedida.core.database.transaction.DatabaseTransaction
 import br.com.schmittsolucoes.cacasobmedida.domain.calculator.GridDimensionCalculator
 import br.com.schmittsolucoes.cacasobmedida.domain.generator.PuzzleGenerator
+import br.com.schmittsolucoes.cacasobmedida.domain.manager.FileManager
 import br.com.schmittsolucoes.cacasobmedida.domain.processor.input.InputProcessor
 import br.com.schmittsolucoes.cacasobmedida.domain.processor.pipeline.TextProcessorPipeline
 import br.com.schmittsolucoes.cacasobmedida.domain.provider.DeviceDimensionsProvider
@@ -43,14 +44,16 @@ object UseCaseModule {
         dimensionsProvider: DeviceDimensionsProvider,
         gridCalculator: GridDimensionCalculator,
         @ImageProcessor textProcessor: TextProcessorPipeline,
-        puzzleGenerator: PuzzleGenerator
+        puzzleGenerator: PuzzleGenerator,
+        fileManager: FileManager
     ): GenerateImagePuzzleUseCase {
         return GenerateImagePuzzleUseCase(
             inputProcessor,
             dimensionsProvider,
             gridCalculator,
             textProcessor,
-            puzzleGenerator
+            puzzleGenerator,
+            fileManager
         )
     }
 
