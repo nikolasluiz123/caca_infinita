@@ -44,9 +44,11 @@ class PDFTextProcessorPipeline @Inject constructor(
         )
 
         var processedText = text
+        Log.d("DEBUG_PROCESS", "$tag: Palavras antes das steps: ${tokenize(processedText).size}")
 
         steps.forEach { step ->
             processedText = step.process(processedText)
+            Log.d("DEBUG_PROCESS", "$tag: Após ${step::class.simpleName}: ${tokenize(processedText).size} palavras")
         }
 
         return tokenize(processedText).also {
