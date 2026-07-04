@@ -2,6 +2,7 @@ package br.com.schmittsolucoes.cacasobmedida.presentation
 
 import android.app.Application
 import br.com.schmittsolucoes.cacasobmedida.R
+import br.com.schmittsolucoes.cacasobmedida.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacasobmedida.domain.manager.PDFTextExtractorManager
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.CreateUserIfNotExistsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,6 +14,7 @@ import javax.inject.Inject
 class AppViewModel @Inject constructor(
     private val createUserIfNotExistsUseCase: CreateUserIfNotExistsUseCase,
     private val pdfTextExtractorManager: PDFTextExtractorManager,
+    private val loadingManager: LoadingManager,
     private val application: Application
 ) : CommonViewModel() {
 
@@ -21,6 +23,9 @@ class AppViewModel @Inject constructor(
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage = _errorMessage.asStateFlow()
+
+    val isLoading = loadingManager.isLoading
+    val loadingMessage = loadingManager.message
 
     init {
         launch {

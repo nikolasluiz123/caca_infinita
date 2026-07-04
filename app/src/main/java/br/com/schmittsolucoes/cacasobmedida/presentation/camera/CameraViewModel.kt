@@ -7,6 +7,7 @@ import br.com.schmittsolucoes.cacasobmedida.R
 import br.com.schmittsolucoes.cacasobmedida.data.analyzer.frame.FrameAnalyzer
 import br.com.schmittsolucoes.cacasobmedida.data.analyzer.frame.ImageProxyFrame
 import br.com.schmittsolucoes.cacasobmedida.domain.model.enumeration.AnalyzerState
+import br.com.schmittsolucoes.cacasobmedida.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GenerateImagePuzzleUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.SaveGeneratedPuzzlesUseCase
 import br.com.schmittsolucoes.cacasobmedida.presentation.CommonViewModel
@@ -24,15 +25,15 @@ class CameraViewModel @Inject constructor(
     private val frameAnalyzer: FrameAnalyzer,
     private val generateImagePuzzleUseCase: GenerateImagePuzzleUseCase,
     private val saveGeneratedPuzzlesUseCase: SaveGeneratedPuzzlesUseCase,
+    private val loadingManager: LoadingManager,
     private val application: android.app.Application
 ) : CommonViewModel() {
 
-    private val _isProcessing = MutableStateFlow(false)
     private val _errorMessage = MutableStateFlow<String?>(null)
 
     val uiState: StateFlow<CameraUiState> = combine(
         frameAnalyzer.state,
-        _isProcessing,
+        loadingManager.isLoading,
         _errorMessage
     ) { analysisResult, isProcessing, errorMessage ->
         CameraUiState(
@@ -55,14 +56,14 @@ class CameraViewModel @Inject constructor(
 
     fun onPhotoCaptured(path: String) {
         launch {
-            _isProcessing.value = true
+            loadingManager.showLoading()
 
             try {
                 val uri = Uri.fromFile(File(path))
                 val puzzles = generateImagePuzzleUseCase(listOf(uri), isFromCamera = true)
                 saveGeneratedPuzzlesUseCase(puzzles)
             } finally {
-                _isProcessing.value = false
+                loadingManager.hideLoading()
             }
         }
     }

@@ -27,7 +27,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.schmittsolucoes.cacasobmedida.R
 import br.com.schmittsolucoes.cacasobmedida.domain.model.WordSearchPuzzle
 import br.com.schmittsolucoes.cacasobmedida.presentation.components.ErrorDialog
-import br.com.schmittsolucoes.cacasobmedida.presentation.components.LoadingOverlay
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.PuzzleUiState
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.PuzzleViewModel
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.composables.components.PuzzleGrid
@@ -109,10 +108,6 @@ fun PuzzleScreen(
                     )
                 }
             }
-        }
-
-        if (state.isLoading) {
-            LoadingOverlay()
         }
 
         state.errorMessage?.let { message ->

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import br.com.schmittsolucoes.cacasobmedida.R
 import br.com.schmittsolucoes.cacasobmedida.domain.model.Word
 import br.com.schmittsolucoes.cacasobmedida.domain.model.WordSearchPuzzle
+import br.com.schmittsolucoes.cacasobmedida.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.EndSessionUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetCountWordsUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetElapsedTimeUseCase
@@ -36,14 +37,14 @@ class PuzzleViewModel @Inject constructor(
     private val getCountWordsUseCase: GetCountWordsUseCase,
     private val getWordsFromPuzzleUseCase: GetWordsFromPuzzleUseCase,
     private val getPuzzleByIdUseCase: GetPuzzleByIdUseCase,
-    private val dimensionsProvider: DeviceDimensionsProvider
+    private val dimensionsProvider: DeviceDimensionsProvider,
+    private val loadingManager: LoadingManager
 ) : CommonViewModel() {
 
     private val puzzleId: String = checkNotNull(savedStateHandle[puzzleIdArg])
 
     private val _puzzle = MutableStateFlow<WordSearchPuzzle?>(null)
     private val _errorMessage = MutableStateFlow<String?>(null)
-    private val _isLoading = MutableStateFlow(false)
     private val _isWordsBottomSheetVisible = MutableStateFlow(false)
 
     @Suppress("UNCHECKED_CAST")
@@ -54,7 +55,7 @@ class PuzzleViewModel @Inject constructor(
         getWordsFromPuzzleUseCase.getAllWordsObservable(puzzleId),
         _isWordsBottomSheetVisible,
         _errorMessage,
-        _isLoading,
+        loadingManager.isLoading,
         _puzzle
     ) { flows ->
         val elapsed = flows[0] as KotlinDuration

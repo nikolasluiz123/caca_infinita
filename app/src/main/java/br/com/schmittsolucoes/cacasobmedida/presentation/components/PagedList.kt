@@ -3,8 +3,12 @@ package br.com.schmittsolucoes.cacasobmedida.presentation.components
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +30,12 @@ fun <T : Any> PagedList(
     Box(modifier = modifier.fillMaxSize()) {
         when (items.loadState.refresh) {
             is LoadState.Loading if items.itemCount == 0 -> {
-                LoadingOverlay()
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                }
             }
 
             is LoadState.NotLoading if items.itemCount == 0 -> {
@@ -58,10 +67,15 @@ fun <T : Any> PagedList(
                     if (items.loadState.append is LoadState.Loading) {
                         item {
                             Box(
-                                modifier = Modifier.fillParentMaxWidth(),
+                                modifier = Modifier
+                                    .fillParentMaxWidth()
+                                    .padding(16.dp),
                                 contentAlignment = Alignment.Center
                             ) {
-                                LoadingOverlay()
+                                CircularProgressIndicator(
+                                    color = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(32.dp)
+                                )
                             }
                         }
                     }

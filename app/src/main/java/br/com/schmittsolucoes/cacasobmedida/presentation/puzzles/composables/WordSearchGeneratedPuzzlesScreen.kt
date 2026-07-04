@@ -27,7 +27,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.schmittsolucoes.cacasobmedida.R
 import br.com.schmittsolucoes.cacasobmedida.presentation.components.ErrorDialog
-import br.com.schmittsolucoes.cacasobmedida.presentation.components.LoadingOverlay
 import br.com.schmittsolucoes.cacasobmedida.presentation.components.PagedList
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.WordSearchUiState
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.WordSearchViewModel
@@ -130,10 +129,6 @@ fun WordSearchGeneratedPuzzlesScreen(
                     onDismiss = onDismissErrorDialog
                 )
             }
-        }
-
-        if (state.isLoading) {
-            LoadingOverlay()
         }
     }
 }

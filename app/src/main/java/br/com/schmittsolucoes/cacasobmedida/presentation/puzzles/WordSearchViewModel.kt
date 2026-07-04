@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import br.com.schmittsolucoes.cacasobmedida.R
 import br.com.schmittsolucoes.cacasobmedida.domain.model.pagination.PaginationConfig
+import br.com.schmittsolucoes.cacasobmedida.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GenerateImagePuzzleUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GeneratePDFPuzzleUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetAllPuzzlesUseCase
@@ -18,7 +19,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,15 +27,15 @@ class WordSearchViewModel @Inject constructor(
     private val generatePdfPuzzleUseCase: GeneratePDFPuzzleUseCase,
     private val generateImagePuzzleUseCase: GenerateImagePuzzleUseCase,
     private val saveGeneratedPuzzlesUseCase: SaveGeneratedPuzzlesUseCase,
+    private val loadingManager: LoadingManager,
     @param:ApplicationContext private val context: Context
 ) : CommonViewModel() {
 
-    private val _isLoading = MutableStateFlow(false)
     private val _errorMessage = MutableStateFlow<String?>(null)
     private val _puzzles = getAllPuzzlesUseCase(PaginationConfig(pageSize = 100)).cachedIn(viewModelScope)
 
     val uiState: StateFlow<WordSearchUiState> = combine(
-        _isLoading,
+        loadingManager.isLoading,
         _errorMessage
     ) { isLoading, errorMessage ->
         WordSearchUiState(
@@ -53,13 +53,13 @@ class WordSearchViewModel @Inject constructor(
         if (uris.isEmpty()) return
 
         launch {
-            _isLoading.update { true }
+            loadingManager.showLoading()
 
             try {
                 val puzzles = generatePdfPuzzleUseCase(uris)
                 saveGeneratedPuzzlesUseCase(puzzles)
             } finally {
-                _isLoading.update { false }
+                loadingManager.hideLoading()
             }
         }
     }
@@ -68,13 +68,13 @@ class WordSearchViewModel @Inject constructor(
         if (uris.isEmpty()) return
 
         launch {
-            _isLoading.update { true }
+            loadingManager.showLoading()
 
             try {
                 val puzzles = generateImagePuzzleUseCase(uris, isFromCamera = false)
                 saveGeneratedPuzzlesUseCase(puzzles)
             } finally {
-                _isLoading.update { false }
+                loadingManager.hideLoading()
             }
         }
     }
