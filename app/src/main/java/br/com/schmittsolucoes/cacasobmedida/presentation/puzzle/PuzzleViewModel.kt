@@ -13,6 +13,7 @@ import br.com.schmittsolucoes.cacasobmedida.domain.usecase.EndSessionUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetHasWordsToSearchUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetElapsedTimeUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetPuzzleByIdUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetSelectedWordUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetWordsFromPuzzleUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.StartSessionUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.UpdateFoundWordUseCase
@@ -39,6 +40,7 @@ class PuzzleViewModel @Inject constructor(
     private val getHasWordsToSearchUseCase: GetHasWordsToSearchUseCase,
     private val getWordsFromPuzzleUseCase: GetWordsFromPuzzleUseCase,
     private val getPuzzleByIdUseCase: GetPuzzleByIdUseCase,
+    private val getSelectedWordUseCase: GetSelectedWordUseCase,
     private val updateFoundWordUseCase: UpdateFoundWordUseCase,
     private val dimensionsProvider: DeviceDimensionsProvider,
     private val loadingManager: LoadingManager
@@ -107,13 +109,7 @@ class PuzzleViewModel @Inject constructor(
 
     fun onWordSelected(start: Coordinate, end: Coordinate) {
         val words = uiState.value.words
-        val selectedWord = words.find { word ->
-            val wordEndRow = word.startRow + (word.text.length - 1) * word.direction.rowStep
-            val wordEndCol = word.startCol + (word.text.length - 1) * word.direction.colStep
-
-            (word.startRow == start.row && word.startCol == start.col && wordEndRow == end.row && wordEndCol == end.col) ||
-            (word.startRow == end.row && word.startCol == end.col && wordEndRow == start.row && wordEndCol == start.col)
-        }
+        val selectedWord = getSelectedWordUseCase(words, start, end)
 
         selectedWord?.let { word ->
             if (word.foundDate == null) {
