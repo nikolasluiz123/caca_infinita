@@ -20,11 +20,11 @@ class AndroidDimensionsProvider @Inject constructor(
 
     override fun getCellSize(): Float = 40f
 
-    override fun getPaddingStart(): Float = 12f
+    override fun getPaddingStart(): Float = 8f
 
-    override fun getPaddingEnd(): Float = 12f
+    override fun getPaddingEnd(): Float = 8f
 
     override fun getPaddingTop(): Float = 64f
 
-    override fun getPaddingBottom(): Float = 64f
+    override fun getPaddingBottom(): Float = 80f
 }

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -26,10 +25,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.schmittsolucoes.cacasobmedida.R
+import br.com.schmittsolucoes.cacasobmedida.domain.model.WordSearchPuzzle
 import br.com.schmittsolucoes.cacasobmedida.presentation.components.ErrorDialog
 import br.com.schmittsolucoes.cacasobmedida.presentation.components.LoadingOverlay
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.PuzzleUiState
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.PuzzleViewModel
+import br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.composables.components.PuzzleGrid
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.composables.components.WordsBottomSheet
 import br.com.schmittsolucoes.cacasobmedida.presentation.theme.CacaSobMedidaTheme
 import br.com.schmittsolucoes.cacasobmedida.presentation.theme.SecondaryTextColor
@@ -97,6 +98,16 @@ fun PuzzleScreen(
                     style = MaterialTheme.typography.bodySmall,
                     color = SecondaryTextColor
                 )
+
+                state.puzzle?.let { puzzle ->
+                    PuzzleGrid(
+                        puzzle = puzzle,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(top = 16.dp)
+                            .padding(bottom = state.paddingBottom.dp)
+                    )
+                }
             }
         }
 
@@ -125,9 +136,22 @@ fun PuzzleScreen(
 @Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun PuzzleScreenPreview() {
+    val samplePuzzle = WordSearchPuzzle(
+        id = "1",
+        grid = listOf(
+            listOf('A', 'B', 'C'),
+            listOf('D', 'E', 'F'),
+            listOf('G', 'H', 'I')
+        ),
+        name = "Sample",
+        rows = 3,
+        columns = 3
+    )
+
     CacaSobMedidaTheme {
         PuzzleScreen(
             state = PuzzleUiState(
+                puzzle = samplePuzzle,
                 formattedTime = "00:05:30",
                 foundWordsCount = 5,
                 totalWordsCount = 10

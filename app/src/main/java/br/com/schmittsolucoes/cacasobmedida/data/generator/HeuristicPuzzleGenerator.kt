@@ -25,10 +25,7 @@ import kotlin.random.Random
  * 3. Tentar posicionar cada palavra em locais e direções aleatórias com detecção de colisão.
  * 4. Preencher espaços vazios com letras aleatórias.
  */
-class HeuristicPuzzleGenerator @Inject constructor(
-    @param:ApplicationContext private val context: Context,
-    private val wordSearchPuzzleRepository: WordSearchPuzzleRepository,
-) : PuzzleGenerator {
+class HeuristicPuzzleGenerator @Inject constructor() : PuzzleGenerator {
 
     companion object {
         private const val AREA_DIVISOR_FOR_WORD_COUNT = 12
