@@ -1,5 +1,6 @@
 package br.com.schmittsolucoes.cacasobmedida.presentation.home
 
+import android.content.Context
 import androidx.lifecycle.viewModelScope
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetLastUnfinishedPuzzleUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetRecordPuzzlesUseCase
@@ -7,6 +8,7 @@ import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetUserUseCase
 import br.com.schmittsolucoes.cacasobmedida.R
 import br.com.schmittsolucoes.cacasobmedida.presentation.CommonViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +21,7 @@ class HomeViewModel @Inject constructor(
     getUserUseCase: GetUserUseCase,
     getRecordPuzzlesUseCase: GetRecordPuzzlesUseCase,
     getLastUnfinishedPuzzleUseCase: GetLastUnfinishedPuzzleUseCase,
-    private val application: android.app.Application
+    @param:ApplicationContext private val context: Context
 ): CommonViewModel() {
 
     private val _errorMessage = MutableStateFlow<String?>(null)
@@ -43,7 +45,7 @@ class HomeViewModel @Inject constructor(
     )
 
     override fun getErrorMessageFrom(throwable: Throwable): String {
-        return application.getString(R.string.error_unexpected)
+        return context.getString(R.string.error_unexpected)
     }
 
     override fun onShowErrorDialog(message: String) {
