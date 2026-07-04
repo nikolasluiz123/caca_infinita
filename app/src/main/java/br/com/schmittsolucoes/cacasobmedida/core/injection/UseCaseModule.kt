@@ -17,8 +17,8 @@ import br.com.schmittsolucoes.cacasobmedida.domain.usecase.EndSessionUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GenerateImagePuzzleUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GeneratePDFPuzzleUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetAllPuzzlesUseCase
-import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetCountWordsUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetElapsedTimeUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetHasWordsToSearchUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetLastUnfinishedPuzzleUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetNextUserLevelUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetPuzzleByIdUseCase
@@ -82,8 +82,8 @@ object UseCaseModule {
     }
 
     @Provides
-    fun provideGetCountWordsUseCase(repository: WordRepository): GetCountWordsUseCase {
-        return GetCountWordsUseCase(repository)
+    fun provideGetHasWordsToSearchUseCase(repository: WordRepository): GetHasWordsToSearchUseCase {
+        return GetHasWordsToSearchUseCase(repository)
     }
 
     @Provides

@@ -202,8 +202,6 @@ private fun PuzzleScreenPreview() {
             state = PuzzleUiState(
                 puzzle = samplePuzzle,
                 formattedTime = "00:05:30",
-                foundWordsCount = 5,
-                totalWordsCount = 10
             )
         )
     }

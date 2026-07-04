@@ -32,6 +32,10 @@ class WordRepositoryImpl @Inject constructor(
         return wordLocalDataSource.selectCountFoundWordsObservable(puzzleId)
     }
 
+    override fun hasWordsToSearchObservable(puzzleId: String): Flow<Boolean> {
+        return wordLocalDataSource.selectHasWordsToSearchObservable(puzzleId)
+    }
+
     override fun getAllWordsObservable(puzzleId: String): Flow<List<Word>> {
         return wordLocalDataSource.selectAllObservable(puzzleId).map { entities ->
             entities.map { it.toDomain() }

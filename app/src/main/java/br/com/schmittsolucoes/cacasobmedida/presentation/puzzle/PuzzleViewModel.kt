@@ -10,7 +10,7 @@ import br.com.schmittsolucoes.cacasobmedida.domain.model.WordSearchPuzzle
 import br.com.schmittsolucoes.cacasobmedida.domain.model.result.puzzle.Coordinate
 import br.com.schmittsolucoes.cacasobmedida.domain.provider.DeviceDimensionsProvider
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.EndSessionUseCase
-import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetCountWordsUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetHasWordsToSearchUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetElapsedTimeUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetPuzzleByIdUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetWordsFromPuzzleUseCase
@@ -36,7 +36,7 @@ class PuzzleViewModel @Inject constructor(
     private val startSessionUseCase: StartSessionUseCase,
     private val endSessionUseCase: EndSessionUseCase,
     private val getElapsedTimeUseCase: GetElapsedTimeUseCase,
-    private val getCountWordsUseCase: GetCountWordsUseCase,
+    private val getHasWordsToSearchUseCase: GetHasWordsToSearchUseCase,
     private val getWordsFromPuzzleUseCase: GetWordsFromPuzzleUseCase,
     private val getPuzzleByIdUseCase: GetPuzzleByIdUseCase,
     private val updateFoundWordUseCase: UpdateFoundWordUseCase,
@@ -54,8 +54,6 @@ class PuzzleViewModel @Inject constructor(
     @Suppress("UNCHECKED_CAST")
     val uiState: StateFlow<PuzzleUiState> = combine(
         getElapsedTimeUseCase(puzzleId),
-        getCountWordsUseCase.allWordsObservable(puzzleId),
-        getCountWordsUseCase.foundWordsObservable(puzzleId),
         getWordsFromPuzzleUseCase.getAllWordsObservable(puzzleId),
         _isWordsBottomSheetVisible,
         _errorMessage,
@@ -64,21 +62,17 @@ class PuzzleViewModel @Inject constructor(
         _xpAnimations
     ) { flows ->
         val elapsed = flows[0] as KotlinDuration
-        val totalCount = flows[1] as Long
-        val foundCount = flows[2] as Long
-        val words = flows[3] as List<Word>
-        val isSheetVisible = flows[4] as Boolean
-        val errorMessage = flows[5] as String?
-        val isLoading = flows[6] as Boolean
-        val puzzle = flows[7] as WordSearchPuzzle?
-        val xpAnimations = flows[8] as List<XpAnimationState>
+        val words = flows[1] as List<Word>
+        val isSheetVisible = flows[2] as Boolean
+        val errorMessage = flows[3] as String?
+        val isLoading = flows[4] as Boolean
+        val puzzle = flows[5] as WordSearchPuzzle?
+        val xpAnimations = flows[6] as List<XpAnimationState>
 
         PuzzleUiState(
             puzzle = puzzle,
             elapsedTime = elapsed.inWholeMilliseconds,
             formattedTime = elapsed.formatToClock(forceShowHours = true),
-            totalWordsCount = totalCount,
-            foundWordsCount = foundCount,
             words = words,
             isWordsBottomSheetVisible = isSheetVisible,
             paddingBottom = dimensionsProvider.getPaddingBottom(),
@@ -96,6 +90,12 @@ class PuzzleViewModel @Inject constructor(
         launch {
             _puzzle.value = getPuzzleByIdUseCase(puzzleId)
             startSessionUseCase(puzzleId)
+
+            getHasWordsToSearchUseCase(puzzleId).collect { hasWords ->
+                if (!hasWords) {
+                    onStop()
+                }
+            }
         }
     }
 

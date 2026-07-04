@@ -21,6 +21,9 @@ interface WordRoomDAO: WordLocalDataSource, RoomLocalDataSource<WordEntity> {
     @Query("select count(id) from word where puzzle_id = :puzzleId")
     override fun selectCountWordsObservable(puzzleId: String): Flow<Long>
 
+    @Query("select exists(select 1 from word where puzzle_id = :puzzleId and found_date is null)")
+    override fun selectHasWordsToSearchObservable(puzzleId: String): Flow<Boolean>
+
     @Query("select * from word where puzzle_id = :puzzleId")
     override fun selectAllObservable(puzzleId: String): Flow<List<WordEntity>>
 }

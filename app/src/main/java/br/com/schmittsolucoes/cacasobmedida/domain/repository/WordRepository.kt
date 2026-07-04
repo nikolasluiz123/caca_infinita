@@ -10,5 +10,6 @@ interface WordRepository {
 
     fun getCountWordsObservable(puzzleId: String): Flow<Long>
     fun getCountFoundWordsObservable(puzzleId: String): Flow<Long>
+    fun hasWordsToSearchObservable(puzzleId: String): Flow<Boolean>
     fun getAllWordsObservable(puzzleId: String): Flow<List<Word>>
 }
