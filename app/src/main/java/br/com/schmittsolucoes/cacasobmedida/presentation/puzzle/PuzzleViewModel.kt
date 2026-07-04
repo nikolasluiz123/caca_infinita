@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
-import kotlin.time.toKotlinDuration
 
 @HiltViewModel
 class PuzzleViewModel @Inject constructor(
