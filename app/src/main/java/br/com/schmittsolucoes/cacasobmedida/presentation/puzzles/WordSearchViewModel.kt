@@ -1,5 +1,6 @@
 package br.com.schmittsolucoes.cacasobmedida.presentation.puzzles
 
+import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -11,9 +12,12 @@ import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetAllPuzzlesUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.SaveGeneratedPuzzlesUseCase
 import br.com.schmittsolucoes.cacasobmedida.presentation.CommonViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -23,27 +27,39 @@ class WordSearchViewModel @Inject constructor(
     private val generatePdfPuzzleUseCase: GeneratePDFPuzzleUseCase,
     private val generateImagePuzzleUseCase: GenerateImagePuzzleUseCase,
     private val saveGeneratedPuzzlesUseCase: SaveGeneratedPuzzlesUseCase,
-    private val application: android.app.Application
+    @param:ApplicationContext private val context: Context
 ) : CommonViewModel() {
-    private val _uiState = MutableStateFlow(WordSearchUiState())
-    val uiState: StateFlow<WordSearchUiState> = _uiState.asStateFlow()
 
-    init {
-        val puzzles = getAllPuzzlesUseCase(PaginationConfig(pageSize = 100)).cachedIn(viewModelScope)
-        _uiState.update { it.copy(puzzles = puzzles) }
-    }
+    private val _isLoading = MutableStateFlow(false)
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    private val _puzzles = getAllPuzzlesUseCase(PaginationConfig(pageSize = 100)).cachedIn(viewModelScope)
+
+    val uiState: StateFlow<WordSearchUiState> = combine(
+        _isLoading,
+        _errorMessage
+    ) { isLoading, errorMessage ->
+        WordSearchUiState(
+            puzzles = _puzzles,
+            isLoading = isLoading,
+            errorMessage = errorMessage
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = WordSearchUiState(puzzles = _puzzles)
+    )
 
     fun onPdfsSelected(uris: List<Uri>) {
         if (uris.isEmpty()) return
 
         launch {
-            _uiState.update { it.copy(isLoading = true) }
+            _isLoading.update { true }
 
             try {
                 val puzzles = generatePdfPuzzleUseCase(uris)
                 saveGeneratedPuzzlesUseCase(puzzles)
             } finally {
-                _uiState.update { it.copy(isLoading = false) }
+                _isLoading.update { false }
             }
         }
     }
@@ -52,26 +68,26 @@ class WordSearchViewModel @Inject constructor(
         if (uris.isEmpty()) return
 
         launch {
-            _uiState.update { it.copy(isLoading = true) }
+            _isLoading.update { true }
 
             try {
                 val puzzles = generateImagePuzzleUseCase(uris, isFromCamera = false)
                 saveGeneratedPuzzlesUseCase(puzzles)
             } finally {
-                _uiState.update { it.copy(isLoading = false) }
+                _isLoading.update { false }
             }
         }
     }
 
     override fun getErrorMessageFrom(throwable: Throwable): String {
-        return application.getString(R.string.error_unexpected)
+        return context.getString(R.string.error_unexpected)
     }
 
     override fun onShowErrorDialog(message: String) {
-        _uiState.update { it.copy(errorMessage = message) }
+        _errorMessage.value = message
     }
 
     fun onDismissErrorDialog() {
-        _uiState.update { it.copy(errorMessage = null) }
+        _errorMessage.value = null
     }
 }
