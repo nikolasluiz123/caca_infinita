@@ -29,7 +29,7 @@ class WordSearchViewModel @Inject constructor(
     val uiState: StateFlow<WordSearchUiState> = _uiState.asStateFlow()
 
     init {
-        val puzzles = getAllPuzzlesUseCase(PaginationConfig(pageSize = 20)).cachedIn(viewModelScope)
+        val puzzles = getAllPuzzlesUseCase(PaginationConfig(pageSize = 100)).cachedIn(viewModelScope)
         _uiState.update { it.copy(puzzles = puzzles) }
     }
 
