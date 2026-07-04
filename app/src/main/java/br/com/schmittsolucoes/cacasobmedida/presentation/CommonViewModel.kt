@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 abstract class CommonViewModel: ViewModel() {
@@ -12,8 +13,8 @@ abstract class CommonViewModel: ViewModel() {
 
     abstract fun onShowErrorDialog(message: String)
 
-    fun launch(block: suspend () -> Unit) = viewModelScope.launch(exceptionHandler) {
-        block()
+    fun launch(block: suspend (scope: CoroutineScope) -> Unit) = viewModelScope.launch(exceptionHandler) {
+        block(this)
     }
 
     protected open fun onError(throwable: Throwable) {
