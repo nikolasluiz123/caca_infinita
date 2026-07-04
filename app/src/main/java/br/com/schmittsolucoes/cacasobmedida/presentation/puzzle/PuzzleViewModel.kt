@@ -4,19 +4,19 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import br.com.schmittsolucoes.cacasobmedida.R
+import br.com.schmittsolucoes.cacasobmedida.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacasobmedida.domain.model.Word
 import br.com.schmittsolucoes.cacasobmedida.domain.model.WordSearchPuzzle
-import br.com.schmittsolucoes.cacasobmedida.domain.manager.LoadingManager
+import br.com.schmittsolucoes.cacasobmedida.domain.model.result.puzzle.Coordinate
+import br.com.schmittsolucoes.cacasobmedida.domain.provider.DeviceDimensionsProvider
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.EndSessionUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetCountWordsUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetElapsedTimeUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetPuzzleByIdUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetWordsFromPuzzleUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.StartSessionUseCase
-import br.com.schmittsolucoes.cacasobmedida.domain.provider.DeviceDimensionsProvider
-import br.com.schmittsolucoes.cacasobmedida.presentation.CommonViewModel
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.UpdateFoundWordUseCase
-import br.com.schmittsolucoes.cacasobmedida.domain.model.result.puzzle.Coordinate
+import br.com.schmittsolucoes.cacasobmedida.presentation.CommonViewModel
 import br.com.schmittsolucoes.cacasobmedida.presentation.formatters.formatToClock
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.navigation.puzzleIdArg
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -49,6 +49,7 @@ class PuzzleViewModel @Inject constructor(
     private val _puzzle = MutableStateFlow<WordSearchPuzzle?>(null)
     private val _errorMessage = MutableStateFlow<String?>(null)
     private val _isWordsBottomSheetVisible = MutableStateFlow(false)
+    private val _xpAnimations = MutableStateFlow<List<XpAnimationState>>(emptyList())
 
     @Suppress("UNCHECKED_CAST")
     val uiState: StateFlow<PuzzleUiState> = combine(
@@ -59,7 +60,8 @@ class PuzzleViewModel @Inject constructor(
         _isWordsBottomSheetVisible,
         _errorMessage,
         loadingManager.isLoading,
-        _puzzle
+        _puzzle,
+        _xpAnimations
     ) { flows ->
         val elapsed = flows[0] as KotlinDuration
         val totalCount = flows[1] as Long
@@ -69,6 +71,7 @@ class PuzzleViewModel @Inject constructor(
         val errorMessage = flows[5] as String?
         val isLoading = flows[6] as Boolean
         val puzzle = flows[7] as WordSearchPuzzle?
+        val xpAnimations = flows[8] as List<XpAnimationState>
 
         PuzzleUiState(
             puzzle = puzzle,
@@ -80,7 +83,8 @@ class PuzzleViewModel @Inject constructor(
             isWordsBottomSheetVisible = isSheetVisible,
             paddingBottom = dimensionsProvider.getPaddingBottom(),
             errorMessage = errorMessage,
-            isLoading = isLoading
+            isLoading = isLoading,
+            xpAnimations = xpAnimations
         )
     }.stateIn(
         scope = viewModelScope,
@@ -114,7 +118,9 @@ class PuzzleViewModel @Inject constructor(
         selectedWord?.let { word ->
             if (word.foundDate == null) {
                 launch {
-                    updateFoundWordUseCase(word)
+                    val xpGained = updateFoundWordUseCase(word)
+                    val newAnimation = XpAnimationState(id = System.currentTimeMillis(), amount = xpGained)
+                    _xpAnimations.value += newAnimation
                 }
             }
         }
@@ -126,6 +132,10 @@ class PuzzleViewModel @Inject constructor(
 
     fun onToggleWordsBottomSheet(visible: Boolean) {
         _isWordsBottomSheetVisible.value = visible
+    }
+
+    fun onAnimationFinished(id: Long) {
+        _xpAnimations.value = _xpAnimations.value.filter { it.id != id }
     }
 
     override fun getErrorMessageFrom(throwable: Throwable): String {

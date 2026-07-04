@@ -1,9 +1,12 @@
 package br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.composables
 
 import android.content.res.Configuration
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -13,9 +16,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,6 +41,7 @@ import br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.composables.comp
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.composables.components.WordsBottomSheet
 import br.com.schmittsolucoes.cacasobmedida.presentation.theme.CacaSobMedidaTheme
 import br.com.schmittsolucoes.cacasobmedida.presentation.theme.SecondaryTextColor
+import kotlinx.coroutines.launch
 
 @Composable
 fun PuzzleScreen(
@@ -53,7 +61,8 @@ fun PuzzleScreen(
         state = state,
         onDismissErrorDialog = viewModel::onDismissErrorDialog,
         onToggleWordsBottomSheet = viewModel::onToggleWordsBottomSheet,
-        onWordSelected = viewModel::onWordSelected
+        onWordSelected = viewModel::onWordSelected,
+        onAnimationFinished = viewModel::onAnimationFinished
     )
 }
 
@@ -63,7 +72,8 @@ fun PuzzleScreen(
     state: PuzzleUiState,
     onDismissErrorDialog: () -> Unit = {},
     onToggleWordsBottomSheet: (Boolean) -> Unit = {},
-    onWordSelected: (Coordinate, Coordinate) -> Unit = { _, _ -> }
+    onWordSelected: (Coordinate, Coordinate) -> Unit = { _, _ -> },
+    onAnimationFinished: (Long) -> Unit = {}
 ) {
     val sheetState = rememberModalBottomSheetState()
 
@@ -131,7 +141,44 @@ fun PuzzleScreen(
                 onDismissRequest = { onToggleWordsBottomSheet(false) }
             )
         }
+
+        state.xpAnimations.forEach { xpAnimation ->
+            key(xpAnimation.id) {
+                XpGainAnimation(
+                    amount = xpAnimation.amount,
+                    onAnimationFinished = { onAnimationFinished(xpAnimation.id) },
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
+        }
     }
+}
+
+@Composable
+private fun XpGainAnimation(
+    amount: Long,
+    onAnimationFinished: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val alpha = remember { Animatable(1f) }
+    val offsetY = remember { Animatable(0f) }
+
+    LaunchedEffect(Unit) {
+        launch {
+            alpha.animateTo(0f, animationSpec = tween(durationMillis = 2000))
+        }
+        offsetY.animateTo(-150f, animationSpec = tween(durationMillis = 2000))
+        onAnimationFinished()
+    }
+
+    Text(
+        text = "+$amount XP",
+        color = MaterialTheme.colorScheme.primary,
+        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+        modifier = modifier
+            .offset(y = offsetY.value.dp)
+            .alpha(alpha.value)
+    )
 }
 
 @Preview(name = "Light Mode")

@@ -24,8 +24,9 @@ class UpdateUserExperienceUseCase(
      * Executa a atualização de progresso do usuário.
      *
      * @param word A palavra que foi encontrada e que gerará a recompensa de XP.
+     * @return O total de XP ganho.
      */
-    suspend operator fun invoke(word: Word) {
+    suspend operator fun invoke(word: Word): Long {
         val user = getUserUseCase.first()
         val xpGained = getUserExperienceByFoundWordUseCase(word)
         
@@ -46,5 +47,7 @@ class UpdateUserExperienceUseCase(
         )
         
         userRepository.save(updatedUser)
+
+        return xpGained
     }
 }

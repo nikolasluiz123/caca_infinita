@@ -12,7 +12,7 @@ class UpdateFoundWordUseCase(
     private val updateUserExperienceUseCase: UpdateUserExperienceUseCase,
     private val transaction: DatabaseTransaction
 ) {
-    suspend operator fun invoke(word: Word) = withContext(Dispatchers.IO) {
+    suspend operator fun invoke(word: Word): Long = withContext(Dispatchers.IO) {
         transaction.run {
             val wordWithDate = word.copy(foundDate = Instant.now())
             wordRepository.updateWord(wordWithDate)
