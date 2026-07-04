@@ -26,6 +26,7 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.schmittsolucoes.cacasobmedida.R
 import br.com.schmittsolucoes.cacasobmedida.domain.model.WordSearchPuzzle
+import br.com.schmittsolucoes.cacasobmedida.domain.model.result.puzzle.Coordinate
 import br.com.schmittsolucoes.cacasobmedida.presentation.components.ErrorDialog
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.PuzzleUiState
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.PuzzleViewModel
@@ -51,7 +52,8 @@ fun PuzzleScreen(
     PuzzleScreen(
         state = state,
         onDismissErrorDialog = viewModel::onDismissErrorDialog,
-        onToggleWordsBottomSheet = viewModel::onToggleWordsBottomSheet
+        onToggleWordsBottomSheet = viewModel::onToggleWordsBottomSheet,
+        onWordSelected = viewModel::onWordSelected
     )
 }
 
@@ -60,7 +62,8 @@ fun PuzzleScreen(
 fun PuzzleScreen(
     state: PuzzleUiState,
     onDismissErrorDialog: () -> Unit = {},
-    onToggleWordsBottomSheet: (Boolean) -> Unit = {}
+    onToggleWordsBottomSheet: (Boolean) -> Unit = {},
+    onWordSelected: (Coordinate, Coordinate) -> Unit = { _, _ -> }
 ) {
     val sheetState = rememberModalBottomSheetState()
 
@@ -99,8 +102,12 @@ fun PuzzleScreen(
                 )
 
                 state.puzzle?.let { puzzle ->
+                    val foundWords = state.words.filter { it.foundDate != null }
+
                     PuzzleGrid(
                         puzzle = puzzle,
+                        foundWords = foundWords,
+                        onWordSelected = onWordSelected,
                         modifier = Modifier
                             .weight(1f)
                             .padding(top = 16.dp)

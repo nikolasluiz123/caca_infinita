@@ -14,6 +14,7 @@ val SurfaceContainerLowLight = Color(0xFFE6F6FF)
 
 val CardAccentLight = Color(0xFF85F6E5)
 val SecondaryTextColorLight = Color(0xFF454652)
+val WordSelectionColorLight = Color(0xFF85F6E5)
 
 val PrimaryDark = Color(0xFFDEE0FF)
 val onPrimaryDark = Color(0xFF00105C)
@@ -25,6 +26,7 @@ val SurfaceContainerLowDark = Color(0xFF163440)
 
 val CardAccentDark = Color(0xFF006A60)
 val SecondaryTextColorDark = Color(0xFFC5C5D4)
+val WordSelectionColorDark = Color(0xFF006A60)
 
 val Gold = Color(0xFFFFD700)
 val Silver = Color(0xFFC0C0C0)
@@ -37,4 +39,8 @@ val CardAccentColor: Color
 @get:Composable
 val SecondaryTextColor: Color
     get() = if (isSystemInDarkTheme()) SecondaryTextColorDark else SecondaryTextColorLight
+
+@get:Composable
+val WordSelectionColor: Color
+    get() = if (isSystemInDarkTheme()) WordSelectionColorDark else WordSelectionColorLight
 

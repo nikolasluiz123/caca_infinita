@@ -15,6 +15,8 @@ import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetWordsFromPuzzleUse
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.StartSessionUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.provider.DeviceDimensionsProvider
 import br.com.schmittsolucoes.cacasobmedida.presentation.CommonViewModel
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.UpdateFoundWordUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.model.result.puzzle.Coordinate
 import br.com.schmittsolucoes.cacasobmedida.presentation.formatters.formatToClock
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.navigation.puzzleIdArg
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,6 +39,7 @@ class PuzzleViewModel @Inject constructor(
     private val getCountWordsUseCase: GetCountWordsUseCase,
     private val getWordsFromPuzzleUseCase: GetWordsFromPuzzleUseCase,
     private val getPuzzleByIdUseCase: GetPuzzleByIdUseCase,
+    private val updateFoundWordUseCase: UpdateFoundWordUseCase,
     private val dimensionsProvider: DeviceDimensionsProvider,
     private val loadingManager: LoadingManager
 ) : CommonViewModel() {
@@ -95,6 +98,25 @@ class PuzzleViewModel @Inject constructor(
     fun onStop() {
         launch {
             endSessionUseCase(puzzleId)
+        }
+    }
+
+    fun onWordSelected(start: Coordinate, end: Coordinate) {
+        val words = uiState.value.words
+        val selectedWord = words.find { word ->
+            val wordEndRow = word.startRow + (word.text.length - 1) * word.direction.rowStep
+            val wordEndCol = word.startCol + (word.text.length - 1) * word.direction.colStep
+
+            (word.startRow == start.row && word.startCol == start.col && wordEndRow == end.row && wordEndCol == end.col) ||
+            (word.startRow == end.row && word.startCol == end.col && wordEndRow == start.row && wordEndCol == start.col)
+        }
+
+        selectedWord?.let { word ->
+            if (word.foundDate == null) {
+                launch {
+                    updateFoundWordUseCase(word)
+                }
+            }
         }
     }
 
