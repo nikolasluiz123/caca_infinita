@@ -1,6 +1,10 @@
 package br.com.schmittsolucoes.cacasobmedida.data.repository
 
 import android.content.Context
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import br.com.schmittsolucoes.cacasobmedida.R
 import br.com.schmittsolucoes.cacasobmedida.core.database.transaction.DatabaseTransaction
 import br.com.schmittsolucoes.cacasobmedida.data.database.access.puzzle.WordSearchPuzzleLocalDataSource
@@ -10,6 +14,8 @@ import br.com.schmittsolucoes.cacasobmedida.data.repository.mapper.toDomain
 import br.com.schmittsolucoes.cacasobmedida.data.repository.mapper.toEntity
 import br.com.schmittsolucoes.cacasobmedida.domain.model.PuzzleRecord
 import br.com.schmittsolucoes.cacasobmedida.domain.model.WordSearchPuzzle
+import br.com.schmittsolucoes.cacasobmedida.domain.model.WordSearchPuzzleSummary
+import br.com.schmittsolucoes.cacasobmedida.domain.model.pagination.PaginationConfig
 import br.com.schmittsolucoes.cacasobmedida.domain.model.result.puzzle.PuzzleResult
 import br.com.schmittsolucoes.cacasobmedida.domain.repository.WordSearchPuzzleRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -52,9 +58,15 @@ class WordSearchPuzzleRepositoryImpl @Inject constructor(
         return wordSearchPuzzleLocalDataSource.selectById(id).toDomain()
     }
 
-    override fun getAllPuzzles(): Flow<List<WordSearchPuzzle>> {
-        return wordSearchPuzzleLocalDataSource.selectAll().map { entities ->
-            entities.map { it.toDomain() }
+    override fun getAllPuzzles(config: PaginationConfig): Flow<PagingData<WordSearchPuzzleSummary>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = config.pageSize,
+                enablePlaceholders = config.enablePlaceholders
+            ),
+            pagingSourceFactory = { wordSearchPuzzleLocalDataSource.selectAll() }
+        ).flow.map { pagingData ->
+            pagingData.map { it.toDomain() }
         }
     }
 

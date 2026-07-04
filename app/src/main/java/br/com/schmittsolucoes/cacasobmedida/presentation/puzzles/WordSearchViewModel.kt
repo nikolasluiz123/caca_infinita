@@ -1,9 +1,13 @@
 package br.com.schmittsolucoes.cacasobmedida.presentation.puzzles
 
 import android.net.Uri
+import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import br.com.schmittsolucoes.cacasobmedida.R
+import br.com.schmittsolucoes.cacasobmedida.domain.model.pagination.PaginationConfig
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GenerateImagePuzzleUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GeneratePDFPuzzleUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetAllPuzzlesUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.SaveGeneratedPuzzlesUseCase
 import br.com.schmittsolucoes.cacasobmedida.presentation.CommonViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,6 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WordSearchViewModel @Inject constructor(
+    private val getAllPuzzlesUseCase: GetAllPuzzlesUseCase,
     private val generatePdfPuzzleUseCase: GeneratePDFPuzzleUseCase,
     private val generateImagePuzzleUseCase: GenerateImagePuzzleUseCase,
     private val saveGeneratedPuzzlesUseCase: SaveGeneratedPuzzlesUseCase,
@@ -22,6 +27,11 @@ class WordSearchViewModel @Inject constructor(
 ) : CommonViewModel() {
     private val _uiState = MutableStateFlow(WordSearchUiState())
     val uiState: StateFlow<WordSearchUiState> = _uiState.asStateFlow()
+
+    init {
+        val puzzles = getAllPuzzlesUseCase(PaginationConfig(pageSize = 20)).cachedIn(viewModelScope)
+        _uiState.update { it.copy(puzzles = puzzles) }
+    }
 
     fun onPdfsSelected(uris: List<Uri>) {
         if (uris.isEmpty()) return

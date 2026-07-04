@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.paging.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -58,8 +59,7 @@ dependencies {
 
     implementation(libs.room.ktx)
     implementation(libs.room.runtime)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
-    debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.room.paging)
     ksp(libs.room.compiler)
 
     implementation(libs.mlkit.text.recognition)
@@ -79,4 +79,7 @@ dependencies {
 
     implementation(libs.androidx.concurrent.futures.ktx)
     implementation(libs.kotlinx.coroutines.play.services)
+
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+    debugImplementation(libs.androidx.compose.ui.tooling)
 }

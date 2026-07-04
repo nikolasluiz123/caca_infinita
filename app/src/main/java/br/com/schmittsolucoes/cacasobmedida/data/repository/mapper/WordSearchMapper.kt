@@ -3,9 +3,11 @@ package br.com.schmittsolucoes.cacasobmedida.data.repository.mapper
 import br.com.schmittsolucoes.cacasobmedida.data.model.PuzzleSessionEntity
 import br.com.schmittsolucoes.cacasobmedida.data.model.WordEntity
 import br.com.schmittsolucoes.cacasobmedida.data.model.WordSearchPuzzleEntity
+import br.com.schmittsolucoes.cacasobmedida.data.model.WordSearchPuzzleWithStats
 import br.com.schmittsolucoes.cacasobmedida.domain.model.PuzzleSession
 import br.com.schmittsolucoes.cacasobmedida.domain.model.Word
 import br.com.schmittsolucoes.cacasobmedida.domain.model.WordSearchPuzzle
+import br.com.schmittsolucoes.cacasobmedida.domain.model.WordSearchPuzzleSummary
 import br.com.schmittsolucoes.cacasobmedida.domain.model.result.puzzle.PlacedWord
 import br.com.schmittsolucoes.cacasobmedida.domain.model.result.puzzle.PuzzleResult
 
@@ -36,6 +38,15 @@ fun WordSearchPuzzleEntity.toDomain(): WordSearchPuzzle {
         name = name,
         rows = rows,
         columns = columns
+    )
+}
+
+fun WordSearchPuzzleWithStats.toDomain(): WordSearchPuzzleSummary {
+    return WordSearchPuzzleSummary(
+        id = puzzle.id,
+        name = puzzle.name,
+        wordsCount = wordsCount,
+        hasUnfinishedWords = hasUnfinishedWords
     )
 }
 

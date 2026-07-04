@@ -4,7 +4,10 @@ import android.content.res.Configuration
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -19,14 +22,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.schmittsolucoes.cacasobmedida.R
 import br.com.schmittsolucoes.cacasobmedida.presentation.components.ErrorDialog
 import br.com.schmittsolucoes.cacasobmedida.presentation.components.LoadingOverlay
+import br.com.schmittsolucoes.cacasobmedida.presentation.components.PagedList
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.WordSearchUiState
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.WordSearchViewModel
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.composables.components.AddWordSearchBottomSheet
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.composables.components.EmptyWordSearchList
+import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.composables.components.WordSearchItem
 import br.com.schmittsolucoes.cacasobmedida.presentation.theme.CacaSobMedidaTheme
 
 @Composable
@@ -74,6 +81,7 @@ fun WordSearchGeneratedPuzzlesScreen(
 ) {
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(value = false) }
+    val puzzles = state.puzzles.collectAsLazyPagingItems()
 
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
@@ -88,7 +96,16 @@ fun WordSearchGeneratedPuzzlesScreen(
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                EmptyWordSearchList()
+                PagedList(
+                    items = puzzles,
+                    emptyContent = { EmptyWordSearchList() },
+                    contentPadding = PaddingValues(16.dp),
+                ) { puzzle ->
+                    puzzle?.let {
+                        WordSearchItem(puzzle = it)
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
+                }
             }
 
             if (showBottomSheet) {

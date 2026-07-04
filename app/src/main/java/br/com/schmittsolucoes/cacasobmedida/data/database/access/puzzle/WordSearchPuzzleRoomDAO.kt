@@ -2,16 +2,24 @@ package br.com.schmittsolucoes.cacasobmedida.data.database.access.puzzle
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.paging.PagingSource
 import br.com.schmittsolucoes.cacasobmedida.data.database.access.RoomLocalDataSource
 import br.com.schmittsolucoes.cacasobmedida.data.model.WordSearchPuzzleEntity
+import br.com.schmittsolucoes.cacasobmedida.data.model.WordSearchPuzzleWithStats
 import br.com.schmittsolucoes.cacasobmedida.domain.model.PuzzleRecord
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WordSearchPuzzleRoomDAO: WordSearchPuzzleLocalDataSource, RoomLocalDataSource<WordSearchPuzzleEntity> {
 
-    @Query("select * from word_search_puzzle")
-    override fun selectAll(): Flow<List<WordSearchPuzzleEntity>>
+    @Query("""
+        select *,
+               (select count(id) from word where word.puzzle_id = word_search_puzzle.id) as wordsCount,
+               (exists (select 1 from word where word.puzzle_id = word_search_puzzle.id and word.found_date is null)) as hasUnfinishedWords
+        from word_search_puzzle
+        order by hasUnfinishedWords desc
+    """)
+    override fun selectAll(): PagingSource<Int, WordSearchPuzzleWithStats>
 
     @Query("select * from word_search_puzzle where id = :id")
     override suspend fun selectById(id: String): WordSearchPuzzleEntity
