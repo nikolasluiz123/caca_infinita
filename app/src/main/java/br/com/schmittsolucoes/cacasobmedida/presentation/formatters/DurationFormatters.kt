@@ -1,13 +1,14 @@
 package br.com.schmittsolucoes.cacasobmedida.presentation.formatters
 
+import java.util.Locale
 import kotlin.time.Duration
 
-fun Duration.formatToClock(): String {
+fun Duration.formatToClock(forceShowHours: Boolean = false): String {
     return toComponents { hours, minutes, seconds, _ ->
-        if (hours > 0) {
-            "%02d:%02d:%02d".format(hours, minutes, seconds)
+        if (forceShowHours || hours > 0) {
+            String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds)
         } else {
-            "%02d:%02d".format(minutes, seconds)
+            String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
         }
     }
 }
