@@ -18,7 +18,7 @@ class AndroidDimensionsProvider @Inject constructor(
         return context.resources.configuration.screenHeightDp.toFloat()
     }
 
-    override fun getCellSize(): Float = 40f
+    override fun getCellSize(): Float = 50f
 
     override fun getPaddingStart(): Float = 8f
 
