@@ -61,7 +61,7 @@ interface WordSearchPuzzleRoomDAO: WordSearchPuzzleLocalDataSource, RoomLocalDat
             where word.puzzle_id = puzzle.id
             and word.found_date is null
         )
-        order by duration desc, wordsCount desc
+        order by duration asc, wordsCount desc
         limit 3
     """)
     override fun selectRecords(): Flow<List<PuzzleRecord>>
