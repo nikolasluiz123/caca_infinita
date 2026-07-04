@@ -31,4 +31,5 @@
     <string name="error_dialog_ok">OK</string>
     <string name="processing">Processando…</string>
     <string name="puzzle_screen_time_label">TEMPO DECORRIDO</string>
+    <string name="puzzle_words_bottom_sheet_title">Palavras</string>
 </resources>

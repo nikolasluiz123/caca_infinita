@@ -10,4 +10,5 @@ interface WordLocalDataSource: EntityLocalDataSource<WordEntity> {
 
     fun selectCountWordsObservable(puzzleId: String): Flow<Long>
     fun selectCountFoundWordsObservable(puzzleId: String): Flow<Long>
+    fun selectAllObservable(puzzleId: String): Flow<List<WordEntity>>
 }

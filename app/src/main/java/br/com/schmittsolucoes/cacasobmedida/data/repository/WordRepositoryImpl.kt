@@ -6,6 +6,7 @@ import br.com.schmittsolucoes.cacasobmedida.data.repository.mapper.toEntity
 import br.com.schmittsolucoes.cacasobmedida.domain.model.Word
 import br.com.schmittsolucoes.cacasobmedida.domain.repository.WordRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class WordRepositoryImpl @Inject constructor(
@@ -29,5 +30,11 @@ class WordRepositoryImpl @Inject constructor(
 
     override fun getCountFoundWordsObservable(puzzleId: String): Flow<Long> {
         return wordLocalDataSource.selectCountFoundWordsObservable(puzzleId)
+    }
+
+    override fun getAllWordsObservable(puzzleId: String): Flow<List<Word>> {
+        return wordLocalDataSource.selectAllObservable(puzzleId).map { entities ->
+            entities.map { it.toDomain() }
+        }
     }
 }

@@ -5,13 +5,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,6 +30,7 @@ import br.com.schmittsolucoes.cacasobmedida.presentation.components.ErrorDialog
 import br.com.schmittsolucoes.cacasobmedida.presentation.components.LoadingOverlay
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.PuzzleUiState
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.PuzzleViewModel
+import br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.composables.components.WordsBottomSheet
 import br.com.schmittsolucoes.cacasobmedida.presentation.theme.CacaSobMedidaTheme
 import br.com.schmittsolucoes.cacasobmedida.presentation.theme.SecondaryTextColor
 
@@ -43,18 +50,33 @@ fun PuzzleScreen(
 
     PuzzleScreen(
         state = state,
-        onDismissErrorDialog = viewModel::onDismissErrorDialog
+        onDismissErrorDialog = viewModel::onDismissErrorDialog,
+        onToggleWordsBottomSheet = viewModel::onToggleWordsBottomSheet
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PuzzleScreen(
     state: PuzzleUiState,
-    onDismissErrorDialog: () -> Unit = {}
+    onDismissErrorDialog: () -> Unit = {},
+    onToggleWordsBottomSheet: (Boolean) -> Unit = {}
 ) {
+    val sheetState = rememberModalBottomSheetState()
+
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = { onToggleWordsBottomSheet(true) },
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_grid_view),
+                        contentDescription = null
+                    )
+                }
+            }
         ) { paddingValues ->
             Column(
                 modifier = Modifier
@@ -88,6 +110,14 @@ fun PuzzleScreen(
                 onDismiss = onDismissErrorDialog
             )
         }
+
+        if (state.isWordsBottomSheetVisible) {
+            WordsBottomSheet(
+                words = state.words,
+                sheetState = sheetState,
+                onDismissRequest = { onToggleWordsBottomSheet(false) }
+            )
+        }
     }
 }
 
@@ -97,7 +127,11 @@ fun PuzzleScreen(
 private fun PuzzleScreenPreview() {
     CacaSobMedidaTheme {
         PuzzleScreen(
-            state = PuzzleUiState(formattedTime = "00:05:30")
+            state = PuzzleUiState(
+                formattedTime = "00:05:30",
+                foundWordsCount = 5,
+                totalWordsCount = 10
+            )
         )
     }
 }

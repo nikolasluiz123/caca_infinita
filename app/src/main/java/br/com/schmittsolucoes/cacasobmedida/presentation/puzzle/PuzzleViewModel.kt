@@ -4,8 +4,11 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import br.com.schmittsolucoes.cacasobmedida.R
+import br.com.schmittsolucoes.cacasobmedida.domain.model.Word
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.EndSessionUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetCountWordsUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetElapsedTimeUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetWordsFromPuzzleUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.StartSessionUseCase
 import br.com.schmittsolucoes.cacasobmedida.presentation.CommonViewModel
 import br.com.schmittsolucoes.cacasobmedida.presentation.formatters.formatToClock
@@ -18,6 +21,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
+import kotlin.time.Duration as KotlinDuration
 
 @HiltViewModel
 class PuzzleViewModel @Inject constructor(
@@ -25,22 +29,42 @@ class PuzzleViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val startSessionUseCase: StartSessionUseCase,
     private val endSessionUseCase: EndSessionUseCase,
-    private val getElapsedTimeUseCase: GetElapsedTimeUseCase
+    private val getElapsedTimeUseCase: GetElapsedTimeUseCase,
+    private val getCountWordsUseCase: GetCountWordsUseCase,
+    private val getWordsFromPuzzleUseCase: GetWordsFromPuzzleUseCase
 ) : CommonViewModel() {
 
     private val puzzleId: String = checkNotNull(savedStateHandle[puzzleIdArg])
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     private val _isLoading = MutableStateFlow(false)
+    private val _isWordsBottomSheetVisible = MutableStateFlow(false)
 
+    @Suppress("UNCHECKED_CAST")
     val uiState: StateFlow<PuzzleUiState> = combine(
         getElapsedTimeUseCase(puzzleId),
+        getCountWordsUseCase.allWordsObservable(puzzleId),
+        getCountWordsUseCase.foundWordsObservable(puzzleId),
+        getWordsFromPuzzleUseCase.getAllWordsObservable(puzzleId),
+        _isWordsBottomSheetVisible,
         _errorMessage,
         _isLoading
-    ) { elapsed, errorMessage, isLoading ->
+    ) { flows ->
+        val elapsed = flows[0] as KotlinDuration
+        val totalCount = flows[1] as Long
+        val foundCount = flows[2] as Long
+        val words = flows[3] as List<Word>
+        val isSheetVisible = flows[4] as Boolean
+        val errorMessage = flows[5] as String?
+        val isLoading = flows[6] as Boolean
+
         PuzzleUiState(
             elapsedTime = elapsed.inWholeMilliseconds,
             formattedTime = elapsed.formatToClock(forceShowHours = true),
+            totalWordsCount = totalCount,
+            foundWordsCount = foundCount,
+            words = words,
+            isWordsBottomSheetVisible = isSheetVisible,
             errorMessage = errorMessage,
             isLoading = isLoading
         )
@@ -64,6 +88,10 @@ class PuzzleViewModel @Inject constructor(
 
     fun onDismissErrorDialog() {
         _errorMessage.value = null
+    }
+
+    fun onToggleWordsBottomSheet(visible: Boolean) {
+        _isWordsBottomSheetVisible.value = visible
     }
 
     override fun getErrorMessageFrom(throwable: Throwable): String {
