@@ -9,6 +9,8 @@ import br.com.schmittsolucoes.cacasobmedida.presentation.camera.navigation.navig
 import br.com.schmittsolucoes.cacasobmedida.presentation.home.navigation.homeScreen
 import br.com.schmittsolucoes.cacasobmedida.presentation.home.navigation.homeScreenRoute
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.navigation.wordSearchGeneratedPuzzlesScreen
+import br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.navigation.navigateToPuzzle
+import br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.navigation.puzzleScreen
 
 @Composable
 fun AppNavHost(
@@ -21,12 +23,11 @@ fun AppNavHost(
         modifier = modifier
     ) {
         homeScreen(
-            onContinueGameClick = { puzzleId ->
-
-            }
+            onContinueGameClick = navController::navigateToPuzzle
         )
         wordSearchGeneratedPuzzlesScreen(
-            onOpenCameraClick = navController::navigateToCamera
+            onOpenCameraClick = navController::navigateToCamera,
+            onPuzzleClick = navController::navigateToPuzzle
         )
 
         cameraScreen(
@@ -34,5 +35,7 @@ fun AppNavHost(
                 navController.popBackStack()
             }
         )
+
+        puzzleScreen()
     }
 }

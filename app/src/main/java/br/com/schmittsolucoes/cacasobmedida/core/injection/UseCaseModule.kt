@@ -13,11 +13,12 @@ import br.com.schmittsolucoes.cacasobmedida.domain.repository.UserRepository
 import br.com.schmittsolucoes.cacasobmedida.domain.repository.WordRepository
 import br.com.schmittsolucoes.cacasobmedida.domain.repository.WordSearchPuzzleRepository
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.CreateUserIfNotExistsUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.EndSessionUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GenerateImagePuzzleUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GeneratePDFPuzzleUseCase
-import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GeneratePuzzleUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetAllPuzzlesUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetCountWordsUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetElapsedTimeUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetLastUnfinishedPuzzleUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetNextUserLevelUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetPuzzleByIdUseCase
@@ -26,6 +27,7 @@ import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetUserExperienceByFo
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetUserUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetWordsFromPuzzleUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.SaveGeneratedPuzzlesUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.StartSessionUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.UpdateFoundWordUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.UpdateUserExperienceUseCase
 import dagger.Module
@@ -126,6 +128,21 @@ object UseCaseModule {
         getNextUserLevelUseCase: GetNextUserLevelUseCase
     ): CreateUserIfNotExistsUseCase {
         return CreateUserIfNotExistsUseCase(userRepository, getNextUserLevelUseCase)
+    }
+
+    @Provides
+    fun provideGetElapsedTimeUseCase(repository: PuzzleSessionRepository): GetElapsedTimeUseCase {
+        return GetElapsedTimeUseCase(repository)
+    }
+
+    @Provides
+    fun provideStartSessionUseCase(repository: PuzzleSessionRepository): StartSessionUseCase {
+        return StartSessionUseCase(repository)
+    }
+
+    @Provides
+    fun provideEndSessionUseCase(repository: PuzzleSessionRepository): EndSessionUseCase {
+        return EndSessionUseCase(repository)
     }
 
     @Provides

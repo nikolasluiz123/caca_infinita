@@ -10,13 +10,17 @@ import br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.composables.Wor
 
 const val wordSearchGeneratedPuzzlesRoute = "word_search_generated_puzzles"
 
-fun NavGraphBuilder.wordSearchGeneratedPuzzlesScreen(onOpenCameraClick: () -> Unit) {
+fun NavGraphBuilder.wordSearchGeneratedPuzzlesScreen(
+    onOpenCameraClick: () -> Unit,
+    onPuzzleClick: (String) -> Unit
+) {
     composable(route = wordSearchGeneratedPuzzlesRoute) {
         val viewModel = hiltViewModel<WordSearchViewModel>()
 
         WordSearchGeneratedPuzzlesScreen(
             viewModel = viewModel,
-            onOpenCameraClick = onOpenCameraClick
+            onOpenCameraClick = onOpenCameraClick,
+            onPuzzleClick = onPuzzleClick
         )
     }
 }

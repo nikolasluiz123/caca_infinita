@@ -45,7 +45,7 @@ class WordSearchViewModel @Inject constructor(
         )
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
+        started = SharingStarted.WhileSubscribed(3000),
         initialValue = WordSearchUiState(puzzles = _puzzles)
     )
 

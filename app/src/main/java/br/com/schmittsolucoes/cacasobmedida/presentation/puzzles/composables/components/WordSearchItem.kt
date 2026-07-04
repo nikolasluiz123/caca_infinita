@@ -28,9 +28,13 @@ import br.com.schmittsolucoes.cacasobmedida.presentation.theme.SecondaryTextColo
 @Composable
 fun WordSearchItem(
     puzzle: WordSearchPuzzleSummary,
+    onClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card(modifier = modifier.fillMaxWidth()) {
+    Card(
+        onClick = { onClick(puzzle.id) },
+        modifier = modifier.fillMaxWidth()
+    ) {
         Row(
             modifier = Modifier
                 .padding(16.dp)
@@ -99,7 +103,8 @@ private fun WordSearchItemPreview() {
                     name = "Animais",
                     wordsCount = 10,
                     hasUnfinishedWords = true
-                )
+                ),
+                onClick = {}
             )
             Spacer(modifier = Modifier.height(16.dp))
             WordSearchItem(
@@ -108,7 +113,8 @@ private fun WordSearchItemPreview() {
                     name = "Cidades",
                     wordsCount = 15,
                     hasUnfinishedWords = false
-                )
+                ),
+                onClick = {}
             )
         }
     }

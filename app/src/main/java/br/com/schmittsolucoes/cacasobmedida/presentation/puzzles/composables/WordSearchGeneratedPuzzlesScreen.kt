@@ -40,6 +40,7 @@ import br.com.schmittsolucoes.cacasobmedida.presentation.theme.CacaSobMedidaThem
 fun WordSearchGeneratedPuzzlesScreen(
     viewModel: WordSearchViewModel,
     onOpenCameraClick: () -> Unit,
+    onPuzzleClick: (String) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -66,7 +67,8 @@ fun WordSearchGeneratedPuzzlesScreen(
         onLoadPdfClick = {
             pdfPickerLauncher.launch(arrayOf("application/pdf"))
         },
-        onDismissErrorDialog = viewModel::onDismissErrorDialog
+        onDismissErrorDialog = viewModel::onDismissErrorDialog,
+        onPuzzleClick = onPuzzleClick
     )
 }
 
@@ -74,10 +76,11 @@ fun WordSearchGeneratedPuzzlesScreen(
 @Composable
 fun WordSearchGeneratedPuzzlesScreen(
     state: WordSearchUiState,
-    onOpenCameraClick: () -> Unit,
-    onLoadImageClick: () -> Unit,
-    onLoadPdfClick: () -> Unit,
-    onDismissErrorDialog: () -> Unit,
+    onOpenCameraClick: () -> Unit = {},
+    onLoadImageClick: () -> Unit = {},
+    onLoadPdfClick: () -> Unit = {},
+    onDismissErrorDialog: () -> Unit = {},
+    onPuzzleClick: (String) -> Unit = {},
 ) {
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(value = false) }
@@ -102,7 +105,10 @@ fun WordSearchGeneratedPuzzlesScreen(
                     contentPadding = PaddingValues(16.dp),
                 ) { puzzle ->
                     puzzle?.let {
-                        WordSearchItem(puzzle = it)
+                        WordSearchItem(
+                            puzzle = it,
+                            onClick = onPuzzleClick
+                        )
                         Spacer(modifier = Modifier.height(12.dp))
                     }
                 }
@@ -139,10 +145,6 @@ private fun WordSearchGeneratedPuzzlesScreenPreview() {
     CacaSobMedidaTheme {
         WordSearchGeneratedPuzzlesScreen(
             state = WordSearchUiState(),
-            onOpenCameraClick = {},
-            onLoadImageClick = {},
-            onLoadPdfClick = {},
-            onDismissErrorDialog = {}
         )
     }
 }
