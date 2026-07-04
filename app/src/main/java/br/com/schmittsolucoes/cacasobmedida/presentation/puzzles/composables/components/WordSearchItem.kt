@@ -1,6 +1,8 @@
 package br.com.schmittsolucoes.cacasobmedida.presentation.puzzles.composables.components
 
 import android.content.res.Configuration
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -77,18 +80,20 @@ private fun StatusIcon(
     hasUnfinishedWords: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val iconRes = if (hasUnfinishedWords) {
-        R.drawable.ic_play_outlined_rounded_20dp
+    if (hasUnfinishedWords) {
+        Box(
+            modifier = modifier
+                .size(24.dp)
+                .border(1.dp, SecondaryTextColor, CircleShape)
+        )
     } else {
-        R.drawable.ic_checked_filled_rounded_20dp
+        Icon(
+            painter = painterResource(R.drawable.ic_checked_filled_rounded_20dp),
+            contentDescription = null,
+            modifier = modifier.size(24.dp),
+            tint = MaterialTheme.colorScheme.primary
+        )
     }
-
-    Icon(
-        painter = painterResource(iconRes),
-        contentDescription = null,
-        modifier = modifier.size(24.dp),
-        tint = if (hasUnfinishedWords) SecondaryTextColor else MaterialTheme.colorScheme.primary
-    )
 }
 
 @Preview(name = "Light Mode")

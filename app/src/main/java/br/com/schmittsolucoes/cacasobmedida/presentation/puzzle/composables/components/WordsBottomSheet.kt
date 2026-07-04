@@ -2,6 +2,7 @@ package br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.composables.com
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
@@ -26,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -36,6 +39,7 @@ import br.com.schmittsolucoes.cacasobmedida.domain.model.Word
 import br.com.schmittsolucoes.cacasobmedida.domain.model.enumeration.Direction
 import br.com.schmittsolucoes.cacasobmedida.presentation.theme.CacaSobMedidaTheme
 import br.com.schmittsolucoes.cacasobmedida.presentation.theme.SecondaryTextColor
+import br.com.schmittsolucoes.cacasobmedida.presentation.theme.WordSelectionColor
 import java.time.Instant
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,12 +86,20 @@ private fun WordItem(word: Word) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .size(18.dp)
-                .clip(CircleShape)
-                .background(if (isFound) MaterialTheme.colorScheme.primary else SecondaryTextColor)
-        )
+        if (isFound) {
+            Icon(
+                painter = painterResource(R.drawable.ic_checked_filled_rounded_20dp),
+                contentDescription = null,
+                modifier = Modifier.size(18.dp),
+                tint = WordSelectionColor
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .size(18.dp)
+                    .border(1.dp, SecondaryTextColor, CircleShape)
+            )
+        }
         Text(
             text = word.text,
             style = MaterialTheme.typography.bodyLarge.copy(
