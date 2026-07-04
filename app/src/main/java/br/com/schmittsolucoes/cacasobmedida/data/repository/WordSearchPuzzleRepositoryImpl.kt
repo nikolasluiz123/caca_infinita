@@ -34,15 +34,16 @@ class WordSearchPuzzleRepositoryImpl @Inject constructor(
 ) : WordSearchPuzzleRepository {
     override suspend fun insert(result: List<PuzzleResult>) {
         val user = userLocalDataSource.selectFirst()
-
         val existingPuzzlesCount = getCount()
 
-        val fallbackName = context.getString(
-            R.string.puzzle_fallback_name,
-            existingPuzzlesCount + result.size + 1
-        )
+        val puzzleEntities = result.mapIndexed { index, result ->
+            val fallbackName = context.getString(
+                R.string.puzzle_fallback_name,
+                existingPuzzlesCount + (index + 1)
+            )
 
-        val puzzleEntities = result.map { it.toEntity(fallbackName, user.id) }
+            result.toEntity(fallbackName, user.id)
+        }
 
         val wordEntities = result.zip(puzzleEntities).flatMap { (puzzleResult, puzzleEntity) ->
             puzzleResult.placedWords.map { it.toEntity(puzzleEntity.id) }
