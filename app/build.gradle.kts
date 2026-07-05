@@ -1,3 +1,4 @@
+import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 import java.util.Properties
 
 plugins {
@@ -24,10 +25,10 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file(System.getenv("KEYSTORE_PATH") ?: "keystore.jks")
-            storePassword = System.getenv("KEYSTORE_PASSWORD")
-            keyAlias = System.getenv("KEY_ALIAS")
-            keyPassword = System.getenv("KEY_PASSWORD")
+            storeFile = file(project.findProperty("KEYSTORE_PATH")?.toString() ?: System.getenv("KEYSTORE_PATH") ?: "keystore.jks")
+            storePassword = project.findProperty("KEYSTORE_PASSWORD")?.toString() ?: System.getenv("KEYSTORE_PASSWORD")
+            keyAlias = project.findProperty("KEY_ALIAS")?.toString() ?: System.getenv("KEY_ALIAS")
+            keyPassword = project.findProperty("KEY_PASSWORD")?.toString() ?: System.getenv("KEY_PASSWORD")
         }
     }
 
@@ -58,14 +59,18 @@ android {
         }
 
         release {
-            isMinifyEnabled = false
-            isShrinkResources = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             ndk.debugSymbolLevel = "FULL"
             signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
+            configure<CrashlyticsExtension> {
+                mappingFileUploadEnabled = true
+            }
         }
     }
     compileOptions {
@@ -74,6 +79,14 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+    packaging {
+        resources {
+            merges += "META-INF/services/org.apache.lucene.codecs.Codec"
+            merges += "META-INF/services/org.apache.lucene.codecs.PostingsFormat"
+            merges += "META-INF/services/org.apache.lucene.codecs.DocValuesFormat"
+            merges += "META-INF/services/org.apache.lucene.analysis.Analyzer"
+        }
     }
 }
 
