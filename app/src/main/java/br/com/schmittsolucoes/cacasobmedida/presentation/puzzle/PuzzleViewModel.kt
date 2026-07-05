@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import br.com.schmittsolucoes.cacasobmedida.R
 import br.com.schmittsolucoes.cacasobmedida.domain.manager.LoadingManager
+import br.com.schmittsolucoes.cacasobmedida.domain.manager.SnackbarManager
 import br.com.schmittsolucoes.cacasobmedida.domain.model.Word
 import br.com.schmittsolucoes.cacasobmedida.domain.model.WordSearchPuzzle
 import br.com.schmittsolucoes.cacasobmedida.domain.model.result.puzzle.Coordinate
@@ -22,6 +23,7 @@ import br.com.schmittsolucoes.cacasobmedida.presentation.formatters.formatToCloc
 import br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.navigation.puzzleIdArg
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -43,7 +45,8 @@ class PuzzleViewModel @Inject constructor(
     getElapsedTimeUseCase: GetElapsedTimeUseCase,
     getWordsFromPuzzleUseCase: GetWordsFromPuzzleUseCase,
     dimensionsProvider: DeviceDimensionsProvider,
-    loadingManager: LoadingManager
+    loadingManager: LoadingManager,
+    private val snackbarManager: SnackbarManager
 ) : CommonViewModel() {
 
     private val puzzleId: String = checkNotNull(savedStateHandle[puzzleIdArg])
@@ -52,6 +55,9 @@ class PuzzleViewModel @Inject constructor(
     private val _errorMessage = MutableStateFlow<String?>(null)
     private val _isWordsBottomSheetVisible = MutableStateFlow(false)
     private val _xpAnimations = MutableStateFlow<List<XpAnimationState>>(emptyList())
+    private val _isPuzzleFinished = MutableStateFlow(false)
+
+    private var puzzleJob: Job? = null
 
     @Suppress("UNCHECKED_CAST")
     val uiState: StateFlow<PuzzleUiState> = combine(
@@ -61,7 +67,8 @@ class PuzzleViewModel @Inject constructor(
         _errorMessage,
         loadingManager.isLoading,
         _puzzle,
-        _xpAnimations
+        _xpAnimations,
+        _isPuzzleFinished
     ) { flows ->
         val elapsed = flows[0] as KotlinDuration
         val words = flows[1] as List<Word>
@@ -70,6 +77,7 @@ class PuzzleViewModel @Inject constructor(
         val isLoading = flows[4] as Boolean
         val puzzle = flows[5] as WordSearchPuzzle?
         val xpAnimations = flows[6] as List<XpAnimationState>
+        val isPuzzleFinished = flows[7] as Boolean
 
         PuzzleUiState(
             puzzle = puzzle,
@@ -80,7 +88,8 @@ class PuzzleViewModel @Inject constructor(
             paddingBottom = dimensionsProvider.getPaddingBottom(),
             errorMessage = errorMessage,
             isLoading = isLoading,
-            xpAnimations = xpAnimations
+            xpAnimations = xpAnimations,
+            isPuzzleFinished = isPuzzleFinished
         )
     }.stateIn(
         scope = viewModelScope,
@@ -89,13 +98,15 @@ class PuzzleViewModel @Inject constructor(
     )
 
     fun onStart() {
-        launch {
+        puzzleJob?.cancel()
+        puzzleJob = launch {
             _puzzle.value = getPuzzleByIdUseCase(puzzleId)
             startSessionUseCase(puzzleId)
 
             getHasWordsToSearchUseCase(puzzleId).collect { hasWords ->
                 if (!hasWords) {
-                    onStop()
+                    _isPuzzleFinished.value = true
+                    snackbarManager.showSnackbar(context.getString(R.string.puzzle_finished_message))
                 }
             }
         }

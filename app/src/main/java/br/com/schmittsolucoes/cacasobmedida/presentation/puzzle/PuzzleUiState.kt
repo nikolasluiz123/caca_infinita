@@ -17,5 +17,6 @@ data class PuzzleUiState(
     val paddingBottom: Float = 0f,
     val errorMessage: String? = null,
     val isLoading: Boolean = false,
-    val xpAnimations: List<XpAnimationState> = emptyList()
+    val xpAnimations: List<XpAnimationState> = emptyList(),
+    val isPuzzleFinished: Boolean = false
 )

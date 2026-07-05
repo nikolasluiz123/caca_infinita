@@ -3,6 +3,7 @@ package br.com.schmittsolucoes.cacasobmedida.presentation
 import android.app.Application
 import br.com.schmittsolucoes.cacasobmedida.R
 import br.com.schmittsolucoes.cacasobmedida.domain.manager.LoadingManager
+import br.com.schmittsolucoes.cacasobmedida.domain.manager.SnackbarManager
 import br.com.schmittsolucoes.cacasobmedida.domain.manager.PDFTextExtractorManager
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.CreateUserIfNotExistsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +16,8 @@ class AppViewModel @Inject constructor(
     private val application: Application,
     createUserIfNotExistsUseCase: CreateUserIfNotExistsUseCase,
     pdfTextExtractorManager: PDFTextExtractorManager,
-    loadingManager: LoadingManager
+    loadingManager: LoadingManager,
+    private val snackbarManager: SnackbarManager
 ) : CommonViewModel() {
 
     private val _isInitializing = MutableStateFlow(true)
@@ -26,6 +28,8 @@ class AppViewModel @Inject constructor(
 
     val isLoading = loadingManager.isLoading
     val loadingMessage = loadingManager.message
+
+    val snackbarMessage = snackbarManager.message
 
     init {
         launch {
@@ -45,5 +49,9 @@ class AppViewModel @Inject constructor(
 
     fun onDismissErrorDialog() {
         _errorMessage.value = null
+    }
+
+    fun onDismissSnackbar() {
+        snackbarManager.hideSnackbar()
     }
 }

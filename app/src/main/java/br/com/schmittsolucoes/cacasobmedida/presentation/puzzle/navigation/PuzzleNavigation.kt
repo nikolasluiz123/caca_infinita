@@ -13,7 +13,9 @@ import br.com.schmittsolucoes.cacasobmedida.presentation.puzzle.composables.Puzz
 const val puzzleIdArg = "puzzleId"
 const val puzzleRoute = "puzzle/{$puzzleIdArg}"
 
-fun NavGraphBuilder.puzzleScreen() {
+fun NavGraphBuilder.puzzleScreen(
+    onNavigateToHome: () -> Unit
+) {
     composable(
         route = puzzleRoute,
         arguments = listOf(
@@ -21,7 +23,10 @@ fun NavGraphBuilder.puzzleScreen() {
         )
     ) {
         val viewModel = hiltViewModel<PuzzleViewModel>()
-        PuzzleScreen(viewModel = viewModel)
+        PuzzleScreen(
+            viewModel = viewModel,
+            onNavigateToHome = onNavigateToHome
+        )
     }
 }
 

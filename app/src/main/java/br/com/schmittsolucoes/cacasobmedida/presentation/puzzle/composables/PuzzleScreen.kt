@@ -45,9 +45,16 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun PuzzleScreen(
-    viewModel: PuzzleViewModel
+    viewModel: PuzzleViewModel,
+    onNavigateToHome: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(state.isPuzzleFinished) {
+        if (state.isPuzzleFinished) {
+            onNavigateToHome()
+        }
+    }
 
     LifecycleEventEffect(Lifecycle.Event.ON_START) {
         viewModel.onStart()

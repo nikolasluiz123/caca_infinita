@@ -3,9 +3,11 @@ package br.com.schmittsolucoes.cacasobmedida.core.injection
 import br.com.schmittsolucoes.cacasobmedida.data.manager.FileHandler
 import br.com.schmittsolucoes.cacasobmedida.data.manager.LoadingManagerImpl
 import br.com.schmittsolucoes.cacasobmedida.data.manager.PDFBoxTextExtractorManager
+import br.com.schmittsolucoes.cacasobmedida.data.manager.SnackbarManagerImpl
 import br.com.schmittsolucoes.cacasobmedida.domain.manager.FileManager
 import br.com.schmittsolucoes.cacasobmedida.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacasobmedida.domain.manager.PDFTextExtractorManager
+import br.com.schmittsolucoes.cacasobmedida.domain.manager.SnackbarManager
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -23,4 +25,7 @@ abstract class ManagerModule {
 
     @Binds
     abstract fun bindLoadingManager(impl: LoadingManagerImpl): LoadingManager
+
+    @Binds
+    abstract fun bindSnackbarManager(impl: SnackbarManagerImpl): SnackbarManager
 }

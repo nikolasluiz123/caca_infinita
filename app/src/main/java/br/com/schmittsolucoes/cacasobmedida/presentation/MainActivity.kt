@@ -10,9 +10,13 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -47,12 +51,25 @@ class MainActivity : ComponentActivity() {
             val appErrorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
             val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
             val loadingMessage by viewModel.loadingMessage.collectAsStateWithLifecycle()
+            val snackbarMessage by viewModel.snackbarMessage.collectAsStateWithLifecycle()
+
+            val snackbarHostState = remember { SnackbarHostState() }
+
+            LaunchedEffect(snackbarMessage) {
+                snackbarMessage?.let {
+                    snackbarHostState.showSnackbar(it)
+                    viewModel.onDismissSnackbar()
+                }
+            }
 
             CacaSobMedidaTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     val navController = rememberNavController()
                     Box(modifier = Modifier.fillMaxSize()) {
-                        App(navController = navController) {
+                        App(
+                            navController = navController,
+                            snackbarHostState = snackbarHostState
+                        ) {
                             AppNavHost(navController = navController)
 
                             appErrorMessage?.let { message ->
@@ -76,6 +93,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun App(
     navController: NavHostController,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     content: @Composable () -> Unit = { }
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -94,7 +112,8 @@ fun App(
                     isHomeSelected = currentRoute == homeScreenRoute
                 )
             }
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         Box(
             modifier = Modifier
