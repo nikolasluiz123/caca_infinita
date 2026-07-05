@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    namespace = "br.com.schmittsolucoes.cacasobmedida"
+    namespace = "br.com.schmittsolucoes.cacainfinita"
     compileSdk {
         version = release(37)
     }
 
     defaultConfig {
-        applicationId = "br.com.schmittsolucoes.cacasobmedida"
+        applicationId = "br.com.schmittsolucoes.cacainfinita"
         minSdk = 29
         targetSdk = 37
         versionCode = 1
