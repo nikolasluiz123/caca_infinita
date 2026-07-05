@@ -22,6 +22,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Caca Sob Medida"
+rootProject.name = "Caça Infinita"
 include(":app")
  
