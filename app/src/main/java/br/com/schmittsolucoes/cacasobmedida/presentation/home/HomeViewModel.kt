@@ -3,6 +3,7 @@ package br.com.schmittsolucoes.cacasobmedida.presentation.home
 import android.content.Context
 import androidx.lifecycle.viewModelScope
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetLastUnfinishedPuzzleUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetNextPuzzleToPlayUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetRecordPuzzlesUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetUserUseCase
 import br.com.schmittsolucoes.cacasobmedida.R
@@ -21,6 +22,7 @@ class HomeViewModel @Inject constructor(
     getUserUseCase: GetUserUseCase,
     getRecordPuzzlesUseCase: GetRecordPuzzlesUseCase,
     getLastUnfinishedPuzzleUseCase: GetLastUnfinishedPuzzleUseCase,
+    getNextPuzzleToPlayUseCase: GetNextPuzzleToPlayUseCase,
     @param:ApplicationContext private val context: Context
 ): CommonViewModel() {
 
@@ -30,12 +32,14 @@ class HomeViewModel @Inject constructor(
         getUserUseCase.observable(),
         getRecordPuzzlesUseCase(),
         getLastUnfinishedPuzzleUseCase(),
+        getNextPuzzleToPlayUseCase(),
         _errorMessage
-    ) { user, records, unfinishedPuzzleId, errorMessage ->
+    ) { user, records, unfinishedPuzzleId, nextPuzzleId, errorMessage ->
         HomeUIState(
             user = user,
             records = records,
-            unfinishedPuzzleId = unfinishedPuzzleId,
+            puzzleIdToPlay = unfinishedPuzzleId ?: nextPuzzleId,
+            isNewGame = unfinishedPuzzleId == null && nextPuzzleId != null,
             errorMessage = errorMessage
         )
     }.stateIn(

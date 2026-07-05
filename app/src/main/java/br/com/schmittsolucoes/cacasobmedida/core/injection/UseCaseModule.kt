@@ -20,6 +20,7 @@ import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetAllPuzzlesUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetElapsedTimeUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetHasWordsToSearchUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetLastUnfinishedPuzzleUseCase
+import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetNextPuzzleToPlayUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetNextUserLevelUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetPuzzleByIdUseCase
 import br.com.schmittsolucoes.cacasobmedida.domain.usecase.GetRecordPuzzlesUseCase
@@ -90,6 +91,11 @@ object UseCaseModule {
     @Provides
     fun provideGetLastUnfinishedPuzzleUseCase(repository: WordSearchPuzzleRepository): GetLastUnfinishedPuzzleUseCase {
         return GetLastUnfinishedPuzzleUseCase(repository)
+    }
+
+    @Provides
+    fun provideGetNextPuzzleToPlayUseCase(repository: WordSearchPuzzleRepository): GetNextPuzzleToPlayUseCase {
+        return GetNextPuzzleToPlayUseCase(repository)
     }
 
     @Provides

@@ -13,6 +13,7 @@ interface WordSearchPuzzleRepository {
     suspend fun getPuzzleBy(id: String): WordSearchPuzzle
     fun getAllPuzzles(config: PaginationConfig): Flow<PagingData<WordSearchPuzzleSummary>>
     fun getLastUnfinished(): Flow<String?>
+    fun getNextPuzzleToPlay(): Flow<String?>
     fun getRecords(): Flow<List<PuzzleRecord>>
     suspend fun getCount(): Long
 }

@@ -12,9 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import br.com.schmittsolucoes.cacasobmedida.R
 import br.com.schmittsolucoes.cacasobmedida.presentation.core.RequestAllPermissions
 import br.com.schmittsolucoes.cacasobmedida.presentation.home.HomeUIState
 import br.com.schmittsolucoes.cacasobmedida.presentation.home.HomeViewModel
@@ -62,8 +64,17 @@ fun HomeScreen(
                 xpToNextLevel = state.user?.maxLevelExperience ?: 0
             )
 
-            state.unfinishedPuzzleId?.let { puzzleId ->
-                ContinueGameButton(onClick = { onContinueGameClick(puzzleId) })
+            state.puzzleIdToPlay?.let { puzzleId ->
+                val text = if (state.isNewGame) {
+                    stringResource(R.string.new_game)
+                } else {
+                    stringResource(R.string.continue_game)
+                }
+
+                ContinueGameButton(
+                    text = text,
+                    onClick = { onContinueGameClick(puzzleId) }
+                )
             }
 
             PersonalRecordsSection(records = state.records)

@@ -28,6 +28,7 @@ import br.com.schmittsolucoes.cacasobmedida.presentation.theme.CacaSobMedidaThem
 @Composable
 fun ContinueGameButton(
     modifier: Modifier = Modifier,
+    text: String = stringResource(R.string.continue_game),
     onClick: () -> Unit = {}
 ) {
     Button(
@@ -49,7 +50,7 @@ fun ContinueGameButton(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = stringResource(R.string.continue_game),
+                text = text,
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
             )
         }

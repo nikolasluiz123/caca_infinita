@@ -75,6 +75,10 @@ class WordSearchPuzzleRepositoryImpl @Inject constructor(
         return wordSearchPuzzleLocalDataSource.selectLastUnfinished()
     }
 
+    override fun getNextPuzzleToPlay(): Flow<String?> {
+        return wordSearchPuzzleLocalDataSource.selectNextPuzzleToPlay()
+    }
+
     override fun getRecords(): Flow<List<PuzzleRecord>> {
         return wordSearchPuzzleLocalDataSource.selectRecords()
     }

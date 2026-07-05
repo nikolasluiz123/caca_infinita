@@ -11,6 +11,7 @@ interface WordSearchPuzzleLocalDataSource: EntityLocalDataSource<WordSearchPuzzl
     suspend fun selectById(id: String): WordSearchPuzzleEntity
     fun selectAll(): PagingSource<Int, WordSearchPuzzleWithStats>
     fun selectLastUnfinished(): Flow<String?>
+    fun selectNextPuzzleToPlay(): Flow<String?>
     fun selectRecords(): Flow<List<PuzzleRecord>>
     suspend fun selectCount(): Long
 }

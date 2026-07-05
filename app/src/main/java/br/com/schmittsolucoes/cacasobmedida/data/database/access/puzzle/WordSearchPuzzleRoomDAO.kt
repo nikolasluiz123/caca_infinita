@@ -41,6 +41,16 @@ interface WordSearchPuzzleRoomDAO: WordSearchPuzzleLocalDataSource, RoomLocalDat
     override fun selectLastUnfinished(): Flow<String?>
 
     @Query("""
+        select puzzle.id
+        from word_search_puzzle puzzle
+        where not exists (
+            select 1 from puzzle_session where puzzle_id = puzzle.id
+        )
+        limit 1
+    """)
+    override fun selectNextPuzzleToPlay(): Flow<String?>
+
+    @Query("""
         select puzzle.id as id,
                puzzle.name as puzzleName,
                (
