@@ -94,7 +94,7 @@ jobs:
           serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }}
           packageName: br.com.schmittsolucoes.cacainfinita
           releaseFiles: app/build/outputs/bundle/prodRelease/*.aab
-          track: ${{ github.event.inputs.track }}
+          tracks: ${{ github.event.inputs.track }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
