@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlinAndroidKsp)
@@ -13,6 +15,13 @@ android {
         version = release(37)
     }
 
+    val versionPropsFile = rootProject.file("version.properties")
+    val versionProps = Properties()
+
+    if (versionPropsFile.exists()) {
+        versionProps.load(versionPropsFile.inputStream())
+    }
+
     signingConfigs {
         create("release") {
             storeFile = file(System.getenv("KEYSTORE_PATH") ?: "keystore.jks")
@@ -26,8 +35,8 @@ android {
         applicationId = "br.com.schmittsolucoes.cacainfinita"
         minSdk = 29
         targetSdk = 37
-        versionCode = 2
-        versionName = "1.0.1"
+        versionCode = versionProps.getProperty("versionCode")?.toInt()!!
+        versionName = versionProps.getProperty("versionName")!!
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -51,6 +60,7 @@ android {
         release {
             isMinifyEnabled = false
             isShrinkResources = false
+            ndk.debugSymbolLevel = "FULL"
             signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -65,10 +75,10 @@ android {
     buildFeatures {
         compose = true
     }
+}
 
-    ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
-    }
+ksp {
+    arg("room.schemaLocation", "${project.projectDir}/schemas")
 }
 
 dependencies {
