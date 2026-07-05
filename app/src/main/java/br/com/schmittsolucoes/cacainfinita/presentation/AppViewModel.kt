@@ -2,6 +2,7 @@ package br.com.schmittsolucoes.cacainfinita.presentation
 
 import android.app.Application
 import br.com.schmittsolucoes.cacainfinita.R
+import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.SnackbarManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.PDFTextExtractorManager
@@ -17,8 +18,9 @@ class AppViewModel @Inject constructor(
     createUserIfNotExistsUseCase: CreateUserIfNotExistsUseCase,
     pdfTextExtractorManager: PDFTextExtractorManager,
     loadingManager: LoadingManager,
-    private val snackbarManager: SnackbarManager
-) : CommonViewModel() {
+    private val snackbarManager: SnackbarManager,
+    exceptionRecorderManager: ExceptionRecorderManager
+) : CommonViewModel(exceptionRecorderManager) {
 
     private val _isInitializing = MutableStateFlow(true)
     val isInitializing = _isInitializing.asStateFlow()

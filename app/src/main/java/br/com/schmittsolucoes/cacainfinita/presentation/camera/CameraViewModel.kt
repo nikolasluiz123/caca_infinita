@@ -7,6 +7,7 @@ import br.com.schmittsolucoes.cacainfinita.R
 import br.com.schmittsolucoes.cacainfinita.data.analyzer.frame.FrameAnalyzer
 import br.com.schmittsolucoes.cacainfinita.data.analyzer.frame.ImageProxyFrame
 import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.AnalyzerState
+import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GenerateImagePuzzleUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.SaveGeneratedPuzzlesUseCase
@@ -26,8 +27,9 @@ class CameraViewModel @Inject constructor(
     private val generateImagePuzzleUseCase: GenerateImagePuzzleUseCase,
     private val saveGeneratedPuzzlesUseCase: SaveGeneratedPuzzlesUseCase,
     private val loadingManager: LoadingManager,
-    private val application: android.app.Application
-) : CommonViewModel() {
+    private val application: android.app.Application,
+    exceptionRecorderManager: ExceptionRecorderManager
+) : CommonViewModel(exceptionRecorderManager) {
 
     private val _errorMessage = MutableStateFlow<String?>(null)
 

@@ -19,6 +19,7 @@ import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetWordsFromPuzzleUseC
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.StartSessionUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.UpdateFoundWordUseCase
 import br.com.schmittsolucoes.cacainfinita.presentation.CommonViewModel
+import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.presentation.formatters.formatToClock
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzle.navigation.puzzleIdArg
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,8 +47,9 @@ class PuzzleViewModel @Inject constructor(
     getWordsFromPuzzleUseCase: GetWordsFromPuzzleUseCase,
     dimensionsProvider: DeviceDimensionsProvider,
     loadingManager: LoadingManager,
-    private val snackbarManager: SnackbarManager
-) : CommonViewModel() {
+    private val snackbarManager: SnackbarManager,
+    exceptionRecorderManager: ExceptionRecorderManager
+) : CommonViewModel(exceptionRecorderManager) {
 
     private val puzzleId: String = checkNotNull(savedStateHandle[puzzleIdArg])
 

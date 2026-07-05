@@ -11,6 +11,7 @@ import br.com.schmittsolucoes.cacainfinita.domain.usecase.GenerateImagePuzzleUse
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GeneratePDFPuzzleUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetAllPuzzlesUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.SaveGeneratedPuzzlesUseCase
+import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.presentation.CommonViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -28,8 +29,9 @@ class WordSearchViewModel @Inject constructor(
     private val saveGeneratedPuzzlesUseCase: SaveGeneratedPuzzlesUseCase,
     private val loadingManager: LoadingManager,
     @param:ApplicationContext private val context: Context,
-    getAllPuzzlesUseCase: GetAllPuzzlesUseCase
-) : CommonViewModel() {
+    getAllPuzzlesUseCase: GetAllPuzzlesUseCase,
+    exceptionRecorderManager: ExceptionRecorderManager
+) : CommonViewModel(exceptionRecorderManager) {
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     private val _puzzles = getAllPuzzlesUseCase(PaginationConfig(pageSize = 100)).cachedIn(viewModelScope)

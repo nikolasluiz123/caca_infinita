@@ -1,9 +1,11 @@
 package br.com.schmittsolucoes.cacainfinita.core.injection
 
+import br.com.schmittsolucoes.cacainfinita.data.manager.CrashlyticsExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.data.manager.FileHandler
 import br.com.schmittsolucoes.cacainfinita.data.manager.LoadingManagerImpl
 import br.com.schmittsolucoes.cacainfinita.data.manager.PDFBoxTextExtractorManager
 import br.com.schmittsolucoes.cacainfinita.data.manager.SnackbarManagerImpl
+import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.FileManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.PDFTextExtractorManager
@@ -28,4 +30,7 @@ abstract class ManagerModule {
 
     @Binds
     abstract fun bindSnackbarManager(impl: SnackbarManagerImpl): SnackbarManager
+
+    @Binds
+    abstract fun bindExceptionRecorderManager(impl: CrashlyticsExceptionRecorderManager): ExceptionRecorderManager
 }

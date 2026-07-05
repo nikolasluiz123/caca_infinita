@@ -7,6 +7,7 @@ import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetNextPuzzleToPlayUse
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetRecordPuzzlesUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetUserUseCase
 import br.com.schmittsolucoes.cacainfinita.R
+import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.presentation.CommonViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -23,8 +24,9 @@ class HomeViewModel @Inject constructor(
     getUserUseCase: GetUserUseCase,
     getRecordPuzzlesUseCase: GetRecordPuzzlesUseCase,
     getLastUnfinishedPuzzleUseCase: GetLastUnfinishedPuzzleUseCase,
-    getNextPuzzleToPlayUseCase: GetNextPuzzleToPlayUseCase
-): CommonViewModel() {
+    getNextPuzzleToPlayUseCase: GetNextPuzzleToPlayUseCase,
+    exceptionRecorderManager: ExceptionRecorderManager
+): CommonViewModel(exceptionRecorderManager) {
 
     private val _errorMessage = MutableStateFlow<String?>(null)
 
