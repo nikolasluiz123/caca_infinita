@@ -75,6 +75,18 @@ jobs:
       - name: Build Changelog
         id: build_changelog
         uses: mikepenz/release-changelog-builder-action@v6
+        with:
+          failOnError: false
+          configurationJson: |
+            {
+              "template": "# ${{ [RELEASE_NAME] }}\n\n${{ [CHANGELOG] }}",
+              "categories": [
+                { "title": "🚀 Features", "labels": ["feat", "feature"] },
+                { "title": "🐛 Fixes", "labels": ["fix", "bug"] },
+                { "title": "🧪 Tests", "labels": ["test"] },
+                { "title": "🧰 Maintenance", "labels": ["chore", "refactor", "docs", "style"] }
+              ]
+            }
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
