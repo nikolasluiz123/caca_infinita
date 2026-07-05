@@ -79,11 +79,12 @@ jobs:
           failOnError: false
           configurationJson: |
             {
-              "template": "# ${{ [RELEASE_NAME] }}\n\n${{ [CHANGELOG] }}",
+              "template": "# ${\{{ [RELEASE_NAME] }}\n\n${\{{ [CHANGELOG] }}",
               "categories": [
                 { "title": "🚀 Features", "labels": ["feat", "feature"] },
                 { "title": "🐛 Fixes", "labels": ["fix", "bug"] },
                 { "title": "🧪 Tests", "labels": ["test"] },
+                { "title": "⚙️ CI", "labels": ["ci"] },
                 { "title": "🧰 Maintenance", "labels": ["chore", "refactor", "docs", "style"] }
               ]
             }
