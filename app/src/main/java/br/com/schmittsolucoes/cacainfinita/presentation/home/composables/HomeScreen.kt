@@ -36,7 +36,8 @@ fun HomeScreen(
     HomeScreen(
         state = state,
         onContinueGameClick = onContinueGameClick,
-        onDismissErrorDialog = viewModel::onDismissErrorDialog
+        onDismissErrorDialog = viewModel::onDismissErrorDialog,
+        logContinueGameClick = viewModel::logNavigationToPuzzle
     )
 }
 
@@ -44,7 +45,8 @@ fun HomeScreen(
 fun HomeScreen(
     state: HomeUIState = HomeUIState(),
     onContinueGameClick: (String) -> Unit = {},
-    onDismissErrorDialog: () -> Unit = {}
+    onDismissErrorDialog: () -> Unit = {},
+    logContinueGameClick: (String) -> Unit = {}
 ) {
     RequestAllPermissions(context = LocalContext.current)
 
@@ -73,7 +75,10 @@ fun HomeScreen(
 
                 ContinueGameButton(
                     text = text,
-                    onClick = { onContinueGameClick(puzzleId) }
+                    onClick = {
+                        logContinueGameClick(puzzleId)
+                        onContinueGameClick(puzzleId)
+                    }
                 )
             }
 

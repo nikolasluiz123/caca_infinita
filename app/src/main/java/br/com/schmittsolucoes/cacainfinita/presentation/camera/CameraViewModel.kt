@@ -12,6 +12,7 @@ import br.com.schmittsolucoes.cacainfinita.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GenerateImagePuzzleUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.SaveGeneratedPuzzlesUseCase
 import br.com.schmittsolucoes.cacainfinita.presentation.CommonViewModel
+import br.com.schmittsolucoes.cacainfinita.presentation.analytics.AnalyticsManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -28,6 +29,7 @@ class CameraViewModel @Inject constructor(
     private val saveGeneratedPuzzlesUseCase: SaveGeneratedPuzzlesUseCase,
     private val loadingManager: LoadingManager,
     private val application: android.app.Application,
+    private val analyticsManager: AnalyticsManager,
     exceptionRecorderManager: ExceptionRecorderManager
 ) : CommonViewModel(exceptionRecorderManager) {
 
@@ -80,6 +82,13 @@ class CameraViewModel @Inject constructor(
 
     fun onDismissErrorDialog() {
         _errorMessage.value = null
+    }
+
+    fun onBackButtonClick() {
+        analyticsManager.logButtonClick(
+            buttonName = CameraAnalytics.BACK_BUTTON,
+            buttonAction = CameraAnalytics.ACTION_NAVIGATE_BACK
+        )
     }
 
     override fun onCleared() {

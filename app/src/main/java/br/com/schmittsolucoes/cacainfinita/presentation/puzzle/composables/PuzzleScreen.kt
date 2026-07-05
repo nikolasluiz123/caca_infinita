@@ -52,6 +52,7 @@ fun PuzzleScreen(
 
     LaunchedEffect(state.isPuzzleFinished) {
         if (state.isPuzzleFinished) {
+            viewModel.logNavigationToHome()
             onNavigateToHome()
         }
     }

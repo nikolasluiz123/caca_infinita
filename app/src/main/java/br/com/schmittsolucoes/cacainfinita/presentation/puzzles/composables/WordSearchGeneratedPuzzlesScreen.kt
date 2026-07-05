@@ -28,6 +28,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.schmittsolucoes.cacainfinita.R
 import br.com.schmittsolucoes.cacainfinita.presentation.components.ErrorDialog
 import br.com.schmittsolucoes.cacainfinita.presentation.components.PagedList
+import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.WordSearchAnalytics
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.WordSearchUiState
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.WordSearchViewModel
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.composables.components.AddWordSearchBottomSheet
@@ -59,7 +60,6 @@ fun WordSearchGeneratedPuzzlesScreen(
 
     WordSearchGeneratedPuzzlesScreen(
         state = state,
-        onOpenCameraClick = onOpenCameraClick,
         onLoadImageClick = {
             imagePickerLauncher.launch(arrayOf("image/*"))
         },
@@ -67,7 +67,16 @@ fun WordSearchGeneratedPuzzlesScreen(
             pdfPickerLauncher.launch(arrayOf("application/pdf"))
         },
         onDismissErrorDialog = viewModel::onDismissErrorDialog,
-        onPuzzleClick = onPuzzleClick
+        onPuzzleClick = { puzzleId ->
+            viewModel.onPuzzleItemClick(puzzleId)
+            onPuzzleClick(puzzleId)
+        },
+        onAddWordSearchClick = viewModel::onAddWordSearchClick,
+        onBottomSheetOptionClick = viewModel::onBottomSheetOptionClick,
+        onOpenCameraClick = {
+            viewModel.logNavigationToCamera()
+            onOpenCameraClick()
+        }
     )
 }
 
@@ -80,6 +89,8 @@ fun WordSearchGeneratedPuzzlesScreen(
     onLoadPdfClick: () -> Unit = {},
     onDismissErrorDialog: () -> Unit = {},
     onPuzzleClick: (String) -> Unit = {},
+    onAddWordSearchClick: () -> Unit = {},
+    onBottomSheetOptionClick: (String) -> Unit = {},
 ) {
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(value = false) }
@@ -88,7 +99,10 @@ fun WordSearchGeneratedPuzzlesScreen(
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
             floatingActionButton = {
-                FloatingActionButton(onClick = { showBottomSheet = true }) {
+                FloatingActionButton(onClick = {
+                    onAddWordSearchClick()
+                    showBottomSheet = true
+                }) {
                     Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = null)
                 }
             }
@@ -117,9 +131,18 @@ fun WordSearchGeneratedPuzzlesScreen(
                 AddWordSearchBottomSheet(
                     sheetState = sheetState,
                     onDismissRequest = { showBottomSheet = false },
-                    onOpenCameraClick = onOpenCameraClick,
-                    onLoadImageClick = onLoadImageClick,
-                    onLoadPdfClick = onLoadPdfClick
+                    onOpenCameraClick = {
+                        onBottomSheetOptionClick(WordSearchAnalytics.OPTION_CAMERA)
+                        onOpenCameraClick()
+                    },
+                    onLoadImageClick = {
+                        onBottomSheetOptionClick(WordSearchAnalytics.OPTION_IMAGE)
+                        onLoadImageClick()
+                    },
+                    onLoadPdfClick = {
+                        onBottomSheetOptionClick(WordSearchAnalytics.OPTION_PDF)
+                        onLoadPdfClick()
+                    }
                 )
             }
 

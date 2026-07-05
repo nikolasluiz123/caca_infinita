@@ -19,6 +19,7 @@ import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetWordsFromPuzzleUseC
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.StartSessionUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.UpdateFoundWordUseCase
 import br.com.schmittsolucoes.cacainfinita.presentation.CommonViewModel
+import br.com.schmittsolucoes.cacainfinita.presentation.analytics.AnalyticsManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.presentation.formatters.formatToClock
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzle.navigation.puzzleIdArg
@@ -48,6 +49,7 @@ class PuzzleViewModel @Inject constructor(
     dimensionsProvider: DeviceDimensionsProvider,
     loadingManager: LoadingManager,
     private val snackbarManager: SnackbarManager,
+    private val analyticsManager: AnalyticsManager,
     exceptionRecorderManager: ExceptionRecorderManager
 ) : CommonViewModel(exceptionRecorderManager) {
 
@@ -140,7 +142,20 @@ class PuzzleViewModel @Inject constructor(
     }
 
     fun onToggleWordsBottomSheet(visible: Boolean) {
+        if (visible) {
+            analyticsManager.logButtonClick(
+                buttonName = PuzzleAnalytics.WORDS_FAB,
+                buttonAction = PuzzleAnalytics.ACTION_OPEN_WORDS_LIST
+            )
+        }
         _isWordsBottomSheetVisible.value = visible
+    }
+
+    fun logNavigationToHome() {
+        analyticsManager.logNavigation(
+            origin = PuzzleAnalytics.SCREEN_NAME,
+            destiny = PuzzleAnalytics.HOME_DESTINY
+        )
     }
 
     fun onAnimationFinished(id: Long) {

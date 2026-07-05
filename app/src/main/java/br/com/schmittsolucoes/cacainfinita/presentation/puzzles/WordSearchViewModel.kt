@@ -13,6 +13,7 @@ import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetAllPuzzlesUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.SaveGeneratedPuzzlesUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.presentation.CommonViewModel
+import br.com.schmittsolucoes.cacainfinita.presentation.analytics.AnalyticsManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,6 +30,7 @@ class WordSearchViewModel @Inject constructor(
     private val saveGeneratedPuzzlesUseCase: SaveGeneratedPuzzlesUseCase,
     private val loadingManager: LoadingManager,
     @param:ApplicationContext private val context: Context,
+    private val analyticsManager: AnalyticsManager,
     getAllPuzzlesUseCase: GetAllPuzzlesUseCase,
     exceptionRecorderManager: ExceptionRecorderManager
 ) : CommonViewModel(exceptionRecorderManager) {
@@ -91,5 +93,37 @@ class WordSearchViewModel @Inject constructor(
 
     fun onDismissErrorDialog() {
         _errorMessage.value = null
+    }
+
+    fun onAddWordSearchClick() {
+        analyticsManager.logButtonClick(
+            buttonName = WordSearchAnalytics.ADD_FAB,
+            buttonAction = WordSearchAnalytics.ACTION_OPEN_BOTTOM_SHEET
+        )
+    }
+
+    fun onPuzzleItemClick(puzzleId: String) {
+        analyticsManager.logCardClick(
+            cardName = WordSearchAnalytics.PUZZLE_CARD,
+            cardAction = WordSearchAnalytics.ACTION_OPEN_PUZZLE
+        )
+        analyticsManager.logNavigation(
+            origin = WordSearchAnalytics.SCREEN_NAME,
+            destiny = WordSearchAnalytics.PUZZLE_DESTINY
+        )
+    }
+
+    fun onBottomSheetOptionClick(option: String) {
+        analyticsManager.logButtonClick(
+            buttonName = option,
+            buttonAction = WordSearchAnalytics.ACTION_SELECT_OPTION
+        )
+    }
+
+    fun logNavigationToCamera() {
+        analyticsManager.logNavigation(
+            origin = WordSearchAnalytics.SCREEN_NAME,
+            destiny = WordSearchAnalytics.CAMERA_DESTINY
+        )
     }
 }

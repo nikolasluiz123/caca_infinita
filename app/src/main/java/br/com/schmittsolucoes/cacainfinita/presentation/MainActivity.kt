@@ -68,6 +68,7 @@ class MainActivity : ComponentActivity() {
                     Box(modifier = Modifier.fillMaxSize()) {
                         App(
                             navController = navController,
+                            viewModel = viewModel,
                             snackbarHostState = snackbarHostState
                         ) {
                             AppNavHost(navController = navController)
@@ -93,6 +94,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun App(
     navController: NavHostController,
+    viewModel: AppViewModel,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     content: @Composable () -> Unit = { }
 ) {
@@ -104,9 +106,11 @@ fun App(
             if (currentRoute == homeScreenRoute || currentRoute == wordSearchGeneratedPuzzlesRoute) {
                 HomeBottomNavBar(
                     onHomeClick = {
+                        viewModel.logBottomNavigation(MainActivityAnalytics.HOME_DESTINY)
                         navController.navigateToHome()
                     },
                     onWordSearchClick = {
+                        viewModel.logBottomNavigation(MainActivityAnalytics.WORD_SEARCH_DESTINY)
                         navController.navigateToWordSearchGeneratedPuzzles()
                     },
                     isHomeSelected = currentRoute == homeScreenRoute
@@ -129,6 +133,6 @@ fun App(
 @Composable
 fun AppPreview() {
     CacaInfinitaTheme {
-        App(navController = rememberNavController())
+        // App(navController = rememberNavController(), viewModel = ...)
     }
 }

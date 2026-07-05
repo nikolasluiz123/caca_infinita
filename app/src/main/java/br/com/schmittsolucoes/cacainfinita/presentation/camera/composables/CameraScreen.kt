@@ -60,7 +60,10 @@ fun CameraScreen(
                 onError = {  }
             )
         },
-        onBackClick = onBackClick,
+        onBackClick = {
+            viewModel.onBackButtonClick()
+            onBackClick()
+        },
         onDismissErrorDialog = viewModel::onDismissErrorDialog
     )
 }

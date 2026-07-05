@@ -9,6 +9,7 @@ import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetUserUseCase
 import br.com.schmittsolucoes.cacainfinita.R
 import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.presentation.CommonViewModel
+import br.com.schmittsolucoes.cacainfinita.presentation.analytics.AnalyticsManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context,
+    private val analyticsManager: AnalyticsManager,
     getUserUseCase: GetUserUseCase,
     getRecordPuzzlesUseCase: GetRecordPuzzlesUseCase,
     getLastUnfinishedPuzzleUseCase: GetLastUnfinishedPuzzleUseCase,
@@ -60,5 +62,16 @@ class HomeViewModel @Inject constructor(
 
     fun onDismissErrorDialog() {
         _errorMessage.value = null
+    }
+
+    fun logNavigationToPuzzle(puzzleId: String) {
+        analyticsManager.logButtonClick(
+            buttonName = HomeAnalytics.CONTINUE_GAME_BUTTON,
+            buttonAction = HomeAnalytics.ACTION_START_PUZZLE
+        )
+        analyticsManager.logNavigation(
+            origin = HomeAnalytics.SCREEN_NAME,
+            destiny = HomeAnalytics.PUZZLE_DESTINY
+        )
     }
 }

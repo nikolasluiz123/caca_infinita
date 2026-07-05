@@ -2,6 +2,7 @@ package br.com.schmittsolucoes.cacainfinita.presentation
 
 import android.app.Application
 import br.com.schmittsolucoes.cacainfinita.R
+import br.com.schmittsolucoes.cacainfinita.presentation.analytics.AnalyticsManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.SnackbarManager
@@ -15,6 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AppViewModel @Inject constructor(
     private val application: Application,
+    private val analyticsManager: AnalyticsManager,
     createUserIfNotExistsUseCase: CreateUserIfNotExistsUseCase,
     pdfTextExtractorManager: PDFTextExtractorManager,
     loadingManager: LoadingManager,
@@ -55,5 +57,12 @@ class AppViewModel @Inject constructor(
 
     fun onDismissSnackbar() {
         snackbarManager.hideSnackbar()
+    }
+
+    fun logBottomNavigation(destiny: String) {
+        analyticsManager.logNavigation(
+            origin = MainActivityAnalytics.SCREEN_NAME,
+            destiny = destiny
+        )
     }
 }
