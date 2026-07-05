@@ -68,6 +68,20 @@ fun PuzzleGrid(
             }
         }
 
+        val sharedCoordinates = remember(foundWords) {
+            val counts = mutableMapOf<Coordinate, Int>()
+            foundWords.forEach { word ->
+                for (i in word.text.indices) {
+                    val coord = Coordinate(
+                        word.startRow + i * word.direction.rowStep,
+                        word.startCol + i * word.direction.colStep
+                    )
+                    counts[coord] = (counts[coord] ?: 0) + 1
+                }
+            }
+            counts.filter { it.value > 1 }.keys
+        }
+
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
@@ -114,7 +128,8 @@ fun PuzzleGrid(
                 cellSize = cellSize,
                 offsetX = offsetX,
                 offsetY = offsetY,
-                color = highlightColor
+                color = highlightColor,
+                sharedCoordinates = sharedCoordinates
             )
 
             drawCurrentSelectionHighlight(
@@ -163,7 +178,8 @@ private fun DrawScope.drawFoundWordsHighlights(
     cellSize: Float,
     offsetX: Float,
     offsetY: Float,
-    color: Color
+    color: Color,
+    sharedCoordinates: Set<Coordinate>
 ) {
     foundWords.forEach { word ->
         val startCenter = getCellCenter(Coordinate(word.startRow, word.startCol), cellSize, offsetX, offsetY)
@@ -172,8 +188,18 @@ private fun DrawScope.drawFoundWordsHighlights(
             word.startCol + (word.text.length - 1) * word.direction.colStep
         )
         val endCenter = getCellCenter(endCoord, cellSize, offsetX, offsetY)
-        
-        drawHighlightLine(startCenter, endCenter, cellSize, color)
+
+        drawHighlightLine(startCenter, endCenter, cellSize, color, alpha = 0.6f)
+    }
+
+    sharedCoordinates.forEach { coord ->
+        val center = getCellCenter(coord, cellSize, offsetX, offsetY)
+        drawCircle(
+            color = color,
+            radius = cellSize * 0.4f,
+            center = center,
+            alpha = 0.3f
+        )
     }
 }
 
@@ -199,14 +225,16 @@ private fun DrawScope.drawHighlightLine(
     start: Offset,
     end: Offset,
     cellSize: Float,
-    color: Color
+    color: Color,
+    alpha: Float = 1f
 ) {
     drawLine(
         color = color,
         start = start,
         end = end,
         strokeWidth = cellSize * 0.8f,
-        cap = StrokeCap.Round
+        cap = StrokeCap.Round,
+        alpha = alpha
     )
 }
 
