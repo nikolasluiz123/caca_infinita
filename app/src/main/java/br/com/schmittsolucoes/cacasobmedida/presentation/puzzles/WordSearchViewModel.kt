@@ -23,12 +23,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WordSearchViewModel @Inject constructor(
-    private val getAllPuzzlesUseCase: GetAllPuzzlesUseCase,
     private val generatePdfPuzzleUseCase: GeneratePDFPuzzleUseCase,
     private val generateImagePuzzleUseCase: GenerateImagePuzzleUseCase,
     private val saveGeneratedPuzzlesUseCase: SaveGeneratedPuzzlesUseCase,
     private val loadingManager: LoadingManager,
-    @param:ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context,
+    getAllPuzzlesUseCase: GetAllPuzzlesUseCase
 ) : CommonViewModel() {
 
     private val _errorMessage = MutableStateFlow<String?>(null)

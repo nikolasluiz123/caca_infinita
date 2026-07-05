@@ -19,11 +19,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    @param:ApplicationContext private val context: Context,
     getUserUseCase: GetUserUseCase,
     getRecordPuzzlesUseCase: GetRecordPuzzlesUseCase,
     getLastUnfinishedPuzzleUseCase: GetLastUnfinishedPuzzleUseCase,
-    getNextPuzzleToPlayUseCase: GetNextPuzzleToPlayUseCase,
-    @param:ApplicationContext private val context: Context
+    getNextPuzzleToPlayUseCase: GetNextPuzzleToPlayUseCase
 ): CommonViewModel() {
 
     private val _errorMessage = MutableStateFlow<String?>(null)

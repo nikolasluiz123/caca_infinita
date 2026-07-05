@@ -36,14 +36,14 @@ class PuzzleViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val startSessionUseCase: StartSessionUseCase,
     private val endSessionUseCase: EndSessionUseCase,
-    private val getElapsedTimeUseCase: GetElapsedTimeUseCase,
     private val getHasWordsToSearchUseCase: GetHasWordsToSearchUseCase,
-    private val getWordsFromPuzzleUseCase: GetWordsFromPuzzleUseCase,
     private val getPuzzleByIdUseCase: GetPuzzleByIdUseCase,
     private val getSelectedWordUseCase: GetSelectedWordUseCase,
     private val updateFoundWordUseCase: UpdateFoundWordUseCase,
-    private val dimensionsProvider: DeviceDimensionsProvider,
-    private val loadingManager: LoadingManager
+    getElapsedTimeUseCase: GetElapsedTimeUseCase,
+    getWordsFromPuzzleUseCase: GetWordsFromPuzzleUseCase,
+    dimensionsProvider: DeviceDimensionsProvider,
+    loadingManager: LoadingManager
 ) : CommonViewModel() {
 
     private val puzzleId: String = checkNotNull(savedStateHandle[puzzleIdArg])

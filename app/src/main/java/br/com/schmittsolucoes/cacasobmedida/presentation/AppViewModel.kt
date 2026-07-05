@@ -12,10 +12,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AppViewModel @Inject constructor(
-    private val createUserIfNotExistsUseCase: CreateUserIfNotExistsUseCase,
-    private val pdfTextExtractorManager: PDFTextExtractorManager,
-    private val loadingManager: LoadingManager,
-    private val application: Application
+    private val application: Application,
+    createUserIfNotExistsUseCase: CreateUserIfNotExistsUseCase,
+    pdfTextExtractorManager: PDFTextExtractorManager,
+    loadingManager: LoadingManager
 ) : CommonViewModel() {
 
     private val _isInitializing = MutableStateFlow(true)
