@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlinAndroidKsp)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hiltAndroid)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.crashlytics)
 }
 
 android {
@@ -11,19 +13,45 @@ android {
         version = release(37)
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file(System.getenv("KEYSTORE_PATH") ?: "keystore.jks")
+            storePassword = System.getenv("KEYSTORE_PASSWORD")
+            keyAlias = System.getenv("KEY_ALIAS")
+            keyPassword = System.getenv("KEY_PASSWORD")
+        }
+    }
+
     defaultConfig {
         applicationId = "br.com.schmittsolucoes.cacainfinita"
         minSdk = 29
         targetSdk = 37
         versionCode = 1
-        versionName = "0.1"
+        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    flavorDimensions += "environment"
+
+    productFlavors {
+        create("dev") {
+            dimension = "environment"
+        }
+        create("prod") {
+            dimension = "environment"
+        }
+    }
+
     buildTypes {
+        debug {
+
+        }
+
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -79,6 +107,10 @@ dependencies {
 
     implementation(libs.androidx.concurrent.futures.ktx)
     implementation(libs.kotlinx.coroutines.play.services)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
 
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)

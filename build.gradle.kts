@@ -3,4 +3,6 @@ plugins {
     alias(libs.plugins.kotlinAndroidKsp) apply false
     alias(libs.plugins.kotlin.compose) apply false
     alias(libs.plugins.hiltAndroid) apply false
+    alias(libs.plugins.google.services) apply false
+    alias(libs.plugins.crashlytics) apply false
 }
