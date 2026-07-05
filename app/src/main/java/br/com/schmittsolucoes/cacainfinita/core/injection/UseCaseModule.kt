@@ -13,6 +13,7 @@ import br.com.schmittsolucoes.cacainfinita.domain.repository.UserRepository
 import br.com.schmittsolucoes.cacainfinita.domain.repository.WordRepository
 import br.com.schmittsolucoes.cacainfinita.domain.repository.WordSearchPuzzleRepository
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.CreateUserIfNotExistsUseCase
+import br.com.schmittsolucoes.cacainfinita.domain.usecase.DeleteWordSearchPuzzleUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.EndSessionUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GenerateImagePuzzleUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GeneratePDFPuzzleUseCase
@@ -81,6 +82,11 @@ object UseCaseModule {
     @Provides
     fun provideGetAllPuzzlesUseCase(repository: WordSearchPuzzleRepository): GetAllPuzzlesUseCase {
         return GetAllPuzzlesUseCase(repository)
+    }
+
+    @Provides
+    fun provideDeleteWordSearchPuzzleUseCase(repository: WordSearchPuzzleRepository): DeleteWordSearchPuzzleUseCase {
+        return DeleteWordSearchPuzzleUseCase(repository)
     }
 
     @Provides

@@ -68,9 +68,10 @@ fun WordSearchGeneratedPuzzlesScreen(
         },
         onDismissErrorDialog = viewModel::onDismissErrorDialog,
         onPuzzleClick = { puzzleId ->
-            viewModel.onPuzzleItemClick(puzzleId)
+            viewModel.onPuzzleItemClick()
             onPuzzleClick(puzzleId)
         },
+        onDeletePuzzleClick = viewModel::onDeletePuzzle,
         onAddWordSearchClick = viewModel::onAddWordSearchClick,
         onBottomSheetOptionClick = viewModel::onBottomSheetOptionClick,
         onOpenCameraClick = {
@@ -89,6 +90,7 @@ fun WordSearchGeneratedPuzzlesScreen(
     onLoadPdfClick: () -> Unit = {},
     onDismissErrorDialog: () -> Unit = {},
     onPuzzleClick: (String) -> Unit = {},
+    onDeletePuzzleClick: (String) -> Unit = {},
     onAddWordSearchClick: () -> Unit = {},
     onBottomSheetOptionClick: (String) -> Unit = {},
 ) {
@@ -120,7 +122,8 @@ fun WordSearchGeneratedPuzzlesScreen(
                     puzzle?.let {
                         WordSearchItem(
                             puzzle = it,
-                            onClick = onPuzzleClick
+                            onClick = onPuzzleClick,
+                            onDeleteClick = onDeletePuzzleClick
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                     }

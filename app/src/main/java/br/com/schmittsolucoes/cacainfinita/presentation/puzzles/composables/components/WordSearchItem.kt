@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +34,7 @@ import br.com.schmittsolucoes.cacainfinita.presentation.theme.SecondaryTextColor
 fun WordSearchItem(
     puzzle: WordSearchPuzzleSummary,
     onClick: (String) -> Unit,
+    onDeleteClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -50,6 +53,16 @@ fun WordSearchItem(
                 modifier = Modifier.weight(1f)
             )
             StatusIcon(hasUnfinishedWords = puzzle.hasUnfinishedWords)
+            if (puzzle.hasUnfinishedWords) {
+                Spacer(modifier = Modifier.width(8.dp))
+                IconButton(onClick = { onDeleteClick(puzzle.id) }) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_delete_24dp),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
         }
     }
 }
@@ -109,7 +122,8 @@ private fun WordSearchItemPreview() {
                     wordsCount = 10,
                     hasUnfinishedWords = true
                 ),
-                onClick = {}
+                onClick = {},
+                onDeleteClick = {}
             )
             Spacer(modifier = Modifier.height(16.dp))
             WordSearchItem(
@@ -119,7 +133,8 @@ private fun WordSearchItemPreview() {
                     wordsCount = 15,
                     hasUnfinishedWords = false
                 ),
-                onClick = {}
+                onClick = {},
+                onDeleteClick = {}
             )
         }
     }

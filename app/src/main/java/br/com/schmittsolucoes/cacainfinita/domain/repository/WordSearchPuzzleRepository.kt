@@ -16,4 +16,5 @@ interface WordSearchPuzzleRepository {
     fun getNextPuzzleToPlay(): Flow<String?>
     fun getRecords(): Flow<List<PuzzleRecord>>
     suspend fun getCount(): Long
+    suspend fun delete(id: String)
 }

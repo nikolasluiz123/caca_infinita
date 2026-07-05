@@ -10,6 +10,7 @@ import br.com.schmittsolucoes.cacainfinita.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GenerateImagePuzzleUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GeneratePDFPuzzleUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetAllPuzzlesUseCase
+import br.com.schmittsolucoes.cacainfinita.domain.usecase.DeleteWordSearchPuzzleUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.SaveGeneratedPuzzlesUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.presentation.CommonViewModel
@@ -28,6 +29,7 @@ class WordSearchViewModel @Inject constructor(
     private val generatePdfPuzzleUseCase: GeneratePDFPuzzleUseCase,
     private val generateImagePuzzleUseCase: GenerateImagePuzzleUseCase,
     private val saveGeneratedPuzzlesUseCase: SaveGeneratedPuzzlesUseCase,
+    private val deleteWordSearchPuzzleUseCase: DeleteWordSearchPuzzleUseCase,
     private val loadingManager: LoadingManager,
     @param:ApplicationContext private val context: Context,
     private val analyticsManager: AnalyticsManager,
@@ -102,7 +104,7 @@ class WordSearchViewModel @Inject constructor(
         )
     }
 
-    fun onPuzzleItemClick(puzzleId: String) {
+    fun onPuzzleItemClick() {
         analyticsManager.logCardClick(
             cardName = WordSearchAnalytics.PUZZLE_CARD,
             cardAction = WordSearchAnalytics.ACTION_OPEN_PUZZLE
@@ -111,6 +113,12 @@ class WordSearchViewModel @Inject constructor(
             origin = WordSearchAnalytics.SCREEN_NAME,
             destiny = WordSearchAnalytics.PUZZLE_DESTINY
         )
+    }
+
+    fun onDeletePuzzle(puzzleId: String) {
+        launch {
+            deleteWordSearchPuzzleUseCase(puzzleId)
+        }
     }
 
     fun onBottomSheetOptionClick(option: String) {

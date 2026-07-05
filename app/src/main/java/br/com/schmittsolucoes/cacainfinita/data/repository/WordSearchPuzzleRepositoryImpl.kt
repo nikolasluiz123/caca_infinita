@@ -86,4 +86,9 @@ class WordSearchPuzzleRepositoryImpl @Inject constructor(
     override suspend fun getCount(): Long = withContext(Dispatchers.IO) {
         wordSearchPuzzleLocalDataSource.selectCount()
     }
+
+    override suspend fun delete(id: String) = withContext(Dispatchers.IO) {
+        val entity = wordSearchPuzzleLocalDataSource.selectById(id)
+        wordSearchPuzzleLocalDataSource.delete(listOf(entity))
+    }
 }
