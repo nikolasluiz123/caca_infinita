@@ -37,6 +37,7 @@ class MLKitTextFrameAnalyzer @Inject constructor(): FrameAnalyzer {
             val imageDimensions = ImageDimension(width = imageWidth, height = imageHeight)
 
             val image = InputImage.fromMediaImage(mediaImage, rotationDegrees)
+            val avgLuminosity = calculateAverageLuminosity(mediaImage)
 
             recognizer.process(image)
                 .addOnSuccessListener { visionText ->
@@ -69,7 +70,8 @@ class MLKitTextFrameAnalyzer @Inject constructor(): FrameAnalyzer {
                         _state.value = FrameAnalysisResult(
                             state = AnalyzerState.NOT_DETECTED,
                             lines = emptyList(),
-                            sourceDimensions = imageDimensions
+                            sourceDimensions = imageDimensions,
+                            luminosity = avgLuminosity
                         )
                     } else {
                         val highConfidenceCount = lines.count { (it.confidence ?: 0f) >= 0.7f }
@@ -83,7 +85,8 @@ class MLKitTextFrameAnalyzer @Inject constructor(): FrameAnalyzer {
                         _state.value = FrameAnalysisResult(
                             state = globalState,
                             lines = lines,
-                            sourceDimensions = imageDimensions
+                            sourceDimensions = imageDimensions,
+                            luminosity = avgLuminosity
                         )
                     }
                 }
@@ -91,7 +94,8 @@ class MLKitTextFrameAnalyzer @Inject constructor(): FrameAnalyzer {
                     _state.value = FrameAnalysisResult(
                         state = AnalyzerState.NOT_DETECTED,
                         lines = emptyList(),
-                        sourceDimensions = imageDimensions
+                        sourceDimensions = imageDimensions,
+                        luminosity = avgLuminosity
                     )
                 }
                 .addOnCompleteListener {
@@ -104,5 +108,25 @@ class MLKitTextFrameAnalyzer @Inject constructor(): FrameAnalyzer {
 
     override fun close() {
         recognizer.close()
+    }
+
+    /**
+     * Calcula a luminância média de uma imagem no formato YUV_420_888.
+     *
+     * A luminância é extraída do canal Y (primeiro plano), que contém a informação
+     * de brilho da imagem, independente das cores.
+     *
+     * @param mediaImage A imagem do sistema Android para análise.
+     * @return O valor médio de brilho (0.0 a 255.0) ou null se a imagem for inválida.
+     */
+    private fun calculateAverageLuminosity(mediaImage: Image): Float? {
+        val yBitmask = 0xFF
+        val plane = mediaImage.planes[0]
+        val buffer = plane.buffer
+        val data = ByteArray(buffer.remaining())
+        buffer.get(data)
+        
+        val pixels = data.map { it.toInt() and yBitmask }
+        return if (pixels.isNotEmpty()) pixels.average().toFloat() else null
     }
 }

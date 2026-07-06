@@ -7,5 +7,6 @@ import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.AnalyzerStat
 data class FrameAnalysisResult(
     val state: AnalyzerState = AnalyzerState.NOT_DETECTED,
     val lines: List<DetectedLine> = emptyList(),
-    val sourceDimensions: ImageDimension? = null
+    val sourceDimensions: ImageDimension? = null,
+    val luminosity: Float? = null
 )

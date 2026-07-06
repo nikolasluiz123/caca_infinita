@@ -1,4 +1,4 @@
-package br.com.schmittsolucoes.cacainfinita.presentation.components
+package br.com.schmittsolucoes.cacainfinita.presentation.camera.composables.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize

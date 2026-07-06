@@ -3,23 +3,17 @@ package br.com.schmittsolucoes.cacainfinita.presentation.camera.composables
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageProxy
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -29,10 +23,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.schmittsolucoes.cacainfinita.R
 import br.com.schmittsolucoes.cacainfinita.presentation.camera.CameraUiState
 import br.com.schmittsolucoes.cacainfinita.presentation.camera.CameraViewModel
-import br.com.schmittsolucoes.cacainfinita.presentation.components.CameraXPreview
+import br.com.schmittsolucoes.cacainfinita.presentation.camera.composables.components.CameraXPreview
+import br.com.schmittsolucoes.cacainfinita.presentation.camera.composables.components.CaptureButton
+import br.com.schmittsolucoes.cacainfinita.presentation.camera.composables.components.FlashToggle
+import br.com.schmittsolucoes.cacainfinita.presentation.camera.composables.components.InteractiveOverlay
+import br.com.schmittsolucoes.cacainfinita.presentation.camera.composables.components.takePhoto
 import br.com.schmittsolucoes.cacainfinita.presentation.components.ErrorDialog
-import br.com.schmittsolucoes.cacainfinita.presentation.components.InteractiveOverlay
-import br.com.schmittsolucoes.cacainfinita.presentation.components.takePhoto
 import java.util.concurrent.Executors
 
 @Composable
@@ -64,6 +60,7 @@ fun CameraScreen(
             viewModel.onBackButtonClick()
             onBackClick()
         },
+        onToggleTorchMode = viewModel::onToggleTorchMode,
         onDismissErrorDialog = viewModel::onDismissErrorDialog
     )
 }
@@ -75,6 +72,7 @@ fun CameraScreen(
     onFrameAnalyzed: (ImageProxy) -> Unit,
     onCaptureClick: () -> Unit,
     onBackClick: () -> Unit,
+    onToggleTorchMode: () -> Unit,
     onDismissErrorDialog: () -> Unit = {}
 ) {
     Scaffold(
@@ -89,6 +87,7 @@ fun CameraScreen(
                 onAnalyzeFrame = onFrameAnalyzed,
                 imageCapture = imageCapture,
                 isCapturing = state.isProcessing,
+                isTorchActive = state.isTorchActive,
                 modifier = Modifier.fillMaxSize()
             )
 
@@ -121,36 +120,22 @@ fun CameraScreen(
                 )
             }
 
-            Box(
+            FlashToggle(
+                torchMode = state.torchMode,
+                onToggle = onToggleTorchMode,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp)
+            )
+
+            CaptureButton(
+                onClick = onCaptureClick,
+                isEnabled = state.isCaptureButtonEnabled,
+                isProcessing = state.isProcessing,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 32.dp)
-                    .size(80.dp)
-                    .clip(CircleShape)
-                    .background(if (state.isCaptureButtonEnabled && !state.isProcessing) Color.White else Color.White.copy(alpha = 0.4f))
-                    .border(4.dp, Color.Gray.copy(alpha = 0.5f), CircleShape)
-                    .let {
-                        if (state.isCaptureButtonEnabled && !state.isProcessing) {
-                            it.background(Color.White)
-                        } else {
-                            it
-                        }
-                    }
-                    .padding(4.dp)
-            ) {
-                IconButton(
-                    onClick = onCaptureClick,
-                    enabled = state.isCaptureButtonEnabled && !state.isProcessing,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    if (state.isProcessing) {
-                        CircularProgressIndicator(
-                            color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(40.dp)
-                        )
-                    }
-                }
-            }
+            )
         }
 
         state.errorMessage?.let { message ->

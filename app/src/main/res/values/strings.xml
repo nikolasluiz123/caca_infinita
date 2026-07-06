@@ -25,6 +25,9 @@
 
     <string name="back">Voltar</string>
     <string name="camera_capture">Capturar</string>
+    <string name="flash_auto">Flash Automático</string>
+    <string name="flash_on">Flash Ligado</string>
+    <string name="flash_off">Flash Desligado</string>
 
     <string name="error_unexpected">Ocorreu um erro inesperado. Tente novamente.</string>
     <string name="error_dialog_title">Erro</string>

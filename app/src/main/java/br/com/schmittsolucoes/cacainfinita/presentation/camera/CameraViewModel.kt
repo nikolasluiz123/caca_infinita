@@ -6,10 +6,11 @@ import androidx.lifecycle.viewModelScope
 import br.com.schmittsolucoes.cacainfinita.R
 import br.com.schmittsolucoes.cacainfinita.data.analyzer.frame.FrameAnalyzer
 import br.com.schmittsolucoes.cacainfinita.data.analyzer.frame.ImageProxyFrame
-import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.AnalyzerState
 import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.SnackbarManager
+import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.AnalyzerState
+import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.TorchMode
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GenerateImagePuzzleUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.SaveGeneratedPuzzlesUseCase
 import br.com.schmittsolucoes.cacainfinita.presentation.CommonViewModel
@@ -36,19 +37,35 @@ class CameraViewModel @Inject constructor(
 ) : CommonViewModel(exceptionRecorderManager) {
 
     private val _errorMessage = MutableStateFlow<String?>(null)
+    private val _torchMode = MutableStateFlow(TorchMode.AUTO)
+    private var lastTorchActive = false
 
     val uiState: StateFlow<CameraUiState> = combine(
         frameAnalyzer.state,
         loadingManager.isLoading,
-        _errorMessage
-    ) { analysisResult, isProcessing, errorMessage ->
+        _errorMessage,
+        _torchMode
+    ) { analysisResult, isProcessing, errorMessage, torchMode ->
+        val isTorchActive = when (torchMode) {
+            TorchMode.AUTO -> {
+                val luminosity = analysisResult.luminosity ?: 100f
+                if (!lastTorchActive && luminosity < 60f) true
+                else lastTorchActive
+            }
+            TorchMode.ON -> true
+            TorchMode.OFF -> false
+        }
+        lastTorchActive = isTorchActive
+
         CameraUiState(
             analyzerState = analysisResult.state,
             detectedLines = analysisResult.lines,
             sourceDimensions = analysisResult.sourceDimensions,
             isCaptureButtonEnabled = analysisResult.state == AnalyzerState.ALIGNED,
             isProcessing = isProcessing,
-            errorMessage = errorMessage
+            errorMessage = errorMessage,
+            torchMode = torchMode,
+            isTorchActive = isTorchActive
         )
     }.stateIn(
         scope = viewModelScope,
@@ -69,6 +86,7 @@ class CameraViewModel @Inject constructor(
                 val puzzles = generateImagePuzzleUseCase(listOf(uri), isFromCamera = true)
                 saveGeneratedPuzzlesUseCase(puzzles)
                 snackbarManager.showSnackbar(application.getString(R.string.success_puzzle_generated))
+                lastTorchActive = false
             } finally {
                 loadingManager.hideLoading()
             }
@@ -85,6 +103,17 @@ class CameraViewModel @Inject constructor(
 
     fun onDismissErrorDialog() {
         _errorMessage.value = null
+    }
+
+    fun onToggleTorchMode() {
+        _torchMode.value = when (_torchMode.value) {
+            TorchMode.AUTO -> TorchMode.ON
+            TorchMode.ON -> TorchMode.OFF
+            TorchMode.OFF -> {
+                lastTorchActive = false
+                TorchMode.AUTO
+            }
+        }
     }
 
     fun onBackButtonClick() {
