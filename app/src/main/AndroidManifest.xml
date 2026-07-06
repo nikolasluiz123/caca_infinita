@@ -16,10 +16,6 @@
         android:theme="@style/Theme.CacaInfinita"
         android:largeHeap="true">
 
-        <meta-data
-            android:name="com.google.mlkit.vision.DEPENDENCIES"
-            android:value="langid,ocr"/>
-
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true"

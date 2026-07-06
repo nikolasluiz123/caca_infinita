@@ -3,8 +3,8 @@ agp = "9.2.1"
 coreKtx = "1.19.0"
 appcompat = "1.7.1"
 material = "1.14.0"
-mlkitText = "19.0.1"
-mlkitLanguageId = "17.0.0"
+mlkitText = "16.0.1"
+mlkitLanguageId = "17.0.6"
 camerax = "1.6.1"
 room = "2.8.4"
 kspVersion = "2.3.9"
@@ -34,8 +34,8 @@ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
 
-mlkit-text-recognition = { group = "com.google.android.gms", name = "play-services-mlkit-text-recognition", version.ref = "mlkitText" }
-mlkit-language-id = { group = "com.google.android.gms", name = "play-services-mlkit-language-id", version.ref = "mlkitLanguageId" }
+mlkit-text-recognition = { group = "com.google.mlkit", name = "text-recognition", version.ref = "mlkitText" }
+mlkit-language-id = { group = "com.google.mlkit", name = "language-id", version.ref = "mlkitLanguageId" }
 
 androidx-camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "camerax" }
 androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax" }
