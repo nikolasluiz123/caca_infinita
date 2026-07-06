@@ -7,6 +7,7 @@ import androidx.paging.cachedIn
 import br.com.schmittsolucoes.cacainfinita.R
 import br.com.schmittsolucoes.cacainfinita.domain.model.pagination.PaginationConfig
 import br.com.schmittsolucoes.cacainfinita.domain.manager.LoadingManager
+import br.com.schmittsolucoes.cacainfinita.domain.manager.SnackbarManager
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GenerateImagePuzzleUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GeneratePDFPuzzleUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetAllPuzzlesUseCase
@@ -31,6 +32,7 @@ class WordSearchViewModel @Inject constructor(
     private val saveGeneratedPuzzlesUseCase: SaveGeneratedPuzzlesUseCase,
     private val deleteWordSearchPuzzleUseCase: DeleteWordSearchPuzzleUseCase,
     private val loadingManager: LoadingManager,
+    private val snackbarManager: SnackbarManager,
     @param:ApplicationContext private val context: Context,
     private val analyticsManager: AnalyticsManager,
     getAllPuzzlesUseCase: GetAllPuzzlesUseCase,
@@ -64,6 +66,7 @@ class WordSearchViewModel @Inject constructor(
             try {
                 val puzzles = generatePdfPuzzleUseCase(uris)
                 saveGeneratedPuzzlesUseCase(puzzles)
+                snackbarManager.showSnackbar(context.getString(R.string.success_puzzle_generated))
             } finally {
                 loadingManager.hideLoading()
             }
@@ -79,6 +82,7 @@ class WordSearchViewModel @Inject constructor(
             try {
                 val puzzles = generateImagePuzzleUseCase(uris, isFromCamera = false)
                 saveGeneratedPuzzlesUseCase(puzzles)
+                snackbarManager.showSnackbar(context.getString(R.string.success_puzzle_generated))
             } finally {
                 loadingManager.hideLoading()
             }
