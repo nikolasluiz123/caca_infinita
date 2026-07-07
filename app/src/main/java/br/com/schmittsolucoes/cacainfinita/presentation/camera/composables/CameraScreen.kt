@@ -15,7 +15,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import android.content.res.Configuration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -75,6 +77,9 @@ fun CameraScreen(
     onToggleTorchMode: () -> Unit,
     onDismissErrorDialog: () -> Unit = {}
 ) {
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) { paddingValues ->
@@ -133,8 +138,11 @@ fun CameraScreen(
                 isEnabled = state.isCaptureButtonEnabled,
                 isProcessing = state.isProcessing,
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 32.dp)
+                    .align(if (isLandscape) Alignment.CenterEnd else Alignment.BottomCenter)
+                    .padding(
+                        bottom = if (isLandscape) 0.dp else 32.dp,
+                        end = if (isLandscape) 32.dp else 0.dp
+                    )
             )
         }
 
