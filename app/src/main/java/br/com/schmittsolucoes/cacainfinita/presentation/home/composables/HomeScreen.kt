@@ -17,15 +17,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.schmittsolucoes.cacainfinita.R
+import br.com.schmittsolucoes.cacainfinita.presentation.components.ErrorDialog
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseIds
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.showcaseTarget
 import br.com.schmittsolucoes.cacainfinita.presentation.core.RequestAllPermissions
 import br.com.schmittsolucoes.cacainfinita.presentation.home.HomeUIState
 import br.com.schmittsolucoes.cacainfinita.presentation.home.HomeViewModel
 import br.com.schmittsolucoes.cacainfinita.presentation.home.composables.components.ContinueGameButton
 import br.com.schmittsolucoes.cacainfinita.presentation.home.composables.components.PersonalRecordsSection
 import br.com.schmittsolucoes.cacainfinita.presentation.home.composables.components.UserLevelStatusCard
-import br.com.schmittsolucoes.cacainfinita.presentation.components.ErrorDialog
 import br.com.schmittsolucoes.cacainfinita.presentation.theme.CacaInfinitaTheme
 
 @Composable
@@ -35,11 +39,15 @@ fun HomeScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
+    LifecycleEventEffect(Lifecycle.Event.ON_START) {
+        viewModel.startTutorialIfNeeded()
+    }
+
     HomeScreen(
         state = state,
         onContinueGameClick = onContinueGameClick,
         onDismissErrorDialog = viewModel::onDismissErrorDialog,
-        logContinueGameClick = viewModel::logNavigationToPuzzle
+        logContinueGameClick = { viewModel.logNavigationToPuzzle() }
     )
 }
 
@@ -66,7 +74,8 @@ fun HomeScreen(
             UserLevelStatusCard(
                 level = state.user?.level ?: 0,
                 xp = state.user?.actualExperience ?: 0,
-                xpToNextLevel = state.user?.maxLevelExperience ?: 0
+                xpToNextLevel = state.user?.maxLevelExperience ?: 0,
+                modifier = Modifier.showcaseTarget(ShowcaseIds.USER_LEVEL_CARD)
             )
 
             state.puzzleIdToPlay?.let { puzzleId ->
@@ -85,7 +94,10 @@ fun HomeScreen(
                 )
             }
 
-            PersonalRecordsSection(records = state.records)
+            PersonalRecordsSection(
+                records = state.records,
+                modifier = Modifier.showcaseTarget(ShowcaseIds.PERSONAL_RECORDS_SECTION)
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
         }

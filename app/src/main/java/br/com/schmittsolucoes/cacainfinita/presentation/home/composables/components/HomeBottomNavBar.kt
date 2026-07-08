@@ -14,6 +14,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.schmittsolucoes.cacainfinita.R
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseIds
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.showcaseTarget
 import br.com.schmittsolucoes.cacainfinita.presentation.theme.CacaInfinitaTheme
 
 @Composable
@@ -24,7 +26,9 @@ fun HomeBottomNavBar(
     isHomeSelected: Boolean = true
 ) {
     NavigationBar(
-        modifier = modifier.clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)),
+        modifier = modifier
+            .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+            .showcaseTarget(ShowcaseIds.BOTTOM_NAV_BAR),
     ) {
         NavigationBarItem(
             selected = isHomeSelected,

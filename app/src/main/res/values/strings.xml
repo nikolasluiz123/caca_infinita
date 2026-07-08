@@ -37,4 +37,18 @@
     <string name="puzzle_words_bottom_sheet_title">Palavras</string>
     <string name="puzzle_finished_message">Parabéns! Você encontrou todas as palavras!</string>
     <string name="success_puzzle_generated">Caça-palavras gerado com sucesso!</string>
+
+    <string name="tutorial_home_level_card">Aqui você pode ver o seu nível atual e quanto XP possui para o próximo nível.</string>
+    <string name="tutorial_home_records_section">Nesta área você verá seus 3 melhores tempos e quantidades de palavras resolvidas.</string>
+    <string name="tutorial_home_bottom_nav">Use esta barra para navegar entre a tela inicial e sua lista de caça-palavras.</string>
+
+    <string name="tutorial_puzzles_add">Clique aqui para adicionar novos caça-palavras via Câmera, Imagem ou PDF.</string>
+    <string name="tutorial_puzzles_item_status">Este ícone indica se você já concluiu ou se ainda há palavras para encontrar neste caça-palavras.</string>
+    <string name="tutorial_puzzles_item_delete">Caso queira remover um caça-palavras que ainda não terminou da sua lista, basta clicar na lixeira.</string>
+
+    <string name="tutorial_puzzle_timer">Fique de olho no tempo! Quanto mais rápido você resolver, mais XP ganhará.</string>
+    <string name="tutorial_puzzle_gestures">Basta deslizar o dedo sobre as letras para marcar as palavras encontradas.</string>
+    <string name="tutorial_puzzle_words_list">Clique aqui para ver a lista de palavras que você precisa encontrar.</string>
+    <string name="tutorial_puzzle_pause">Seu progresso é salvo automaticamente ao sair. Você pode continuar de onde parou!</string>
+    <string name="tutorial_tap_to_continue">Tocar para continuar</string>
 </resources>

@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import br.com.schmittsolucoes.cacainfinita.core.database.transaction.DatabaseTransaction
 import br.com.schmittsolucoes.cacainfinita.data.database.AppDatabase
+import br.com.schmittsolucoes.cacainfinita.data.database.access.DataStoreTutorialInfoLocalDataSource
+import br.com.schmittsolucoes.cacainfinita.data.database.access.TutorialInfoLocalDataSource
 import br.com.schmittsolucoes.cacainfinita.data.database.access.assets.AndroidAssetsLocalDataSource
 import br.com.schmittsolucoes.cacainfinita.data.database.access.assets.AssetsLocalDataSource
 import br.com.schmittsolucoes.cacainfinita.data.database.access.puzzle.WordSearchPuzzleLocalDataSource
@@ -61,6 +63,12 @@ object LocalDataAccessModule {
     @Provides
     @Singleton
     fun provideAssetsLocalDataSource(impl: AndroidAssetsLocalDataSource): AssetsLocalDataSource {
+        return impl
+    }
+
+    @Provides
+    @Singleton
+    fun provideTutorialInfoLocalDataSource(impl: DataStoreTutorialInfoLocalDataSource): TutorialInfoLocalDataSource {
         return impl
     }
 }

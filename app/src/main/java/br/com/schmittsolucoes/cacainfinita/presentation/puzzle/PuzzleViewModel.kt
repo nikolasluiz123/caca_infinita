@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import br.com.schmittsolucoes.cacainfinita.R
+import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.SnackbarManager
 import br.com.schmittsolucoes.cacainfinita.domain.model.Word
@@ -11,16 +12,19 @@ import br.com.schmittsolucoes.cacainfinita.domain.model.WordSearchPuzzle
 import br.com.schmittsolucoes.cacainfinita.domain.model.result.puzzle.Coordinate
 import br.com.schmittsolucoes.cacainfinita.domain.provider.DeviceDimensionsProvider
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.EndSessionUseCase
-import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetHasWordsToSearchUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetElapsedTimeUseCase
+import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetHasWordsToSearchUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetPuzzleByIdUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetSelectedWordUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetWordsFromPuzzleUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.StartSessionUseCase
+import br.com.schmittsolucoes.cacainfinita.domain.usecase.TutorialUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.UpdateFoundWordUseCase
 import br.com.schmittsolucoes.cacainfinita.presentation.CommonViewModel
 import br.com.schmittsolucoes.cacainfinita.presentation.analytics.AnalyticsManager
-import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseIds
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseStep
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.TutorialIds
 import br.com.schmittsolucoes.cacainfinita.presentation.formatters.formatToClock
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzle.navigation.puzzleIdArg
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -50,6 +54,7 @@ class PuzzleViewModel @Inject constructor(
     loadingManager: LoadingManager,
     private val snackbarManager: SnackbarManager,
     private val analyticsManager: AnalyticsManager,
+    private val tutorialUseCase: TutorialUseCase,
     exceptionRecorderManager: ExceptionRecorderManager
 ) : CommonViewModel(exceptionRecorderManager) {
 
@@ -105,6 +110,7 @@ class PuzzleViewModel @Inject constructor(
         puzzleJob?.cancel()
         puzzleJob = launch {
             _puzzle.value = getPuzzleByIdUseCase(puzzleId)
+            showTutorialIfNeeded()
             startSessionUseCase(puzzleId)
 
             getHasWordsToSearchUseCase(puzzleId).collect { hasWords ->
@@ -160,6 +166,30 @@ class PuzzleViewModel @Inject constructor(
 
     fun onAnimationFinished(id: Long) {
         _xpAnimations.value = _xpAnimations.value.filter { it.id != id }
+    }
+
+    private suspend fun showTutorialIfNeeded() {
+        tutorialUseCase.checkAndStartTutorial(
+            tutorialId = TutorialIds.PUZZLE_GAME,
+            steps = listOf(
+                ShowcaseStep(
+                    targetId = ShowcaseIds.PUZZLE_TIMER,
+                    text = context.getString(R.string.tutorial_puzzle_timer)
+                ),
+                ShowcaseStep(
+                    targetId = ShowcaseIds.PUZZLE_GRID,
+                    text = context.getString(R.string.tutorial_puzzle_gestures)
+                ),
+                ShowcaseStep(
+                    targetId = ShowcaseIds.PUZZLE_WORDS_FAB,
+                    text = context.getString(R.string.tutorial_puzzle_words_list)
+                ),
+                ShowcaseStep(
+                    targetId = ShowcaseIds.PUZZLE_GRID,
+                    text = context.getString(R.string.tutorial_puzzle_pause)
+                )
+            )
+        )
     }
 
     override fun getErrorMessageFrom(throwable: Throwable): String {

@@ -5,17 +5,22 @@ import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import br.com.schmittsolucoes.cacainfinita.R
-import br.com.schmittsolucoes.cacainfinita.domain.model.pagination.PaginationConfig
+import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.SnackbarManager
+import br.com.schmittsolucoes.cacainfinita.domain.manager.TutorialManager
+import br.com.schmittsolucoes.cacainfinita.domain.model.pagination.PaginationConfig
+import br.com.schmittsolucoes.cacainfinita.domain.usecase.DeleteWordSearchPuzzleUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GenerateImagePuzzleUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GeneratePDFPuzzleUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetAllPuzzlesUseCase
-import br.com.schmittsolucoes.cacainfinita.domain.usecase.DeleteWordSearchPuzzleUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.SaveGeneratedPuzzlesUseCase
-import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
+import br.com.schmittsolucoes.cacainfinita.domain.usecase.TutorialUseCase
 import br.com.schmittsolucoes.cacainfinita.presentation.CommonViewModel
 import br.com.schmittsolucoes.cacainfinita.presentation.analytics.AnalyticsManager
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseIds
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseStep
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.TutorialIds
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,6 +41,8 @@ class WordSearchViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val analyticsManager: AnalyticsManager,
     getAllPuzzlesUseCase: GetAllPuzzlesUseCase,
+    private val tutorialUseCase: TutorialUseCase,
+    private val tutorialManager: TutorialManager,
     exceptionRecorderManager: ExceptionRecorderManager
 ) : CommonViewModel(exceptionRecorderManager) {
 
@@ -137,5 +144,37 @@ class WordSearchViewModel @Inject constructor(
             origin = WordSearchAnalytics.SCREEN_NAME,
             destiny = WordSearchAnalytics.CAMERA_DESTINY
         )
+    }
+
+    fun startTutorialIfNeeded(itemCount: Int) {
+        if (tutorialManager.currentSteps.value != null) return
+
+        launch {
+            tutorialUseCase.checkAndStartTutorial(
+                tutorialId = TutorialIds.WORD_SEARCH_LIST,
+                steps = listOf(
+                    ShowcaseStep(
+                        targetId = ShowcaseIds.ADD_PUZZLE_FAB,
+                        text = context.getString(R.string.tutorial_puzzles_add)
+                    )
+                )
+            )
+
+            if (itemCount > 0) {
+                tutorialUseCase.checkAndStartTutorial(
+                    tutorialId = TutorialIds.WORD_SEARCH_ITEM,
+                    steps = listOf(
+                        ShowcaseStep(
+                            targetId = ShowcaseIds.PUZZLE_ITEM_STATUS,
+                            text = context.getString(R.string.tutorial_puzzles_item_status)
+                        ),
+                        ShowcaseStep(
+                            targetId = ShowcaseIds.PUZZLE_ITEM_DELETE,
+                            text = context.getString(R.string.tutorial_puzzles_item_delete)
+                        )
+                    )
+                )
+            }
+        }
     }
 }

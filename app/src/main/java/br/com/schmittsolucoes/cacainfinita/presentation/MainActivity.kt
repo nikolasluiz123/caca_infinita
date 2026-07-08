@@ -26,6 +26,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import br.com.schmittsolucoes.cacainfinita.presentation.components.ErrorDialog
 import br.com.schmittsolucoes.cacainfinita.presentation.components.LoadingOverlay
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseHost
 import br.com.schmittsolucoes.cacainfinita.presentation.home.composables.components.HomeBottomNavBar
 import br.com.schmittsolucoes.cacainfinita.presentation.home.navigation.homeScreenRoute
 import br.com.schmittsolucoes.cacainfinita.presentation.home.navigation.navigateToHome
@@ -84,6 +85,11 @@ class MainActivity : ComponentActivity() {
                         if (isLoading) {
                             loadingMessage?.let { LoadingOverlay(message = it) } ?: LoadingOverlay()
                         }
+
+                        ShowcaseHost(
+                            tutorialManager = viewModel.tutorialManager,
+                            onTutorialFinished = viewModel::onDismissTutorial
+                        )
                     }
                 }
             }

@@ -25,7 +25,7 @@ fun <T : Any> PagedList(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     key: ((item: T) -> Any)? = null,
-    itemContent: @Composable LazyItemScope.(item: T?) -> Unit
+    itemContent: @Composable LazyItemScope.(index: Int, item: T?) -> Unit
 ) {
     Box(modifier = modifier.fillMaxSize()) {
         when (items.loadState.refresh) {
@@ -61,7 +61,7 @@ fun <T : Any> PagedList(
                         key = items.itemKey(key),
                         contentType = items.itemContentType()
                     ) { index ->
-                        itemContent(items[index])
+                        itemContent(index, items[index])
                     }
 
                     if (items.loadState.append is LoadState.Loading) {

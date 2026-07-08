@@ -35,7 +35,9 @@ fun WordSearchItem(
     puzzle: WordSearchPuzzleSummary,
     onClick: (String) -> Unit,
     onDeleteClick: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    statusModifier: Modifier = Modifier,
+    deleteModifier: Modifier = Modifier
 ) {
     Card(
         onClick = { onClick(puzzle.id) },
@@ -52,10 +54,16 @@ fun WordSearchItem(
                 wordsCount = puzzle.wordsCount,
                 modifier = Modifier.weight(1f)
             )
-            StatusIcon(hasUnfinishedWords = puzzle.hasUnfinishedWords)
+            StatusIcon(
+                hasUnfinishedWords = puzzle.hasUnfinishedWords,
+                modifier = statusModifier
+            )
             if (puzzle.hasUnfinishedWords) {
                 Spacer(modifier = Modifier.width(8.dp))
-                IconButton(onClick = { onDeleteClick(puzzle.id) }) {
+                IconButton(
+                    onClick = { onDeleteClick(puzzle.id) },
+                    modifier = deleteModifier
+                ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_delete_24dp),
                         contentDescription = null,

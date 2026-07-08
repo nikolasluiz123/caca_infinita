@@ -15,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,11 +24,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.schmittsolucoes.cacainfinita.R
+import br.com.schmittsolucoes.cacainfinita.domain.model.WordSearchPuzzleSummary
 import br.com.schmittsolucoes.cacainfinita.presentation.components.ErrorDialog
 import br.com.schmittsolucoes.cacainfinita.presentation.components.PagedList
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseIds
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.showcaseTarget
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.WordSearchAnalytics
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.WordSearchUiState
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.WordSearchViewModel
@@ -43,6 +50,15 @@ fun WordSearchGeneratedPuzzlesScreen(
     onPuzzleClick: (String) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val puzzles = state.puzzles.collectAsLazyPagingItems()
+
+    LifecycleEventEffect(Lifecycle.Event.ON_START) {
+        viewModel.startTutorialIfNeeded(puzzles.itemCount)
+    }
+
+    LaunchedEffect(puzzles.itemCount) {
+        viewModel.startTutorialIfNeeded(puzzles.itemCount)
+    }
 
     val pdfPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenMultipleDocuments(),
@@ -93,18 +109,21 @@ fun WordSearchGeneratedPuzzlesScreen(
     onDeletePuzzleClick: (String) -> Unit = {},
     onAddWordSearchClick: () -> Unit = {},
     onBottomSheetOptionClick: (String) -> Unit = {},
+    puzzles: LazyPagingItems<WordSearchPuzzleSummary> = state.puzzles.collectAsLazyPagingItems()
 ) {
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(value = false) }
-    val puzzles = state.puzzles.collectAsLazyPagingItems()
 
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
             floatingActionButton = {
-                FloatingActionButton(onClick = {
-                    onAddWordSearchClick()
-                    showBottomSheet = true
-                }) {
+                FloatingActionButton(
+                    onClick = {
+                        onAddWordSearchClick()
+                        showBottomSheet = true
+                    },
+                    modifier = Modifier.showcaseTarget(ShowcaseIds.ADD_PUZZLE_FAB)
+                ) {
                     Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = null)
                 }
             }
@@ -118,12 +137,14 @@ fun WordSearchGeneratedPuzzlesScreen(
                     items = puzzles,
                     emptyContent = { EmptyWordSearchList() },
                     contentPadding = PaddingValues(16.dp),
-                ) { puzzle ->
+                ) { index, puzzle ->
                     puzzle?.let {
                         WordSearchItem(
                             puzzle = it,
                             onClick = onPuzzleClick,
-                            onDeleteClick = onDeletePuzzleClick
+                            onDeleteClick = onDeletePuzzleClick,
+                            statusModifier = if (index == 0) Modifier.showcaseTarget(ShowcaseIds.PUZZLE_ITEM_STATUS) else Modifier,
+                            deleteModifier = if (index == 0) Modifier.showcaseTarget(ShowcaseIds.PUZZLE_ITEM_DELETE) else Modifier
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                     }

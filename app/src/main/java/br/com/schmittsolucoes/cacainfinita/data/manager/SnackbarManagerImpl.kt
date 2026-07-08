@@ -5,9 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class SnackbarManagerImpl @Inject constructor() : SnackbarManager {
     private val _message = MutableStateFlow<String?>(null)
     override val message: StateFlow<String?> = _message.asStateFlow()

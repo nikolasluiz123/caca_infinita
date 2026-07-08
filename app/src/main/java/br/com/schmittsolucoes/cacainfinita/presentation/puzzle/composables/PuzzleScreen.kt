@@ -35,6 +35,8 @@ import br.com.schmittsolucoes.cacainfinita.R
 import br.com.schmittsolucoes.cacainfinita.domain.model.WordSearchPuzzle
 import br.com.schmittsolucoes.cacainfinita.domain.model.result.puzzle.Coordinate
 import br.com.schmittsolucoes.cacainfinita.presentation.components.ErrorDialog
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseIds
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.showcaseTarget
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzle.PuzzleUiState
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzle.PuzzleViewModel
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzle.composables.components.PuzzleGrid
@@ -91,6 +93,7 @@ fun PuzzleScreen(
             floatingActionButton = {
                 FloatingActionButton(
                     onClick = { onToggleWordsBottomSheet(true) },
+                    modifier = Modifier.showcaseTarget(ShowcaseIds.PUZZLE_WORDS_FAB)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_grid_view),
@@ -111,7 +114,8 @@ fun PuzzleScreen(
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.Bold
                     ),
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.showcaseTarget(ShowcaseIds.PUZZLE_TIMER)
                 )
                 Text(
                     text = stringResource(R.string.puzzle_screen_time_label),
@@ -130,6 +134,7 @@ fun PuzzleScreen(
                             .weight(1f)
                             .padding(top = 16.dp)
                             .padding(bottom = state.paddingBottom.dp)
+                            .showcaseTarget(ShowcaseIds.PUZZLE_GRID)
                     )
                 }
             }

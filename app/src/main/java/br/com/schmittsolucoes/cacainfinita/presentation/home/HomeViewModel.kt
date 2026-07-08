@@ -2,14 +2,18 @@ package br.com.schmittsolucoes.cacainfinita.presentation.home
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
+import br.com.schmittsolucoes.cacainfinita.R
+import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetLastUnfinishedPuzzleUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetNextPuzzleToPlayUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetRecordPuzzlesUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetUserUseCase
-import br.com.schmittsolucoes.cacainfinita.R
-import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
+import br.com.schmittsolucoes.cacainfinita.domain.usecase.TutorialUseCase
 import br.com.schmittsolucoes.cacainfinita.presentation.CommonViewModel
 import br.com.schmittsolucoes.cacainfinita.presentation.analytics.AnalyticsManager
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseIds
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseStep
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.TutorialIds
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +31,7 @@ class HomeViewModel @Inject constructor(
     getRecordPuzzlesUseCase: GetRecordPuzzlesUseCase,
     getLastUnfinishedPuzzleUseCase: GetLastUnfinishedPuzzleUseCase,
     getNextPuzzleToPlayUseCase: GetNextPuzzleToPlayUseCase,
+    private val tutorialUseCase: TutorialUseCase,
     exceptionRecorderManager: ExceptionRecorderManager
 ): CommonViewModel(exceptionRecorderManager) {
 
@@ -64,7 +69,7 @@ class HomeViewModel @Inject constructor(
         _errorMessage.value = null
     }
 
-    fun logNavigationToPuzzle(puzzleId: String) {
+    fun logNavigationToPuzzle() {
         analyticsManager.logButtonClick(
             buttonName = HomeAnalytics.CONTINUE_GAME_BUTTON,
             buttonAction = HomeAnalytics.ACTION_START_PUZZLE
@@ -73,5 +78,27 @@ class HomeViewModel @Inject constructor(
             origin = HomeAnalytics.SCREEN_NAME,
             destiny = HomeAnalytics.PUZZLE_DESTINY
         )
+    }
+
+    fun startTutorialIfNeeded() {
+        launch {
+            tutorialUseCase.checkAndStartTutorial(
+                tutorialId = TutorialIds.HOME,
+                steps = listOf(
+                    ShowcaseStep(
+                        targetId = ShowcaseIds.USER_LEVEL_CARD,
+                        text = context.getString(R.string.tutorial_home_level_card)
+                    ),
+                    ShowcaseStep(
+                        targetId = ShowcaseIds.PERSONAL_RECORDS_SECTION,
+                        text = context.getString(R.string.tutorial_home_records_section)
+                    ),
+                    ShowcaseStep(
+                        targetId = ShowcaseIds.BOTTOM_NAV_BAR,
+                        text = context.getString(R.string.tutorial_home_bottom_nav)
+                    )
+                )
+            )
+        }
     }
 }
