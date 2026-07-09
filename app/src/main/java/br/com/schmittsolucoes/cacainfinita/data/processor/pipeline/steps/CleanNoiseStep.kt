@@ -1,6 +1,7 @@
 package br.com.schmittsolucoes.cacainfinita.data.processor.pipeline.steps
 
 import android.util.Log
+import br.com.schmittsolucoes.cacainfinita.domain.exception.NoValidWordsException
 
 /**
  * Etapa responsável por remover "ruídos" do texto extraído.
@@ -25,7 +26,13 @@ class CleanNoiseStep : TextResultProcessorStep {
 
         Log.d("DEBUG_PROCESS", "$tag: Iniciando step CleanNoise")
 
-        return text.replace(Regex("[^\\p{L}\\s]"), " ").also {
+        val result = text.replace(Regex("[^\\p{L}\\s]"), " ")
+
+        if (result.isBlank()) {
+            throw NoValidWordsException()
+        }
+
+        return result.also {
             Log.d("DEBUG_PROCESS", "$tag: Fim step CleanNoise")
         }
     }

@@ -1,6 +1,7 @@
 package br.com.schmittsolucoes.cacainfinita.data.processor.pipeline.steps
 
 import android.util.Log
+import br.com.schmittsolucoes.cacainfinita.domain.exception.NoValidWordsException
 
 /**
  * Etapa responsável por eliminar termos repetidos no texto.
@@ -25,11 +26,17 @@ class RemoveDuplicatedWordsStep : TextResultProcessorStep {
 
         Log.d("DEBUG_PROCESS", "$tag: Iniciando step RemoveDuplicatedWords")
 
-        return text.split(Regex("\\s+"))
+        val result = text.split(Regex("\\s+"))
             .filter { it.isNotBlank() }
             .distinct()
-            .joinToString(" ").also {
-                Log.d("DEBUG_PROCESS", "$tag: Fim step RemoveDuplicatedWords")
-            }
+            .joinToString(" ")
+
+        if (result.isBlank()) {
+            throw NoValidWordsException()
+        }
+
+        return result.also {
+            Log.d("DEBUG_PROCESS", "$tag: Fim step RemoveDuplicatedWords")
+        }
     }
 }

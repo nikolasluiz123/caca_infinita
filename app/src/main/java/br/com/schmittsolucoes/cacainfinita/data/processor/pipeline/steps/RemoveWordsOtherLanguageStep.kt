@@ -2,6 +2,7 @@ package br.com.schmittsolucoes.cacainfinita.data.processor.pipeline.steps
 
 import android.util.Log
 import br.com.schmittsolucoes.cacainfinita.data.analyzer.language.LanguageTextAnalyzer
+import br.com.schmittsolucoes.cacainfinita.domain.exception.NoValidWordsException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -54,6 +55,10 @@ class RemoveWordsOtherLanguageStep(
 
         val filteredWords = allWords.filter { word ->
             languageMap[word] == PORTUGUESE_LANGUAGE_CODE
+        }
+
+        if (filteredWords.isEmpty()) {
+            throw NoValidWordsException()
         }
 
         filteredWords.joinToString(" ").also {

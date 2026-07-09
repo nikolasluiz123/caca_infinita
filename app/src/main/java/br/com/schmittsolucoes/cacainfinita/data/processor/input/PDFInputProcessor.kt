@@ -7,6 +7,7 @@ import br.com.schmittsolucoes.cacainfinita.data.extractor.pdf.PDFExtractionConfi
 import br.com.schmittsolucoes.cacainfinita.data.extractor.pdf.PDFTextExtractor
 import br.com.schmittsolucoes.cacainfinita.data.processor.input.exceptions.PDFInputProcessorException
 import br.com.schmittsolucoes.cacainfinita.data.provider.FreeMemoryProvider
+import br.com.schmittsolucoes.cacainfinita.domain.exception.NoTextFoundException
 import br.com.schmittsolucoes.cacainfinita.domain.processor.input.InputProcessor
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +35,13 @@ class PDFInputProcessor @Inject constructor(
 
             val config = PDFExtractionConfig(maxMainMemoryBytes = memoryLimit)
 
-            extractor.extract(stream, config).also {
+            val text = extractor.extract(stream, config)
+
+            if (text.isBlank()) {
+                throw NoTextFoundException()
+            }
+
+            text.also {
                 Log.d("DEBUG_PROCESS", "$tag: Fim do processamento de PDF")
             }
         }

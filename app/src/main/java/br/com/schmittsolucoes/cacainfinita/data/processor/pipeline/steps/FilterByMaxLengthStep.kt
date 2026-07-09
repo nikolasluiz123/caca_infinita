@@ -1,6 +1,7 @@
 package br.com.schmittsolucoes.cacainfinita.data.processor.pipeline.steps
 
 import android.util.Log
+import br.com.schmittsolucoes.cacainfinita.domain.exception.NoValidWordsException
 
 /**
  * Etapa que filtra palavras com base no comprimento máximo permitido pela grade.
@@ -26,10 +27,16 @@ class FilterByMaxLengthStep(private val maxAllowedLength: Int) : TextResultProce
 
         Log.d("DEBUG_PROCESS", "$tag: Iniciando step FilterByMaxLength (Max: $maxAllowedLength)")
 
-        return text.split(Regex("\\s+"))
+        val result = text.split(Regex("\\s+"))
             .filter { word -> word.isNotBlank() && word.length <= maxAllowedLength }
-            .joinToString(" ").also {
-                Log.d("DEBUG_PROCESS", "$tag: Fim step FilterByMaxLength")
-            }
+            .joinToString(" ")
+
+        if (result.isBlank()) {
+            throw NoValidWordsException()
+        }
+
+        return result.also {
+            Log.d("DEBUG_PROCESS", "$tag: Fim step FilterByMaxLength")
+        }
     }
 }

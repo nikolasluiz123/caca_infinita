@@ -5,6 +5,8 @@ import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import br.com.schmittsolucoes.cacainfinita.R
+import br.com.schmittsolucoes.cacainfinita.domain.exception.NoTextFoundException
+import br.com.schmittsolucoes.cacainfinita.domain.exception.NoValidWordsException
 import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.SnackbarManager
@@ -97,7 +99,11 @@ class WordSearchViewModel @Inject constructor(
     }
 
     override fun getErrorMessageFrom(throwable: Throwable): String {
-        return context.getString(R.string.error_unexpected)
+        return when (throwable) {
+            is NoTextFoundException -> context.getString(R.string.error_no_text_found)
+            is NoValidWordsException -> context.getString(R.string.error_no_valid_words_found)
+            else -> context.getString(R.string.error_unexpected)
+        }
     }
 
     override fun onShowErrorDialog(message: String) {

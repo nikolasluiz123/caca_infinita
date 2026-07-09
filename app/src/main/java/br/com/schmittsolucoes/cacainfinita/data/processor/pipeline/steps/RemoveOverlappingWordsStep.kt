@@ -1,6 +1,7 @@
 package br.com.schmittsolucoes.cacainfinita.data.processor.pipeline.steps
 
 import android.util.Log
+import br.com.schmittsolucoes.cacainfinita.domain.exception.NoValidWordsException
 
 /**
  * Etapa responsável por remover palavras que são subconjuntos de outras palavras maiores.
@@ -24,6 +25,10 @@ class RemoveOverlappingWordsStep : TextResultProcessorStep {
             if (result.none { it.contains(word) }) {
                 result.add(word)
             }
+        }
+
+        if (result.isEmpty()) {
+            throw NoValidWordsException()
         }
 
         return result.joinToString(" ").also {

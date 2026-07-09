@@ -1,6 +1,7 @@
 package br.com.schmittsolucoes.cacainfinita.data.processor.pipeline.steps
 
 import android.util.Log
+import br.com.schmittsolucoes.cacainfinita.domain.exception.NoValidWordsException
 import java.text.Normalizer
 
 /**
@@ -31,7 +32,13 @@ class NormalizeTextStep : TextResultProcessorStep {
         val normalized = Normalizer.normalize(text, Normalizer.Form.NFD)
         val withoutAccents = normalized.replace(Regex("\\p{InCombiningDiacriticalMarks}+"), "")
 
-        return withoutAccents.uppercase().also {
+        val result = withoutAccents.uppercase()
+
+        if (result.isBlank()) {
+            throw NoValidWordsException()
+        }
+
+        return result.also {
             Log.d("DEBUG_PROCESS", "$tag: Fim step NormalizeText")
         }
     }

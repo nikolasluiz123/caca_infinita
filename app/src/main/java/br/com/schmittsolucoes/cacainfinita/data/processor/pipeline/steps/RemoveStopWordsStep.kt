@@ -1,6 +1,7 @@
 package br.com.schmittsolucoes.cacainfinita.data.processor.pipeline.steps
 
 import android.util.Log
+import br.com.schmittsolucoes.cacainfinita.domain.exception.NoValidWordsException
 
 /**
  * Etapa responsável por filtrar palavras irrelevantes (Stop Words).
@@ -27,10 +28,16 @@ class RemoveStopWordsStep(private val stopWords: Set<String>) : TextResultProces
 
         Log.d("DEBUG_PROCESS", "$tag: Iniciando step RemoveStopWords")
 
-        return text.split(Regex("\\s+"))
+        val result = text.split(Regex("\\s+"))
             .filter { word -> word.isNotBlank() && word.uppercase() !in stopWords }
-            .joinToString(" ").also {
-                Log.d("DEBUG_PROCESS", "$tag: Fim step RemoveStopWords")
-            }
+            .joinToString(" ")
+
+        if (result.isBlank()) {
+            throw NoValidWordsException()
+        }
+
+        return result.also {
+            Log.d("DEBUG_PROCESS", "$tag: Fim step RemoveStopWords")
+        }
     }
 }

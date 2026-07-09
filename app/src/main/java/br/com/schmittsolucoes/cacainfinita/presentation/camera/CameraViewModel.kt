@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import br.com.schmittsolucoes.cacainfinita.R
 import br.com.schmittsolucoes.cacainfinita.data.analyzer.frame.FrameAnalyzer
 import br.com.schmittsolucoes.cacainfinita.data.analyzer.frame.ImageProxyFrame
+import br.com.schmittsolucoes.cacainfinita.domain.exception.NoTextFoundException
+import br.com.schmittsolucoes.cacainfinita.domain.exception.NoValidWordsException
 import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.SnackbarManager
@@ -94,7 +96,11 @@ class CameraViewModel @Inject constructor(
     }
 
     override fun getErrorMessageFrom(throwable: Throwable): String {
-        return application.getString(R.string.error_unexpected)
+        return when (throwable) {
+            is NoTextFoundException -> application.getString(R.string.error_no_text_found)
+            is NoValidWordsException -> application.getString(R.string.error_no_valid_words_found)
+            else -> application.getString(R.string.error_unexpected)
+        }
     }
 
     override fun onShowErrorDialog(message: String) {

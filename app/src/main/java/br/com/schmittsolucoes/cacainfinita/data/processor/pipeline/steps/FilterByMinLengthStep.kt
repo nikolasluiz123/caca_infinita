@@ -1,6 +1,7 @@
 package br.com.schmittsolucoes.cacainfinita.data.processor.pipeline.steps
 
 import android.util.Log
+import br.com.schmittsolucoes.cacainfinita.domain.exception.NoValidWordsException
 
 /**
  * Etapa responsável por remover palavras que possuem comprimento menor que o mínimo especificado.
@@ -19,10 +20,16 @@ class FilterByMinLengthStep(private val minLength: Int) : TextResultProcessorSte
 
         Log.d("DEBUG_PROCESS", "$tag: Iniciando step FilterByMinLength (Min: $minLength)")
 
-        return text.split(Regex("\\s+"))
+        val result = text.split(Regex("\\s+"))
             .filter { word -> word.isNotBlank() && word.length >= minLength }
-            .joinToString(" ").also {
-                Log.d("DEBUG_PROCESS", "$tag: Fim step FilterByMinLength")
-            }
+            .joinToString(" ")
+
+        if (result.isBlank()) {
+            throw NoValidWordsException()
+        }
+
+        return result.also {
+            Log.d("DEBUG_PROCESS", "$tag: Fim step FilterByMinLength")
+        }
     }
 }
