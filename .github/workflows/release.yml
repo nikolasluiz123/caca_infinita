@@ -10,9 +10,14 @@ on:
         description: 'Version Name (e.g., 1.0.2)'
         required: true
       track:
-        description: 'Google Play Track (internal/production)'
-        default: 'internal'
+        description: 'Canal de lançamento no Google Play (internal: Teste Interno, alpha: Teste Fechado, production: Produção)'
         required: true
+        default: 'internal'
+        type: choice
+        options:
+          - internal
+          - alpha
+          - production
 
 jobs:
   release:
