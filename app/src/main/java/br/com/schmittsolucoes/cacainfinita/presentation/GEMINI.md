@@ -13,5 +13,6 @@ As telas devem ser organizadas em pacotes por conceito (ex: `home`), contendo:
 
 ## Tematização e Estilo
 - **Suporte a Dark/Light Mode**: Obrigatório. Utilizar cores dinâmicas baseadas no tema em `Theme.kt` e `Color.kt`.
+- **Internacionalização**: Obrigatório criar labels em Português (`values`) e Inglês (`values-en`) para todas as novas UIs. Proibido o uso de strings hardcoded.
 - **Tipografia**: Preferir estilos padrão do Material Design (`MaterialTheme.typography`). Criar estilos específicos apenas se estritamente necessário.
 - **Composables**: Subdividir telas grandes em pequenas partes para facilitar a manutenção e o reaproveitamento.

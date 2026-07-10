@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">Infinite Word Search</string>
+    <string name="user_level_status_card_label_current_status">CURRENT STATUS</string>
+    <string name="user_level_status_card_level_label">Level %d</string>
+    <string name="user_level_status_card_xp_to_next_level">%d / %d XP</string>
+    <string name="continue_game">Continue Game</string>
+    <string name="new_game">New Game</string>
+    <string name="personal_records">Personal Records</string>
+    <string name="words_label">%d words</string>
+    <string name="home_tab">Home</string>
+    <string name="word_search_tab">Word Search</string>
+    <string name="no_records_message">No records yet. Choose a word search, start playing and they will appear here!</string>
+
+    <string name="no_word_search_found_title">No word search found</string>
+    <string name="no_word_search_found_subtitle">You haven\'t added any word searches yet.</string>
+
+    <string name="add_word_search_title">Add Word Search</string>
+    <string name="add_word_search_open_camera_title">Open Camera</string>
+    <string name="add_word_search_open_camera_subtitle">Take a photo of a text</string>
+    <string name="add_word_search_load_image_title">Load Image</string>
+    <string name="add_word_search_load_image_subtitle">Choose a photo from gallery</string>
+    <string name="add_word_search_load_pdf_title">Load PDF</string>
+    <string name="add_word_search_load_pdf_subtitle">Choose a PDF file</string>
+    <string name="puzzle_fallback_name">Word Search #%d</string>
+
+    <string name="back">Back</string>
+    <string name="camera_capture">Capture</string>
+    <string name="flash_auto">Auto Flash</string>
+    <string name="flash_on">Flash On</string>
+    <string name="flash_off">Flash Off</string>
+
+    <string name="error_no_text_found">We couldn\'t find any text to generate the word search. Try another file or image.</string>
+    <string name="error_no_valid_words_found">We didn\'t find enough valid words to generate the word search. Try a text with more words.</string>
+    <string name="error_unexpected">An unexpected error occurred. Please try again.</string>
+    <string name="error_dialog_title">Error</string>
+    <string name="error_dialog_ok">OK</string>
+    <string name="processing">Processing…</string>
+    <string name="puzzle_screen_time_label">ELAPSED TIME</string>
+    <string name="puzzle_words_bottom_sheet_title">Words</string>
+    <string name="puzzle_finished_message">Congratulations! You found all the words!</string>
+    <string name="success_puzzle_generated">Word search generated successfully!</string>
+
+    <string name="tutorial_home_level_card">Here you can see your current level and how much XP you have for the next level.</string>
+    <string name="tutorial_home_records_section">In this area you will see your top 3 times and word counts solved.</string>
+    <string name="tutorial_home_bottom_nav">Use this bar to navigate between the home screen and your word search list.</string>
+
+    <string name="tutorial_puzzles_add">Click here to add new word searches via Camera, Image or PDF.</string>
+    <string name="tutorial_puzzles_item_status">This icon indicates if you have already completed or if there are still words to find in this word search.</string>
+    <string name="tutorial_puzzles_item_delete">If you want to remove an unfinished word search from your list, just click the trash icon.</string>
+
+    <string name="tutorial_puzzle_timer">Keep an eye on the time! The faster you solve it, the more XP you earn.</string>
+    <string name="tutorial_puzzle_gestures">Just slide your finger over the letters to mark the found words.</string>
+    <string name="tutorial_puzzle_words_list">Click here to see the list of words you need to find.</string>
+    <string name="tutorial_puzzle_pause">Your progress is automatically saved when leaving. You can continue from where you left off!</string>
+    <string name="tutorial_tap_to_continue">Tap to continue</string>
+</resources>
