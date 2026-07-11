@@ -45,11 +45,12 @@ import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.composables.comp
 import br.com.schmittsolucoes.cacainfinita.presentation.theme.CacaInfinitaTheme
 import br.com.schmittsolucoes.cacainfinita.domain.model.result.puzzle.PuzzleGenerationConfig
 import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.LanguageSelection
+import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.GridOrientation
 
 @Composable
 fun WordSearchGeneratedPuzzlesScreen(
     viewModel: WordSearchViewModel,
-    onOpenCameraClick: (LanguageSelection) -> Unit,
+    onOpenCameraClick: (LanguageSelection, GridOrientation) -> Unit,
     onPuzzleClick: (String) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -101,9 +102,9 @@ fun WordSearchGeneratedPuzzlesScreen(
         onDeletePuzzleClick = viewModel::onDeletePuzzle,
         onAddWordSearchClick = viewModel::onAddWordSearchClick,
         onBottomSheetOptionClick = viewModel::onBottomSheetOptionClick,
-        onOpenCameraClick = { languageSelection ->
+        onOpenCameraClick = { languageSelection, orientation ->
             viewModel.logNavigationToCamera()
-            onOpenCameraClick(languageSelection)
+            onOpenCameraClick(languageSelection, orientation)
         }
     )
 }
@@ -112,7 +113,7 @@ fun WordSearchGeneratedPuzzlesScreen(
 @Composable
 fun WordSearchGeneratedPuzzlesScreen(
     state: WordSearchUiState,
-    onOpenCameraClick: (LanguageSelection) -> Unit = {},
+    onOpenCameraClick: (LanguageSelection, GridOrientation) -> Unit = { _, _ -> },
     onLoadImageClick: (PuzzleGenerationConfig) -> Unit = {},
     onLoadPdfClick: (PuzzleGenerationConfig) -> Unit = {},
     onDismissErrorDialog: () -> Unit = {},
@@ -194,7 +195,7 @@ fun WordSearchGeneratedPuzzlesScreen(
                     onConfirm = { config ->
                         showConfigBottomSheet = false
                         when (selectedOption) {
-                            WordSearchAnalytics.OPTION_CAMERA -> onOpenCameraClick(config.languageSelection)
+                            WordSearchAnalytics.OPTION_CAMERA -> onOpenCameraClick(config.languageSelection, config.orientation)
                             WordSearchAnalytics.OPTION_IMAGE -> onLoadImageClick(config)
                             WordSearchAnalytics.OPTION_PDF -> onLoadPdfClick(config)
                         }

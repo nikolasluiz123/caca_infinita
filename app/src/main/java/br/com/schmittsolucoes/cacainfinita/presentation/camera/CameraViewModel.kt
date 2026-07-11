@@ -14,12 +14,11 @@ import br.com.schmittsolucoes.cacainfinita.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.SnackbarManager
 import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.AnalyzerState
 import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.TorchMode
-import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.LanguageSelection
 import br.com.schmittsolucoes.cacainfinita.domain.model.result.puzzle.PuzzleGenerationConfig
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.ImagePuzzleOrchestratorUseCase
 import br.com.schmittsolucoes.cacainfinita.presentation.CommonViewModel
 import br.com.schmittsolucoes.cacainfinita.presentation.analytics.AnalyticsManager
-import br.com.schmittsolucoes.cacainfinita.presentation.camera.navigation.languageSelectionArg
+import br.com.schmittsolucoes.cacainfinita.presentation.camera.navigation.CameraNavArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -41,7 +40,7 @@ class CameraViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : CommonViewModel(exceptionRecorderManager) {
 
-    private val languageSelection: LanguageSelection = LanguageSelection.valueOf(savedStateHandle.get<String>(languageSelectionArg) ?: LanguageSelection.BOTH.name)
+    private val navArgs = CameraNavArgs(savedStateHandle)
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     private val _torchMode = MutableStateFlow(TorchMode.AUTO)
@@ -90,7 +89,10 @@ class CameraViewModel @Inject constructor(
 
             try {
                 val uri = Uri.fromFile(File(path))
-                val config = PuzzleGenerationConfig(languageSelection)
+                val config = PuzzleGenerationConfig(
+                    languageSelection = navArgs.languageSelection,
+                    orientation = navArgs.orientation
+                )
                 imagePuzzleOrchestratorUseCase(listOf(uri), config, isFromCamera = true)
                 snackbarManager.showSnackbar(application.getString(R.string.success_puzzle_generated))
                 lastTorchActive = false

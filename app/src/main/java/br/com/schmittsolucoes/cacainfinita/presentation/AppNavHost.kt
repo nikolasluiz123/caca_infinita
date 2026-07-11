@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import br.com.schmittsolucoes.cacainfinita.presentation.camera.navigation.cameraScreen
 import br.com.schmittsolucoes.cacainfinita.presentation.camera.navigation.navigateToCamera
+import br.com.schmittsolucoes.cacainfinita.presentation.camera.navigation.CameraNavArgs
 import br.com.schmittsolucoes.cacainfinita.presentation.home.navigation.homeScreen
 import br.com.schmittsolucoes.cacainfinita.presentation.home.navigation.homeScreenRoute
 import br.com.schmittsolucoes.cacainfinita.presentation.home.navigation.navigateToHome
@@ -28,8 +29,10 @@ fun AppNavHost(
             onContinueGameClick = navController::navigateToPuzzle
         )
         wordSearchGeneratedPuzzlesScreen(
-            onOpenCameraClick = { languageSelection ->
-                navController.navigateToCamera(languageSelection)
+            onOpenCameraClick = { languageSelection, orientation ->
+                navController.navigateToCamera(
+                    CameraNavArgs(languageSelection, orientation)
+                )
             },
             onPuzzleClick = navController::navigateToPuzzle
         )

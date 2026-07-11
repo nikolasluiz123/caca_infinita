@@ -3,6 +3,8 @@ package br.com.schmittsolucoes.cacainfinita.domain.usecase
 import android.util.Log
 import br.com.schmittsolucoes.cacainfinita.domain.calculator.GridDimensionCalculator
 import br.com.schmittsolucoes.cacainfinita.domain.generator.PuzzleGenerator
+import br.com.schmittsolucoes.cacainfinita.domain.model.GridCalculationParams
+import br.com.schmittsolucoes.cacainfinita.domain.model.PaddingParams
 import br.com.schmittsolucoes.cacainfinita.domain.model.result.language.LanguageAnalyzerResult
 import br.com.schmittsolucoes.cacainfinita.domain.model.result.puzzle.PuzzleGenerationConfig
 import br.com.schmittsolucoes.cacainfinita.domain.model.result.puzzle.PuzzleResult
@@ -26,13 +28,18 @@ open class GeneratePuzzleUseCase(
             Log.d("DEBUG_PROCESS", "$tag: Iniciando geração de quebra-cabeça")
 
             val gridDimensions = gridCalculator.calculate(
-                availableWidthDp = dimensionsProvider.getAvailableWidth(),
-                availableHeightDp = dimensionsProvider.getAvailableHeight(),
-                cellTargetSizeDp = dimensionsProvider.getCellSize(),
-                paddingStartDp = dimensionsProvider.getPaddingStart(),
-                paddingEndDp = dimensionsProvider.getPaddingEnd(),
-                paddingTopDp = dimensionsProvider.getPaddingTop(),
-                paddingBottomDp = dimensionsProvider.getPaddingBottom()
+                params = GridCalculationParams(
+                    availableWidthDp = dimensionsProvider.getAvailableWidth(),
+                    availableHeightDp = dimensionsProvider.getAvailableHeight(),
+                    cellTargetSizeDp = dimensionsProvider.getCellSize(),
+                    orientation = config.orientation
+                ),
+                padding = PaddingParams(
+                    paddingStartDp = dimensionsProvider.getPaddingStart(),
+                    paddingEndDp = dimensionsProvider.getPaddingEnd(),
+                    paddingTopDp = dimensionsProvider.getPaddingTop(),
+                    paddingBottomDp = dimensionsProvider.getPaddingBottom()
+                )
             )
 
             Log.d("DEBUG_PROCESS", "$tag: Grid Dimensions calculada: $gridDimensions")

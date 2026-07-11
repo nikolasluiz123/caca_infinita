@@ -17,6 +17,7 @@ fun PuzzleResult.toEntity(name: String, userId: String): WordSearchPuzzleEntity 
         name = name,
         rows = grid.size,
         columns = grid[0].size,
+        orientation = orientation,
         userId = userId
     )
 }
@@ -38,7 +39,8 @@ fun WordSearchPuzzleEntity.toDomain(): WordSearchPuzzle {
         grid = grid.chunked(columns).map { it.toList() },
         name = name,
         rows = rows,
-        columns = columns
+        columns = columns,
+        orientation = orientation
     )
 }
 

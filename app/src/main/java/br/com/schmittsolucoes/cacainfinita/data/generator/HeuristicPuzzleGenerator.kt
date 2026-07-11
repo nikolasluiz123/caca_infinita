@@ -79,7 +79,13 @@ class HeuristicPuzzleGenerator @Inject constructor() : PuzzleGenerator {
 
             if (placedWords.isNotEmpty()) {
                 fillEmptySpaces(grid)
-                results.add(PuzzleResult(grid, placedWords))
+                results.add(
+                    PuzzleResult(
+                        grid = grid,
+                        placedWords = placedWords,
+                        orientation = dimensions.orientation
+                    )
+                )
                 Log.d("DEBUG_PROCESS", "$tag: Novo PuzzleResult gerado com ${placedWords.size} palavras")
             } else {
                 break

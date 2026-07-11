@@ -33,6 +33,7 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.schmittsolucoes.cacainfinita.R
 import br.com.schmittsolucoes.cacainfinita.domain.model.WordSearchPuzzle
+import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.GridOrientation
 import br.com.schmittsolucoes.cacainfinita.domain.model.result.puzzle.Coordinate
 import br.com.schmittsolucoes.cacainfinita.presentation.components.ErrorDialog
 import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseIds
@@ -207,7 +208,8 @@ private fun PuzzleScreenPreview() {
         ),
         name = "Sample",
         rows = 3,
-        columns = 3
+        columns = 3,
+        orientation = GridOrientation.PORTRAIT
     )
 
     CacaInfinitaTheme {

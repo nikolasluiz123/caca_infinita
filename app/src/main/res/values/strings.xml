@@ -26,6 +26,9 @@
     <string name="puzzle_config_portuguese">Português</string>
     <string name="puzzle_config_english">Inglês</string>
     <string name="puzzle_config_confirm">Confirmar e Iniciar</string>
+    <string name="puzzle_config_orientation_subtitle">Orientação:</string>
+    <string name="puzzle_config_orientation_portrait">Retrato</string>
+    <string name="puzzle_config_orientation_landscape">Paisagem</string>
     <string name="puzzle_fallback_name">Caça-Palavras #%d</string>
 
     <string name="back">Voltar</string>

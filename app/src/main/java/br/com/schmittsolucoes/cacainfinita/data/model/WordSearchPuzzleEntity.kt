@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.GridOrientation
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -26,6 +27,7 @@ data class WordSearchPuzzleEntity(
     val name: String,
     val rows: Int,
     val columns: Int,
+    val orientation: GridOrientation,
     @ColumnInfo("user_id", index = true)
     val userId: String
 ): UniqueEntity

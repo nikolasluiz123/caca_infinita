@@ -9,16 +9,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import br.com.schmittsolucoes.cacainfinita.presentation.camera.CameraViewModel
 import br.com.schmittsolucoes.cacainfinita.presentation.camera.composables.CameraScreen
-import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.LanguageSelection
 
 const val cameraRoute = "camera_feedback"
 const val languageSelectionArg = "languageSelection"
+const val orientationArg = "orientation"
 
 fun NavGraphBuilder.cameraScreen(onBackClick: () -> Unit) {
     composable(
-        route = "$cameraRoute/{$languageSelectionArg}",
+        route = "$cameraRoute/{$languageSelectionArg}/{$orientationArg}",
         arguments = listOf(
-            navArgument(languageSelectionArg) { type = NavType.StringType }
+            navArgument(languageSelectionArg) { type = NavType.StringType },
+            navArgument(orientationArg) { type = NavType.StringType }
         )
     ) {
         val viewModel = hiltViewModel<CameraViewModel>()
@@ -30,6 +31,12 @@ fun NavGraphBuilder.cameraScreen(onBackClick: () -> Unit) {
     }
 }
 
-fun NavController.navigateToCamera(languageSelection: LanguageSelection, navOptions: NavOptions? = null) {
-    navigate(route = "$cameraRoute/${languageSelection.name}", navOptions = navOptions)
+fun NavController.navigateToCamera(
+    navArgs: CameraNavArgs,
+    navOptions: NavOptions? = null
+) {
+    navigate(
+        route = "$cameraRoute/${navArgs.languageSelection.name}/${navArgs.orientation.name}",
+        navOptions = navOptions
+    )
 }

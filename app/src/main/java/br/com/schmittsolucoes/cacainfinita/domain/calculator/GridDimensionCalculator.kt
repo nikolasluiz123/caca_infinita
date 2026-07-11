@@ -1,15 +1,9 @@
 package br.com.schmittsolucoes.cacainfinita.domain.calculator
 
+import br.com.schmittsolucoes.cacainfinita.domain.model.GridCalculationParams
 import br.com.schmittsolucoes.cacainfinita.domain.model.GridDimensions
+import br.com.schmittsolucoes.cacainfinita.domain.model.PaddingParams
 
 interface GridDimensionCalculator {
-    fun calculate(
-        availableWidthDp: Float,
-        availableHeightDp: Float,
-        cellTargetSizeDp: Float,
-        paddingStartDp: Float,
-        paddingEndDp: Float,
-        paddingTopDp: Float,
-        paddingBottomDp: Float
-    ): GridDimensions
+    fun calculate(params: GridCalculationParams, padding: PaddingParams): GridDimensions
 }

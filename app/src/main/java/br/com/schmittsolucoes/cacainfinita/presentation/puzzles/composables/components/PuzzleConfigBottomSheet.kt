@@ -9,12 +9,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -26,10 +29,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.schmittsolucoes.cacainfinita.R
+import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.GridOrientation
 import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.LanguageSelection
 import br.com.schmittsolucoes.cacainfinita.domain.model.result.puzzle.PuzzleGenerationConfig
 import br.com.schmittsolucoes.cacainfinita.presentation.theme.CacaInfinitaTheme
@@ -44,6 +49,7 @@ fun PuzzleConfigBottomSheet(
 ) {
     var isPortugueseSelected by remember { mutableStateOf(true) }
     var isEnglishSelected by remember { mutableStateOf(true) }
+    var selectedOrientation by remember { mutableStateOf(GridOrientation.PORTRAIT) }
 
     val isConfirmEnabled = isPortugueseSelected || isEnglishSelected
 
@@ -86,6 +92,34 @@ fun PuzzleConfigBottomSheet(
                 )
             }
 
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = stringResource(R.string.puzzle_config_orientation_subtitle),
+                style = MaterialTheme.typography.bodyLarge,
+                color = SecondaryTextColor,
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .selectableGroup()
+            ) {
+                OrientationOption(
+                    label = stringResource(R.string.puzzle_config_orientation_portrait),
+                    selected = selectedOrientation == GridOrientation.PORTRAIT,
+                    onClick = { selectedOrientation = GridOrientation.PORTRAIT },
+                    modifier = Modifier.weight(1f)
+                )
+
+                OrientationOption(
+                    label = stringResource(R.string.puzzle_config_orientation_landscape),
+                    selected = selectedOrientation == GridOrientation.LANDSCAPE,
+                    onClick = { selectedOrientation = GridOrientation.LANDSCAPE },
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
@@ -95,7 +129,12 @@ fun PuzzleConfigBottomSheet(
                         isPortugueseSelected -> LanguageSelection.PORTUGUESE_ONLY
                         else -> LanguageSelection.ENGLISH_ONLY
                     }
-                    onConfirm(PuzzleGenerationConfig(selection))
+                    onConfirm(
+                        PuzzleGenerationConfig(
+                            languageSelection = selection,
+                            orientation = selectedOrientation
+                        )
+                    )
                 },
                 enabled = isConfirmEnabled,
                 modifier = Modifier.fillMaxWidth()
@@ -120,6 +159,33 @@ private fun LanguageOption(
         Checkbox(
             checked = isSelected,
             onCheckedChange = onSelectedChange
+        )
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyLarge,
+        )
+    }
+}
+
+@Composable
+private fun OrientationOption(
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .selectable(
+                selected = selected,
+                onClick = onClick,
+                role = Role.RadioButton
+            ),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RadioButton(
+            selected = selected,
+            onClick = null // Selected is handled by the Row
         )
         Text(
             text = label,

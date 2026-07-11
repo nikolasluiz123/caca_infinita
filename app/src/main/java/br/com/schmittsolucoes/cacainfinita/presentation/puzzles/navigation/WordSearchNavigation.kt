@@ -7,12 +7,13 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.WordSearchViewModel
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.composables.WordSearchGeneratedPuzzlesScreen
+import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.GridOrientation
 import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.LanguageSelection
 
 const val wordSearchGeneratedPuzzlesRoute = "word_search_generated_puzzles"
 
 fun NavGraphBuilder.wordSearchGeneratedPuzzlesScreen(
-    onOpenCameraClick: (LanguageSelection) -> Unit,
+    onOpenCameraClick: (LanguageSelection, GridOrientation) -> Unit,
     onPuzzleClick: (String) -> Unit
 ) {
     composable(route = wordSearchGeneratedPuzzlesRoute) {

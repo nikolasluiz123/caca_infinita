@@ -12,7 +12,6 @@ import br.com.schmittsolucoes.cacainfinita.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.SnackbarManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.TutorialManager
 import br.com.schmittsolucoes.cacainfinita.domain.model.pagination.PaginationConfig
-import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.LanguageSelection
 import br.com.schmittsolucoes.cacainfinita.domain.model.result.puzzle.PuzzleGenerationConfig
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.DeleteWordSearchPuzzleUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetAllPuzzlesUseCase
