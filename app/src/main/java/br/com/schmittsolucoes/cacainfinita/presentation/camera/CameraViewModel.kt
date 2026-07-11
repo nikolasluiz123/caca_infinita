@@ -18,7 +18,8 @@ import br.com.schmittsolucoes.cacainfinita.domain.model.result.puzzle.PuzzleGene
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.ImagePuzzleOrchestratorUseCase
 import br.com.schmittsolucoes.cacainfinita.presentation.CommonViewModel
 import br.com.schmittsolucoes.cacainfinita.presentation.analytics.AnalyticsManager
-import br.com.schmittsolucoes.cacainfinita.presentation.camera.navigation.CameraNavArgs
+import br.com.schmittsolucoes.cacainfinita.presentation.camera.navigation.CameraRoute
+import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -40,7 +41,7 @@ class CameraViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : CommonViewModel(exceptionRecorderManager) {
 
-    private val navArgs = CameraNavArgs(savedStateHandle)
+    private val navArgs = savedStateHandle.toRoute<CameraRoute>()
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     private val _torchMode = MutableStateFlow(TorchMode.AUTO)

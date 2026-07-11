@@ -10,13 +10,11 @@ import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.composables.Word
 import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.GridOrientation
 import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.LanguageSelection
 
-const val wordSearchGeneratedPuzzlesRoute = "word_search_generated_puzzles"
-
 fun NavGraphBuilder.wordSearchGeneratedPuzzlesScreen(
     onOpenCameraClick: (LanguageSelection, GridOrientation) -> Unit,
     onPuzzleClick: (String) -> Unit
 ) {
-    composable(route = wordSearchGeneratedPuzzlesRoute) {
+    composable<WordSearchGeneratedPuzzlesRoute> {
         val viewModel = hiltViewModel<WordSearchViewModel>()
 
         WordSearchGeneratedPuzzlesScreen(
@@ -28,5 +26,5 @@ fun NavGraphBuilder.wordSearchGeneratedPuzzlesScreen(
 }
 
 fun NavController.navigateToWordSearchGeneratedPuzzles(navOptions: NavOptions? = null) {
-    navigate(route = wordSearchGeneratedPuzzlesRoute, navOptions = navOptions)
+    navigate(route = WordSearchGeneratedPuzzlesRoute, navOptions = navOptions)
 }

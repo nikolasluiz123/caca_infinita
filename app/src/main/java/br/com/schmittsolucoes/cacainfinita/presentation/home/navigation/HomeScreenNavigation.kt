@@ -8,12 +8,10 @@ import androidx.navigation.compose.composable
 import br.com.schmittsolucoes.cacainfinita.presentation.home.HomeViewModel
 import br.com.schmittsolucoes.cacainfinita.presentation.home.composables.HomeScreen
 
-const val homeScreenRoute = "home"
-
 fun NavGraphBuilder.homeScreen(
     onContinueGameClick: (String) -> Unit
 ) {
-    composable(route = homeScreenRoute) {
+    composable<HomeRoute> {
         val viewModel = hiltViewModel<HomeViewModel>()
 
         HomeScreen(
@@ -24,5 +22,5 @@ fun NavGraphBuilder.homeScreen(
 }
 
 fun NavController.navigateToHome(navOptions: NavOptions? = null) {
-    navigate(route = homeScreenRoute, navOptions = navOptions)
+    navigate(route = HomeRoute, navOptions = navOptions)
 }

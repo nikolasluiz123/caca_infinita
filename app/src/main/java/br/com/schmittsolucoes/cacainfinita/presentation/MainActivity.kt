@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -28,10 +29,10 @@ import br.com.schmittsolucoes.cacainfinita.presentation.components.ErrorDialog
 import br.com.schmittsolucoes.cacainfinita.presentation.components.LoadingOverlay
 import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseHost
 import br.com.schmittsolucoes.cacainfinita.presentation.home.composables.components.HomeBottomNavBar
-import br.com.schmittsolucoes.cacainfinita.presentation.home.navigation.homeScreenRoute
+import br.com.schmittsolucoes.cacainfinita.presentation.home.navigation.HomeRoute
 import br.com.schmittsolucoes.cacainfinita.presentation.home.navigation.navigateToHome
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.navigation.navigateToWordSearchGeneratedPuzzles
-import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.navigation.wordSearchGeneratedPuzzlesRoute
+import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.navigation.WordSearchGeneratedPuzzlesRoute
 import br.com.schmittsolucoes.cacainfinita.presentation.theme.CacaInfinitaTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -105,11 +106,14 @@ fun App(
     content: @Composable () -> Unit = { }
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
+    val destination = navBackStackEntry?.destination
+
+    val isHomeRoute = destination?.hasRoute<HomeRoute>() ?: false
+    val isWordSearchRoute = destination?.hasRoute<WordSearchGeneratedPuzzlesRoute>() ?: false
 
     Scaffold(
         bottomBar = {
-            if (currentRoute == homeScreenRoute || currentRoute == wordSearchGeneratedPuzzlesRoute) {
+            if (isHomeRoute || isWordSearchRoute) {
                 HomeBottomNavBar(
                     onHomeClick = {
                         viewModel.logBottomNavigation(MainActivityAnalytics.HOME_DESTINY)
@@ -119,7 +123,7 @@ fun App(
                         viewModel.logBottomNavigation(MainActivityAnalytics.WORD_SEARCH_DESTINY)
                         navController.navigateToWordSearchGeneratedPuzzles()
                     },
-                    isHomeSelected = currentRoute == homeScreenRoute
+                    isHomeSelected = isHomeRoute
                 )
             }
         },

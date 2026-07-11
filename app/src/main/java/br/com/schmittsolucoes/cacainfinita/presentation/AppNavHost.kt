@@ -7,9 +7,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import br.com.schmittsolucoes.cacainfinita.presentation.camera.navigation.cameraScreen
 import br.com.schmittsolucoes.cacainfinita.presentation.camera.navigation.navigateToCamera
-import br.com.schmittsolucoes.cacainfinita.presentation.camera.navigation.CameraNavArgs
+import br.com.schmittsolucoes.cacainfinita.presentation.camera.navigation.CameraRoute
 import br.com.schmittsolucoes.cacainfinita.presentation.home.navigation.homeScreen
-import br.com.schmittsolucoes.cacainfinita.presentation.home.navigation.homeScreenRoute
+import br.com.schmittsolucoes.cacainfinita.presentation.home.navigation.HomeRoute
 import br.com.schmittsolucoes.cacainfinita.presentation.home.navigation.navigateToHome
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.navigation.wordSearchGeneratedPuzzlesScreen
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzle.navigation.navigateToPuzzle
@@ -22,7 +22,7 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = homeScreenRoute,
+        startDestination = HomeRoute,
         modifier = modifier
     ) {
         homeScreen(
@@ -31,7 +31,7 @@ fun AppNavHost(
         wordSearchGeneratedPuzzlesScreen(
             onOpenCameraClick = { languageSelection, orientation ->
                 navController.navigateToCamera(
-                    CameraNavArgs(languageSelection, orientation)
+                    CameraRoute(languageSelection, orientation)
                 )
             },
             onPuzzleClick = navController::navigateToPuzzle
@@ -47,7 +47,7 @@ fun AppNavHost(
             onNavigateToHome = {
                 navController.navigateToHome(
                     navOptions = navOptions {
-                        popUpTo(homeScreenRoute) {
+                        popUpTo<HomeRoute> {
                             inclusive = true
                         }
                     }

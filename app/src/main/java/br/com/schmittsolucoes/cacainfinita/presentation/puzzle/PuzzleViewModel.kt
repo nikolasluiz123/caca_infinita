@@ -26,7 +26,8 @@ import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.Show
 import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseStep
 import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.TutorialIds
 import br.com.schmittsolucoes.cacainfinita.presentation.formatters.formatToClock
-import br.com.schmittsolucoes.cacainfinita.presentation.puzzle.navigation.puzzleIdArg
+import br.com.schmittsolucoes.cacainfinita.presentation.puzzle.navigation.PuzzleRoute
+import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
@@ -58,7 +59,7 @@ class PuzzleViewModel @Inject constructor(
     exceptionRecorderManager: ExceptionRecorderManager
 ) : CommonViewModel(exceptionRecorderManager) {
 
-    private val puzzleId: String = checkNotNull(savedStateHandle[puzzleIdArg])
+    private val puzzleId: String = savedStateHandle.toRoute<PuzzleRoute>().puzzleId
 
     private val _puzzle = MutableStateFlow<WordSearchPuzzle?>(null)
     private val _errorMessage = MutableStateFlow<String?>(null)
