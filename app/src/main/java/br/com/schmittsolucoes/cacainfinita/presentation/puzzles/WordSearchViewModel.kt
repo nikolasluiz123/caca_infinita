@@ -15,6 +15,7 @@ import br.com.schmittsolucoes.cacainfinita.domain.model.pagination.PaginationCon
 import br.com.schmittsolucoes.cacainfinita.domain.model.result.puzzle.PuzzleGenerationConfig
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.DeleteWordSearchPuzzleUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetAllPuzzlesUseCase
+import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetInitialConfigsPuzzleGenerationUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.ImagePuzzleOrchestratorUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.PDFPuzzleOrchestratorUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.TutorialUseCase
@@ -44,20 +45,24 @@ class WordSearchViewModel @Inject constructor(
     getAllPuzzlesUseCase: GetAllPuzzlesUseCase,
     private val tutorialUseCase: TutorialUseCase,
     private val tutorialManager: TutorialManager,
+    private val getInitialConfigsPuzzleGenerationUseCase: GetInitialConfigsPuzzleGenerationUseCase,
     exceptionRecorderManager: ExceptionRecorderManager,
 ) : CommonViewModel(exceptionRecorderManager) {
 
     private val _errorMessage = MutableStateFlow<String?>(null)
+    private val _initialConfig = MutableStateFlow<PuzzleGenerationConfig?>(null)
     private val _puzzles = getAllPuzzlesUseCase(PaginationConfig(pageSize = 100)).cachedIn(viewModelScope)
 
     val uiState: StateFlow<WordSearchUiState> = combine(
         loadingManager.isLoading,
-        _errorMessage
-    ) { isLoading, errorMessage ->
+        _errorMessage,
+        _initialConfig
+    ) { isLoading, errorMessage, initialConfig ->
         WordSearchUiState(
             puzzles = _puzzles,
             isLoading = isLoading,
-            errorMessage = errorMessage
+            errorMessage = errorMessage,
+            initialConfig = initialConfig
         )
     }.stateIn(
         scope = viewModelScope,
@@ -112,6 +117,7 @@ class WordSearchViewModel @Inject constructor(
     }
 
     fun onAddWordSearchClick() {
+        _initialConfig.value = getInitialConfigsPuzzleGenerationUseCase()
         analyticsManager.logButtonClick(
             buttonName = WordSearchAnalytics.ADD_FAB,
             buttonAction = WordSearchAnalytics.ACTION_OPEN_BOTTOM_SHEET

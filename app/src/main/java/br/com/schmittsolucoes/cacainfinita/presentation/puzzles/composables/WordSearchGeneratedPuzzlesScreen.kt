@@ -191,6 +191,7 @@ fun WordSearchGeneratedPuzzlesScreen(
             if (showConfigBottomSheet) {
                 PuzzleConfigBottomSheet(
                     sheetState = configSheetState,
+                    initialConfig = state.initialConfig,
                     onDismissRequest = { showConfigBottomSheet = false },
                     onConfirm = { config ->
                         showConfigBottomSheet = false

@@ -44,12 +44,27 @@ import br.com.schmittsolucoes.cacainfinita.presentation.theme.SecondaryTextColor
 @Composable
 fun PuzzleConfigBottomSheet(
     sheetState: SheetState,
+    initialConfig: PuzzleGenerationConfig? = null,
     onDismissRequest: () -> Unit,
     onConfirm: (PuzzleGenerationConfig) -> Unit,
 ) {
-    var isPortugueseSelected by remember { mutableStateOf(true) }
-    var isEnglishSelected by remember { mutableStateOf(true) }
-    var selectedOrientation by remember { mutableStateOf(GridOrientation.PORTRAIT) }
+    var isPortugueseSelected by remember {
+        mutableStateOf(
+            initialConfig?.languageSelection == LanguageSelection.PORTUGUESE_ONLY ||
+                    initialConfig?.languageSelection == LanguageSelection.BOTH ||
+                    initialConfig == null
+        )
+    }
+    var isEnglishSelected by remember {
+        mutableStateOf(
+            initialConfig?.languageSelection == LanguageSelection.ENGLISH_ONLY ||
+                    initialConfig?.languageSelection == LanguageSelection.BOTH ||
+                    initialConfig == null
+        )
+    }
+    var selectedOrientation by remember {
+        mutableStateOf(initialConfig?.orientation ?: GridOrientation.PORTRAIT)
+    }
 
     val isConfirmEnabled = isPortugueseSelected || isEnglishSelected
 
