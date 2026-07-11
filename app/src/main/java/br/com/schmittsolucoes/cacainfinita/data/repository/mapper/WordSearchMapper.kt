@@ -8,6 +8,7 @@ import br.com.schmittsolucoes.cacainfinita.domain.model.PuzzleSession
 import br.com.schmittsolucoes.cacainfinita.domain.model.Word
 import br.com.schmittsolucoes.cacainfinita.domain.model.WordSearchPuzzle
 import br.com.schmittsolucoes.cacainfinita.domain.model.WordSearchPuzzleSummary
+import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.Language
 import br.com.schmittsolucoes.cacainfinita.domain.model.result.puzzle.PlacedWord
 import br.com.schmittsolucoes.cacainfinita.domain.model.result.puzzle.PuzzleResult
 
@@ -49,7 +50,9 @@ fun WordSearchPuzzleWithStats.toDomain(): WordSearchPuzzleSummary {
         id = puzzle.id,
         name = puzzle.name,
         wordsCount = wordsCount,
-        hasUnfinishedWords = hasUnfinishedWords
+        hasUnfinishedWords = hasUnfinishedWords,
+        languages = languages.split(",").map { Language.valueOf(it) },
+        orientation = puzzle.orientation
     )
 }
 

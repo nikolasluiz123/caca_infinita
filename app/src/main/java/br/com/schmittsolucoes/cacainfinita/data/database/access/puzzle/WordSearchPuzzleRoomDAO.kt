@@ -15,7 +15,8 @@ interface WordSearchPuzzleRoomDAO: WordSearchPuzzleLocalDataSource, RoomLocalDat
     @Query("""
         select *,
                (select count(id) from word where word.puzzle_id = word_search_puzzle.id) as wordsCount,
-               (exists (select 1 from word where word.puzzle_id = word_search_puzzle.id and word.found_date is null)) as hasUnfinishedWords
+               (exists (select 1 from word where word.puzzle_id = word_search_puzzle.id and word.found_date is null)) as hasUnfinishedWords,
+               (select group_concat(distinct language) from word where word.puzzle_id = word_search_puzzle.id) as languages
         from word_search_puzzle
         order by hasUnfinishedWords desc
     """)

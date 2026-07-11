@@ -27,6 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.schmittsolucoes.cacainfinita.R
 import br.com.schmittsolucoes.cacainfinita.domain.model.WordSearchPuzzleSummary
+import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.GridOrientation
+import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.Language
 import br.com.schmittsolucoes.cacainfinita.presentation.theme.CacaInfinitaTheme
 import br.com.schmittsolucoes.cacainfinita.presentation.theme.SecondaryTextColor
 
@@ -37,7 +39,7 @@ fun WordSearchItem(
     onDeleteClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     statusModifier: Modifier = Modifier,
-    deleteModifier: Modifier = Modifier
+    deleteModifier: Modifier = Modifier,
 ) {
     Card(
         onClick = { onClick(puzzle.id) },
@@ -52,6 +54,8 @@ fun WordSearchItem(
             PuzzleInfo(
                 name = puzzle.name,
                 wordsCount = puzzle.wordsCount,
+                languages = puzzle.languages,
+                orientation = puzzle.orientation,
                 modifier = Modifier.weight(1f)
             )
             StatusIcon(
@@ -79,21 +83,68 @@ fun WordSearchItem(
 private fun PuzzleInfo(
     name: String,
     wordsCount: Int,
+    languages: List<Language>,
+    orientation: GridOrientation,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-        Text(
-            text = name,
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.Bold,
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = name,
+                style = MaterialTheme.typography.titleSmall.copy(
+                    fontWeight = FontWeight.Bold,
+                ),
+                modifier = Modifier.weight(1f, fill = false)
             )
-        )
-        Text(
-            text = stringResource(R.string.words_label, wordsCount),
-            style = MaterialTheme.typography.bodyMedium,
-            color = SecondaryTextColor
-        )
+            Spacer(modifier = Modifier.width(8.dp))
+            OrientationLabel(orientation)
+        }
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = stringResource(R.string.words_label, wordsCount),
+                style = MaterialTheme.typography.bodySmall,
+                color = SecondaryTextColor
+            )
+            Text(
+                text = " • ",
+                style = MaterialTheme.typography.bodySmall,
+                color = SecondaryTextColor
+            )
+            LanguagesLabel(languages)
+        }
     }
+}
+
+@Composable
+private fun OrientationLabel(orientation: GridOrientation) {
+    val textRes = when (orientation) {
+        GridOrientation.PORTRAIT -> R.string.puzzle_config_orientation_portrait
+        GridOrientation.LANDSCAPE -> R.string.puzzle_config_orientation_landscape
+    }
+    Text(
+        text = "(${stringResource(textRes)})",
+        style = MaterialTheme.typography.labelMedium,
+        color = SecondaryTextColor
+    )
+}
+
+@Composable
+private fun LanguagesLabel(languages: List<Language>) {
+    val label = languages.map { language ->
+        stringResource(
+            when (language) {
+                Language.PORTUGUESE -> R.string.puzzle_item_language_portuguese
+                Language.ENGLISH -> R.string.puzzle_item_language_english
+                Language.OTHER -> R.string.puzzle_item_language_other
+            }
+        )
+    }.joinToString()
+
+    Text(
+        text = label,
+        style = MaterialTheme.typography.bodySmall,
+        color = SecondaryTextColor
+    )
 }
 
 @Composable
@@ -128,7 +179,9 @@ private fun WordSearchItemPreview() {
                     id = "1",
                     name = "Animais",
                     wordsCount = 10,
-                    hasUnfinishedWords = true
+                    hasUnfinishedWords = true,
+                    languages = listOf(Language.PORTUGUESE),
+                    orientation = GridOrientation.PORTRAIT
                 ),
                 onClick = {},
                 onDeleteClick = {}
@@ -137,9 +190,11 @@ private fun WordSearchItemPreview() {
             WordSearchItem(
                 puzzle = WordSearchPuzzleSummary(
                     id = "2",
-                    name = "Cidades",
+                    name = "Cities",
                     wordsCount = 15,
-                    hasUnfinishedWords = false
+                    hasUnfinishedWords = false,
+                    languages = listOf(Language.ENGLISH, Language.PORTUGUESE),
+                    orientation = GridOrientation.LANDSCAPE
                 ),
                 onClick = {},
                 onDeleteClick = {}

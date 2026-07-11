@@ -29,6 +29,9 @@
     <string name="puzzle_config_orientation_subtitle">Orientation:</string>
     <string name="puzzle_config_orientation_portrait">Portrait</string>
     <string name="puzzle_config_orientation_landscape">Landscape</string>
+    <string name="puzzle_item_language_portuguese">Portuguese</string>
+    <string name="puzzle_item_language_english">English</string>
+    <string name="puzzle_item_language_other">Other</string>
     <string name="puzzle_fallback_name">Word Search #%d</string>
 
     <string name="back">Back</string>
