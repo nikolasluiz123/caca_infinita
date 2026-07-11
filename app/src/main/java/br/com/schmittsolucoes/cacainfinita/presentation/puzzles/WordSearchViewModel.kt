@@ -66,14 +66,13 @@ class WordSearchViewModel @Inject constructor(
         initialValue = WordSearchUiState(puzzles = _puzzles)
     )
 
-    fun onPdfsSelected(uris: List<Uri>) {
+    fun onPdfsSelected(uris: List<Uri>, config: PuzzleGenerationConfig) {
         if (uris.isEmpty()) return
 
         launch {
             loadingManager.showLoading()
 
             try {
-                val config = PuzzleGenerationConfig(LanguageSelection.BOTH)
                 pdfPuzzleOrchestratorUseCase(uris, config)
                 snackbarManager.showSnackbar(context.getString(R.string.success_puzzle_generated))
             } finally {
@@ -82,14 +81,13 @@ class WordSearchViewModel @Inject constructor(
         }
     }
 
-    fun onImagesSelected(uris: List<Uri>) {
+    fun onImagesSelected(uris: List<Uri>, config: PuzzleGenerationConfig) {
         if (uris.isEmpty()) return
 
         launch {
             loadingManager.showLoading()
 
             try {
-                val config = PuzzleGenerationConfig(LanguageSelection.BOTH)
                 imagePuzzleOrchestratorUseCase(uris, config, isFromCamera = false)
                 snackbarManager.showSnackbar(context.getString(R.string.success_puzzle_generated))
             } finally {

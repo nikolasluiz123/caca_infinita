@@ -21,6 +21,11 @@
     <string name="add_word_search_load_image_subtitle">Escolher uma foto da galeria</string>
     <string name="add_word_search_load_pdf_title">Carregar PDF</string>
     <string name="add_word_search_load_pdf_subtitle">Escolher um arquivo PDF</string>
+    <string name="puzzle_config_title">Configuração do Caça-Palavras</string>
+    <string name="puzzle_config_language_subtitle">Idiomas:</string>
+    <string name="puzzle_config_portuguese">Português</string>
+    <string name="puzzle_config_english">Inglês</string>
+    <string name="puzzle_config_confirm">Confirmar e Iniciar</string>
     <string name="puzzle_fallback_name">Caça-Palavras #%d</string>
 
     <string name="back">Voltar</string>
@@ -30,7 +35,7 @@
     <string name="flash_off">Flash Desligado</string>
 
     <string name="error_no_text_found">Não foi possível encontrar nenhum texto para gerar o caça-palavras. Tente outro arquivo ou imagem.</string>
-    <string name="error_no_valid_words_found">Não encontramos palavras válidas o suficiente para gerar o caça-palavras. Tente um texto com mais palavras.</string>
+    <string name="error_no_valid_words_found">Não encontramos palavras válidas o suficiente para gerar o caça-palavras.</string>
     <string name="error_unexpected">Ocorreu um erro inesperado. Tente novamente.</string>
     <string name="error_dialog_title">Erro</string>
     <string name="error_dialog_ok">OK</string>

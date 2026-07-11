@@ -28,7 +28,9 @@ fun AppNavHost(
             onContinueGameClick = navController::navigateToPuzzle
         )
         wordSearchGeneratedPuzzlesScreen(
-            onOpenCameraClick = navController::navigateToCamera,
+            onOpenCameraClick = { languageSelection ->
+                navController.navigateToCamera(languageSelection)
+            },
             onPuzzleClick = navController::navigateToPuzzle
         )
 

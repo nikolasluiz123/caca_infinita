@@ -21,6 +21,11 @@
     <string name="add_word_search_load_image_subtitle">Choose a photo from gallery</string>
     <string name="add_word_search_load_pdf_title">Load PDF</string>
     <string name="add_word_search_load_pdf_subtitle">Choose a PDF file</string>
+    <string name="puzzle_config_title">Word Search Configuration</string>
+    <string name="puzzle_config_language_subtitle">Languages:</string>
+    <string name="puzzle_config_portuguese">Portuguese</string>
+    <string name="puzzle_config_english">English</string>
+    <string name="puzzle_config_confirm">Confirm and Start</string>
     <string name="puzzle_fallback_name">Word Search #%d</string>
 
     <string name="back">Back</string>
@@ -30,7 +35,7 @@
     <string name="flash_off">Flash Off</string>
 
     <string name="error_no_text_found">We couldn\'t find any text to generate the word search. Try another file or image.</string>
-    <string name="error_no_valid_words_found">We didn\'t find enough valid words to generate the word search. Try a text with more words.</string>
+    <string name="error_no_valid_words_found">We didn\'t find enough valid words to generate the word search.</string>
     <string name="error_unexpected">An unexpected error occurred. Please try again.</string>
     <string name="error_dialog_title">Error</string>
     <string name="error_dialog_ok">OK</string>

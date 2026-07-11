@@ -2,6 +2,7 @@ package br.com.schmittsolucoes.cacainfinita.presentation.camera
 
 import android.net.Uri
 import androidx.camera.core.ImageProxy
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import br.com.schmittsolucoes.cacainfinita.R
 import br.com.schmittsolucoes.cacainfinita.data.analyzer.frame.FrameAnalyzer
@@ -18,6 +19,7 @@ import br.com.schmittsolucoes.cacainfinita.domain.model.result.puzzle.PuzzleGene
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.ImagePuzzleOrchestratorUseCase
 import br.com.schmittsolucoes.cacainfinita.presentation.CommonViewModel
 import br.com.schmittsolucoes.cacainfinita.presentation.analytics.AnalyticsManager
+import br.com.schmittsolucoes.cacainfinita.presentation.camera.navigation.languageSelectionArg
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -36,7 +38,10 @@ class CameraViewModel @Inject constructor(
     private val application: android.app.Application,
     private val analyticsManager: AnalyticsManager,
     exceptionRecorderManager: ExceptionRecorderManager,
+    savedStateHandle: SavedStateHandle,
 ) : CommonViewModel(exceptionRecorderManager) {
+
+    private val languageSelection: LanguageSelection = LanguageSelection.valueOf(savedStateHandle.get<String>(languageSelectionArg) ?: LanguageSelection.BOTH.name)
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     private val _torchMode = MutableStateFlow(TorchMode.AUTO)
@@ -85,7 +90,7 @@ class CameraViewModel @Inject constructor(
 
             try {
                 val uri = Uri.fromFile(File(path))
-                val config = PuzzleGenerationConfig(LanguageSelection.BOTH)
+                val config = PuzzleGenerationConfig(languageSelection)
                 imagePuzzleOrchestratorUseCase(listOf(uri), config, isFromCamera = true)
                 snackbarManager.showSnackbar(application.getString(R.string.success_puzzle_generated))
                 lastTorchActive = false

@@ -40,13 +40,16 @@ import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.WordSearchUiStat
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.WordSearchViewModel
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.composables.components.AddWordSearchBottomSheet
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.composables.components.EmptyWordSearchList
+import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.composables.components.PuzzleConfigBottomSheet
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.composables.components.WordSearchItem
 import br.com.schmittsolucoes.cacainfinita.presentation.theme.CacaInfinitaTheme
+import br.com.schmittsolucoes.cacainfinita.domain.model.result.puzzle.PuzzleGenerationConfig
+import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.LanguageSelection
 
 @Composable
 fun WordSearchGeneratedPuzzlesScreen(
     viewModel: WordSearchViewModel,
-    onOpenCameraClick: () -> Unit,
+    onOpenCameraClick: (LanguageSelection) -> Unit,
     onPuzzleClick: (String) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -60,26 +63,34 @@ fun WordSearchGeneratedPuzzlesScreen(
         viewModel.startTutorialIfNeeded(puzzles.itemCount)
     }
 
+    var pendingConfig by remember { mutableStateOf<PuzzleGenerationConfig?>(null) }
+
     val pdfPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenMultipleDocuments(),
         onResult = { uris ->
-            viewModel.onPdfsSelected(uris)
+            pendingConfig?.let { config ->
+                viewModel.onPdfsSelected(uris, config)
+            }
         }
     )
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenMultipleDocuments(),
         onResult = { uris ->
-            viewModel.onImagesSelected(uris)
+            pendingConfig?.let { config ->
+                viewModel.onImagesSelected(uris, config)
+            }
         }
     )
 
     WordSearchGeneratedPuzzlesScreen(
         state = state,
-        onLoadImageClick = {
+        onLoadImageClick = { config ->
+            pendingConfig = config
             imagePickerLauncher.launch(arrayOf("image/*"))
         },
-        onLoadPdfClick = {
+        onLoadPdfClick = { config ->
+            pendingConfig = config
             pdfPickerLauncher.launch(arrayOf("application/pdf"))
         },
         onDismissErrorDialog = viewModel::onDismissErrorDialog,
@@ -90,9 +101,9 @@ fun WordSearchGeneratedPuzzlesScreen(
         onDeletePuzzleClick = viewModel::onDeletePuzzle,
         onAddWordSearchClick = viewModel::onAddWordSearchClick,
         onBottomSheetOptionClick = viewModel::onBottomSheetOptionClick,
-        onOpenCameraClick = {
+        onOpenCameraClick = { languageSelection ->
             viewModel.logNavigationToCamera()
-            onOpenCameraClick()
+            onOpenCameraClick(languageSelection)
         }
     )
 }
@@ -101,9 +112,9 @@ fun WordSearchGeneratedPuzzlesScreen(
 @Composable
 fun WordSearchGeneratedPuzzlesScreen(
     state: WordSearchUiState,
-    onOpenCameraClick: () -> Unit = {},
-    onLoadImageClick: () -> Unit = {},
-    onLoadPdfClick: () -> Unit = {},
+    onOpenCameraClick: (LanguageSelection) -> Unit = {},
+    onLoadImageClick: (PuzzleGenerationConfig) -> Unit = {},
+    onLoadPdfClick: (PuzzleGenerationConfig) -> Unit = {},
     onDismissErrorDialog: () -> Unit = {},
     onPuzzleClick: (String) -> Unit = {},
     onDeletePuzzleClick: (String) -> Unit = {},
@@ -111,8 +122,11 @@ fun WordSearchGeneratedPuzzlesScreen(
     onBottomSheetOptionClick: (String) -> Unit = {},
     puzzles: LazyPagingItems<WordSearchPuzzleSummary> = state.puzzles.collectAsLazyPagingItems()
 ) {
-    val sheetState = rememberModalBottomSheetState()
-    var showBottomSheet by remember { mutableStateOf(value = false) }
+    val addSheetState = rememberModalBottomSheetState()
+    val configSheetState = rememberModalBottomSheetState()
+    var showAddBottomSheet by remember { mutableStateOf(value = false) }
+    var showConfigBottomSheet by remember { mutableStateOf(value = false) }
+    var selectedOption by remember { mutableStateOf<String?>(null) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
@@ -120,7 +134,7 @@ fun WordSearchGeneratedPuzzlesScreen(
                 FloatingActionButton(
                     onClick = {
                         onAddWordSearchClick()
-                        showBottomSheet = true
+                        showAddBottomSheet = true
                     },
                     modifier = Modifier.showcaseTarget(ShowcaseIds.ADD_PUZZLE_FAB)
                 ) {
@@ -151,21 +165,39 @@ fun WordSearchGeneratedPuzzlesScreen(
                 }
             }
 
-            if (showBottomSheet) {
+            if (showAddBottomSheet) {
                 AddWordSearchBottomSheet(
-                    sheetState = sheetState,
-                    onDismissRequest = { showBottomSheet = false },
+                    sheetState = addSheetState,
+                    onDismissRequest = { showAddBottomSheet = false },
                     onOpenCameraClick = {
                         onBottomSheetOptionClick(WordSearchAnalytics.OPTION_CAMERA)
-                        onOpenCameraClick()
+                        selectedOption = WordSearchAnalytics.OPTION_CAMERA
+                        showConfigBottomSheet = true
                     },
                     onLoadImageClick = {
                         onBottomSheetOptionClick(WordSearchAnalytics.OPTION_IMAGE)
-                        onLoadImageClick()
+                        selectedOption = WordSearchAnalytics.OPTION_IMAGE
+                        showConfigBottomSheet = true
                     },
                     onLoadPdfClick = {
                         onBottomSheetOptionClick(WordSearchAnalytics.OPTION_PDF)
-                        onLoadPdfClick()
+                        selectedOption = WordSearchAnalytics.OPTION_PDF
+                        showConfigBottomSheet = true
+                    }
+                )
+            }
+
+            if (showConfigBottomSheet) {
+                PuzzleConfigBottomSheet(
+                    sheetState = configSheetState,
+                    onDismissRequest = { showConfigBottomSheet = false },
+                    onConfirm = { config ->
+                        showConfigBottomSheet = false
+                        when (selectedOption) {
+                            WordSearchAnalytics.OPTION_CAMERA -> onOpenCameraClick(config.languageSelection)
+                            WordSearchAnalytics.OPTION_IMAGE -> onLoadImageClick(config)
+                            WordSearchAnalytics.OPTION_PDF -> onLoadPdfClick(config)
+                        }
                     }
                 )
             }
