@@ -6,6 +6,8 @@ import androidx.compose.ui.graphics.Color
 
 val PrimaryLight = Color(0xFF24389C)
 val onPrimaryLight = Color(0xFFFFFFFF)
+val PrimaryContainerLight = Color(0xFFDDE1FF)
+val onPrimaryContainerLight = Color(0xFF001453)
 val SecondaryContainerLight = Color(0xFFC9E7F7)
 val BackgroundLight = Color(0xFFF4FAFF)
 val SurfaceContainerHighestLight = Color(0xFFE6F6FF)
@@ -18,6 +20,8 @@ val WordSelectionColorLight = Color(0xFF85F6E5)
 
 val PrimaryDark = Color(0xFFDEE0FF)
 val onPrimaryDark = Color(0xFF00105C)
+val PrimaryContainerDark = Color(0xFF3B4682)
+val onPrimaryContainerDark = Color(0xFFDDE1FF)
 val SecondaryContainerDark = Color(0x4DC5C5D4)
 val BackgroundDark = Color(0xFF001F2A)
 val SurfaceContainerHighestDark = Color(0xFF163440)
@@ -43,4 +47,8 @@ val SecondaryTextColor: Color
 @get:Composable
 val WordSelectionColor: Color
     get() = if (isSystemInDarkTheme()) WordSelectionColorDark else WordSelectionColorLight
+
+@get:Composable
+val UnfinishedPuzzleStatusColor: Color
+    get() = if (isSystemInDarkTheme()) Color(0xFF2C4A57) else Color(0xFFD1E4EE)
 

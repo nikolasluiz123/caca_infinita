@@ -56,7 +56,7 @@
     <string name="tutorial_home_bottom_nav">Use this bar to navigate between the home screen and your word search list.</string>
 
     <string name="tutorial_puzzles_add">Click here to add new word searches via Camera, Image or PDF.</string>
-    <string name="tutorial_puzzles_item_status">This icon indicates if you have already completed or if there are still words to find in this word search.</string>
+    <string name="tutorial_puzzles_item_status">This side bar indicates if you have already completed the word search. It will be colored when all words are found.</string>
     <string name="tutorial_puzzles_item_delete">If you want to remove an unfinished word search from your list, just click the trash icon.</string>
 
     <string name="tutorial_puzzle_timer">Keep an eye on the time! The faster you solve it, the more XP you earn.</string>

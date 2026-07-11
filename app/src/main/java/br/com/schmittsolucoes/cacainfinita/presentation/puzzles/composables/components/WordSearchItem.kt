@@ -1,17 +1,17 @@
 package br.com.schmittsolucoes.cacainfinita.presentation.puzzles.composables.components
 
 import android.content.res.Configuration
-import androidx.compose.foundation.border
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,6 +31,8 @@ import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.GridOrientat
 import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.Language
 import br.com.schmittsolucoes.cacainfinita.presentation.theme.CacaInfinitaTheme
 import br.com.schmittsolucoes.cacainfinita.presentation.theme.SecondaryTextColor
+import br.com.schmittsolucoes.cacainfinita.presentation.theme.UnfinishedPuzzleStatusColor
+import br.com.schmittsolucoes.cacainfinita.presentation.theme.WordSelectionColor
 
 @Composable
 fun WordSearchItem(
@@ -47,32 +49,43 @@ fun WordSearchItem(
     ) {
         Row(
             modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            PuzzleInfo(
-                name = puzzle.name,
-                wordsCount = puzzle.wordsCount,
-                languages = puzzle.languages,
-                orientation = puzzle.orientation,
-                modifier = Modifier.weight(1f)
-            )
-            StatusIcon(
-                hasUnfinishedWords = puzzle.hasUnfinishedWords,
+            Box(
                 modifier = statusModifier
-            )
-            if (puzzle.hasUnfinishedWords) {
-                Spacer(modifier = Modifier.width(8.dp))
-                IconButton(
-                    onClick = { onDeleteClick(puzzle.id) },
-                    modifier = deleteModifier
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_delete_24dp),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.error
+                    .fillMaxHeight()
+                    .width(8.dp)
+                    .background(
+                        if (puzzle.hasUnfinishedWords) UnfinishedPuzzleStatusColor
+                        else WordSelectionColor
                     )
+            )
+            Row(
+                modifier = Modifier
+                    .padding(12.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                PuzzleInfo(
+                    name = puzzle.name,
+                    wordsCount = puzzle.wordsCount,
+                    languages = puzzle.languages,
+                    orientation = puzzle.orientation,
+                    modifier = Modifier.weight(1f)
+                )
+                if (puzzle.hasUnfinishedWords) {
+                    IconButton(
+                        onClick = { onDeleteClick(puzzle.id) },
+                        modifier = deleteModifier
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_delete_24dp),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                    }
                 }
             }
         }
@@ -145,27 +158,6 @@ private fun LanguagesLabel(languages: List<Language>) {
         style = MaterialTheme.typography.bodySmall,
         color = SecondaryTextColor
     )
-}
-
-@Composable
-private fun StatusIcon(
-    hasUnfinishedWords: Boolean,
-    modifier: Modifier = Modifier
-) {
-    if (hasUnfinishedWords) {
-        Box(
-            modifier = modifier
-                .size(24.dp)
-                .border(1.dp, SecondaryTextColor, CircleShape)
-        )
-    } else {
-        Icon(
-            painter = painterResource(R.drawable.ic_checked_filled_rounded_20dp),
-            contentDescription = null,
-            modifier = modifier.size(24.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
-    }
 }
 
 @Preview(name = "Light Mode")
