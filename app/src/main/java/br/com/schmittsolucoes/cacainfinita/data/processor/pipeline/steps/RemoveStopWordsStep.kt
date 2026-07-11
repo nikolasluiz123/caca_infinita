@@ -1,43 +1,44 @@
 package br.com.schmittsolucoes.cacainfinita.data.processor.pipeline.steps
 
 import android.util.Log
+import br.com.schmittsolucoes.cacainfinita.data.provider.StopWordsProvider
 import br.com.schmittsolucoes.cacainfinita.domain.exception.NoValidWordsException
+import br.com.schmittsolucoes.cacainfinita.domain.model.result.language.IdentifiedWord
+import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.LanguageSelection
 
 /**
- * Etapa responsável por filtrar palavras irrelevantes (Stop Words).
+ * Etapa responsável por remover "Stop Words" (palavras irrelevantes) da lista de palavras identificadas.
  *
- * Utiliza um conjunto de palavras fornecido por um [br.com.schmittsolucoes.cacainfinita.data.provider.StopWordsProvider]
- * para limpar o texto de conectivos e termos sem valor semântico para o jogo.
- *
- * @property stopWords O conjunto de palavras a serem removidas (devem estar em caixa alta).
+ * @param stopWordsProvider O provedor que fornece o conjunto de stop words.
+ * @param config A configuração de seleção de idioma que define quais stop words devem ser carregadas.
  */
-class RemoveStopWordsStep(private val stopWords: Set<String>) : TextResultProcessorStep {
+class RemoveStopWordsStep(
+    private val stopWordsProvider: StopWordsProvider,
+    private val config: LanguageSelection
+): IdentifiedWordProcessorStep {
     /**
-     * Filtra o texto removendo tokens que pertencem ao conjunto de stop words.
+     * Processa a lista de palavras filtrando aquelas que constam como stop words.
      *
-     * O processamento:
-     * 1. Divide o texto em palavras usando o Regex `\\s+`.
-     * 2. Filtra strings vazias e palavras que (em caixa alta) estejam presentes no conjunto [stopWords].
-     * 3. Reconstrói a string com os termos restantes.
-     *
-     * @param text O texto a ser filtrado.
-     * @return O texto limpo de palavras irrelevantes.
+     * @param words A lista de [IdentifiedWord] a ser processada.
+     * @return Uma lista contendo apenas as palavras que não são stop words.
+     * @throws NoValidWordsException Caso todas as palavras sejam removidas pelo filtro.
      */
-    override suspend fun process(text: String): String {
+    override suspend fun process(words: List<IdentifiedWord>): List<IdentifiedWord> {
         val tag = this@RemoveStopWordsStep::class.simpleName
+        Log.d("DEBUG_PROCESS", "$tag: Iniciando remoção de stop words")
 
-        Log.d("DEBUG_PROCESS", "$tag: Iniciando step RemoveStopWords")
+        val stopWords = stopWordsProvider.getStopWords(config)
 
-        val result = text.split(Regex("\\s+"))
-            .filter { word -> word.isNotBlank() && word.uppercase() !in stopWords }
-            .joinToString(" ")
+        val result = words.filter { word ->
+            word.text.uppercase() !in stopWords
+        }
 
-        if (result.isBlank()) {
+        if (result.isEmpty()) {
             throw NoValidWordsException()
         }
 
         return result.also {
-            Log.d("DEBUG_PROCESS", "$tag: Fim step RemoveStopWords")
+            Log.d("DEBUG_PROCESS", "$tag: Fim remoção de stop words. Palavras restantes: ${it.size}")
         }
     }
 }

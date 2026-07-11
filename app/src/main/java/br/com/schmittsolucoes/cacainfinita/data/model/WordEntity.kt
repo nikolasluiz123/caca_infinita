@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.Direction
+import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.Language
 import java.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -32,6 +33,7 @@ data class WordEntity(
     @ColumnInfo(name = "start_col")
     val startCol: Int,
     val direction: Direction,
+    val language: Language,
     @ColumnInfo(name = "found_date")
     val foundDate: Instant? = null
 ) : UniqueEntity

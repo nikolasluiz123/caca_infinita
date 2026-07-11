@@ -6,6 +6,8 @@ import br.com.schmittsolucoes.cacainfinita.domain.calculator.GridDimensionCalcul
 import br.com.schmittsolucoes.cacainfinita.domain.generator.PuzzleGenerator
 import br.com.schmittsolucoes.cacainfinita.domain.manager.FileManager
 import br.com.schmittsolucoes.cacainfinita.domain.processor.input.InputProcessor
+import br.com.schmittsolucoes.cacainfinita.domain.processor.language.LanguageIdentifierProcessor
+import br.com.schmittsolucoes.cacainfinita.domain.processor.pipeline.LanguageIdentifierProcessorPipeline
 import br.com.schmittsolucoes.cacainfinita.domain.processor.pipeline.TextProcessorPipeline
 import br.com.schmittsolucoes.cacainfinita.domain.provider.DeviceDimensionsProvider
 import br.com.schmittsolucoes.cacainfinita.domain.repository.PuzzleSessionRepository
@@ -29,6 +31,7 @@ import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetSelectedWordUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetUserExperienceByFoundWordUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetUserUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetWordsFromPuzzleUseCase
+import br.com.schmittsolucoes.cacainfinita.domain.usecase.LanguageIdentifierUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.SaveGeneratedPuzzlesUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.StartSessionUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.UpdateFoundWordUseCase
@@ -44,34 +47,46 @@ import java.io.File
 object UseCaseModule {
 
     @Provides
-    fun provideGenerateImagePuzzleUseCase(
+    fun provideImageLanguageIdentifierUseCase(
         @ImageProcessor inputProcessor: InputProcessor<File>,
+        @ImageLanguageProcessor pipeline: LanguageIdentifierProcessorPipeline,
+        identifierProcessor: LanguageIdentifierProcessor
+    ): LanguageIdentifierUseCase<File> {
+        return LanguageIdentifierUseCase(inputProcessor, pipeline, identifierProcessor)
+    }
+
+    @Provides
+    fun providePDFLanguageIdentifierUseCase(
+        @PDFProcessor inputProcessor: InputProcessor<Uri>,
+        @PDFLanguageProcessor pipeline: LanguageIdentifierProcessorPipeline,
+        identifierProcessor: LanguageIdentifierProcessor
+    ): LanguageIdentifierUseCase<Uri> {
+        return LanguageIdentifierUseCase(inputProcessor, pipeline, identifierProcessor)
+    }
+
+    @Provides
+    fun provideGenerateImagePuzzleUseCase(
         dimensionsProvider: DeviceDimensionsProvider,
         gridCalculator: GridDimensionCalculator,
         @ImageProcessor textProcessor: TextProcessorPipeline,
-        puzzleGenerator: PuzzleGenerator,
-        fileManager: FileManager
+        puzzleGenerator: PuzzleGenerator
     ): GenerateImagePuzzleUseCase {
         return GenerateImagePuzzleUseCase(
-            inputProcessor,
             dimensionsProvider,
             gridCalculator,
             textProcessor,
-            puzzleGenerator,
-            fileManager
+            puzzleGenerator
         )
     }
 
     @Provides
     fun provideGeneratePDFPuzzleUseCase(
-        @PDFProcessor inputProcessor: InputProcessor<Uri>,
         dimensionsProvider: DeviceDimensionsProvider,
         gridCalculator: GridDimensionCalculator,
         @PDFProcessor textProcessor: TextProcessorPipeline,
         puzzleGenerator: PuzzleGenerator
     ): GeneratePDFPuzzleUseCase {
         return GeneratePDFPuzzleUseCase(
-            inputProcessor,
             dimensionsProvider,
             gridCalculator,
             textProcessor,

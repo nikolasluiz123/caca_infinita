@@ -12,6 +12,7 @@ import br.com.schmittsolucoes.cacainfinita.data.database.access.puzzle.WordSearc
 import br.com.schmittsolucoes.cacainfinita.data.database.access.puzzle.session.PuzzleSessionLocalDataSource
 import br.com.schmittsolucoes.cacainfinita.data.database.access.puzzle.word.WordLocalDataSource
 import br.com.schmittsolucoes.cacainfinita.data.database.access.user.UserLocalDataSource
+import br.com.schmittsolucoes.cacainfinita.data.database.migration.DatabaseMigrations
 import br.com.schmittsolucoes.cacainfinita.data.database.transaction.RoomDatabaseTransaction
 import dagger.Module
 import dagger.Provides
@@ -31,7 +32,9 @@ object LocalDataAccessModule {
             context,
             AppDatabase::class.java,
             "caca_sob_medida.db"
-        ).build()
+        )
+        .addMigrations(*DatabaseMigrations.getAll())
+        .build()
     }
 
     @Provides

@@ -2,39 +2,36 @@ package br.com.schmittsolucoes.cacainfinita.data.processor.pipeline.steps
 
 import android.util.Log
 import br.com.schmittsolucoes.cacainfinita.domain.exception.NoValidWordsException
+import br.com.schmittsolucoes.cacainfinita.domain.model.result.language.IdentifiedWord
 import java.text.Normalizer
 
 /**
- * Etapa de normalização textual para padronização.
+ * Etapa responsável por normalizar as palavras.
  *
- * Esta etapa prepara o texto para as fases de comparação (remoção de duplicatas e stop words)
- * e para a exibição final no jogo, garantindo consistência visual e lógica.
+ * A normalização consiste em:
+ * 1. Remover acentos (ex: "AÇÃO" torna-se "ACAO").
+ * 2. Converter todos os caracteres para caixa alta (Upper Case).
  */
-class NormalizeTextStep : TextResultProcessorStep {
+class NormalizeTextStep : IdentifiedWordProcessorStep {
     /**
-     * Aplica a normalização decompondo acentos, removendo-os e convertendo para caixa alta.
+     * Normaliza as palavras da lista.
      *
-     * O processo ocorre em três fases:
-     * 1. **Normalizer.normalize(Form.NFD)**: Decompõe caracteres acentuados em seus componentes
-     *    base e sinais diacríticos (ex: "ã" vira "a" + "~").
-     * 2. **Regex \\p{InCombiningDiacriticalMarks}+**: Localiza e remove apenas os sinais
-     *    diacríticos resultantes da decomposição, mantendo a letra base.
-     * 3. **uppercase()**: Garante que todo o texto retorne em caixa alta para o padrão do jogo.
-     *
-     * @param text O texto a ser normalizado.
-     * @return O texto sem acentos e em letras maiúsculas.
+     * @param words A lista de palavras a serem normalizadas.
+     * @return Uma lista de palavras normalizadas.
      */
-    override suspend fun process(text: String): String {
+    override suspend fun process(words: List<IdentifiedWord>): List<IdentifiedWord> {
         val tag = this@NormalizeTextStep::class.simpleName
 
         Log.d("DEBUG_PROCESS", "$tag: Iniciando step NormalizeText")
 
-        val normalized = Normalizer.normalize(text, Normalizer.Form.NFD)
-        val withoutAccents = normalized.replace(Regex("\\p{InCombiningDiacriticalMarks}+"), "")
+        val result = words.map { word ->
+            val normalizedText = Normalizer.normalize(word.text, Normalizer.Form.NFD)
+                .replace(Regex("\\p{InCombiningDiacriticalMarks}+"), "")
+                .uppercase()
+            word.copy(text = normalizedText)
+        }
 
-        val result = withoutAccents.uppercase()
-
-        if (result.isBlank()) {
+        if (result.isEmpty()) {
             throw NoValidWordsException()
         }
 

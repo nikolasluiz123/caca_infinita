@@ -13,8 +13,9 @@ import br.com.schmittsolucoes.cacainfinita.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.SnackbarManager
 import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.AnalyzerState
 import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.TorchMode
-import br.com.schmittsolucoes.cacainfinita.domain.usecase.GenerateImagePuzzleUseCase
-import br.com.schmittsolucoes.cacainfinita.domain.usecase.SaveGeneratedPuzzlesUseCase
+import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.LanguageSelection
+import br.com.schmittsolucoes.cacainfinita.domain.model.result.puzzle.PuzzleGenerationConfig
+import br.com.schmittsolucoes.cacainfinita.domain.usecase.ImagePuzzleOrchestratorUseCase
 import br.com.schmittsolucoes.cacainfinita.presentation.CommonViewModel
 import br.com.schmittsolucoes.cacainfinita.presentation.analytics.AnalyticsManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,13 +30,12 @@ import javax.inject.Inject
 @HiltViewModel
 class CameraViewModel @Inject constructor(
     private val frameAnalyzer: FrameAnalyzer,
-    private val generateImagePuzzleUseCase: GenerateImagePuzzleUseCase,
-    private val saveGeneratedPuzzlesUseCase: SaveGeneratedPuzzlesUseCase,
+    private val imagePuzzleOrchestratorUseCase: ImagePuzzleOrchestratorUseCase,
     private val loadingManager: LoadingManager,
     private val snackbarManager: SnackbarManager,
     private val application: android.app.Application,
     private val analyticsManager: AnalyticsManager,
-    exceptionRecorderManager: ExceptionRecorderManager
+    exceptionRecorderManager: ExceptionRecorderManager,
 ) : CommonViewModel(exceptionRecorderManager) {
 
     private val _errorMessage = MutableStateFlow<String?>(null)
@@ -85,8 +85,8 @@ class CameraViewModel @Inject constructor(
 
             try {
                 val uri = Uri.fromFile(File(path))
-                val puzzles = generateImagePuzzleUseCase(listOf(uri), isFromCamera = true)
-                saveGeneratedPuzzlesUseCase(puzzles)
+                val config = PuzzleGenerationConfig(LanguageSelection.BOTH)
+                imagePuzzleOrchestratorUseCase(listOf(uri), config, isFromCamera = true)
                 snackbarManager.showSnackbar(application.getString(R.string.success_puzzle_generated))
                 lastTorchActive = false
             } finally {

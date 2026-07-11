@@ -27,7 +27,8 @@ fun PlacedWord.toEntity(puzzleId: String): WordEntity {
         text = text,
         startRow = startCoordinate.row,
         startCol = startCoordinate.col,
-        direction = direction
+        direction = direction,
+        language = language
     )
 }
 
@@ -58,6 +59,7 @@ fun Word.toEntity(): WordEntity {
         startRow = startRow,
         startCol = startCol,
         direction = direction,
+        language = language,
         foundDate = foundDate
     )
 }
@@ -70,6 +72,7 @@ fun WordEntity.toDomain(): Word {
         startRow = startRow,
         startCol = startCol,
         direction = direction,
+        language = language,
         foundDate = foundDate
     )
 }

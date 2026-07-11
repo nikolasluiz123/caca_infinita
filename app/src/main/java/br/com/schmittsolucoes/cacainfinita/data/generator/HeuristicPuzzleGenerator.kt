@@ -4,6 +4,7 @@ import android.util.Log
 import br.com.schmittsolucoes.cacainfinita.domain.generator.PuzzleGenerator
 import br.com.schmittsolucoes.cacainfinita.domain.model.GridDimensions
 import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.Direction
+import br.com.schmittsolucoes.cacainfinita.domain.model.result.language.IdentifiedWord
 import br.com.schmittsolucoes.cacainfinita.domain.model.result.puzzle.Coordinate
 import br.com.schmittsolucoes.cacainfinita.domain.model.result.puzzle.PlacedWord
 import br.com.schmittsolucoes.cacainfinita.domain.model.result.puzzle.PuzzleResult
@@ -43,11 +44,11 @@ class HeuristicPuzzleGenerator @Inject constructor() : PuzzleGenerator {
      * Gera uma lista de resultados de quebra-cabeça ([PuzzleResult]) a partir de uma lista de palavras.
      * O processo tenta agrupar o máximo de palavras possível em cada grade, respeitando a densidade alvo.
      *
-     * @param words Lista de palavras a serem inseridas nos caça-palavras.
+     * @param words Lista de [IdentifiedWord] a serem inseridas nos caça-palavras.
      * @param dimensions Dimensões da grade (linhas e colunas).
      * @return Lista de grades geradas com suas respectivas palavras posicionadas.
      */
-    override suspend fun generate(words: List<String>, dimensions: GridDimensions): List<PuzzleResult> {
+    override suspend fun generate(words: List<IdentifiedWord>, dimensions: GridDimensions): List<PuzzleResult> {
         val tag = this@HeuristicPuzzleGenerator::class.simpleName
 
         Log.d("DEBUG_PROCESS", "$tag: Iniciando geração de grade(s) heurística")
@@ -62,15 +63,15 @@ class HeuristicPuzzleGenerator @Inject constructor() : PuzzleGenerator {
         while (allWords.isNotEmpty()) {
             val grid = Array(dimensions.rows) { CharArray(dimensions.columns) { ' ' } }
             val placedWords = mutableListOf<PlacedWord>()
-            val wordsToRemove = mutableListOf<String>()
+            val wordsToRemove = mutableListOf<IdentifiedWord>()
 
-            for (word in allWords) {
+            for (identifiedWord in allWords) {
                 if (placedWords.size >= targetWordsPerPuzzle) break
 
-                val wasPlacedSuccessfully = tryPlaceWord(word, grid, dimensions, placedWords)
+                val wasPlacedSuccessfully = tryPlaceWord(identifiedWord, grid, dimensions, placedWords)
 
                 if (wasPlacedSuccessfully) {
-                    wordsToRemove.add(word)
+                    wordsToRemove.add(identifiedWord)
                 }
             }
 
@@ -108,18 +109,19 @@ class HeuristicPuzzleGenerator @Inject constructor() : PuzzleGenerator {
      * - finalCandidate: Uma escolha aleatória entre os melhores candidatos, o que introduz
      *   variabilidade natural ao gerador, evitando que ele sempre escolha o mesmo canto da grade.
      *
-     * @param word A palavra a ser posicionada.
+     * @param identifiedWord A palavra identificada a ser posicionada.
      * @param grid A matriz de caracteres atual.
      * @param dimensions As dimensões da grade.
      * @param placedWords A lista de palavras já posicionadas para registro.
      * @return Verdadeiro se a palavra foi posicionada com sucesso, falso caso contrário.
      */
     private fun tryPlaceWord(
-        word: String,
+        identifiedWord: IdentifiedWord,
         grid: Array<CharArray>,
         dimensions: GridDimensions,
         placedWords: MutableList<PlacedWord>
     ): Boolean {
+        val word = identifiedWord.text
         val directions = Direction.entries
         val candidates = mutableListOf<PlacementCandidate>()
 
@@ -148,7 +150,8 @@ class HeuristicPuzzleGenerator @Inject constructor() : PuzzleGenerator {
             PlacedWord(
                 text = word,
                 startCoordinate = Coordinate(finalCandidate.row, finalCandidate.col),
-                direction = finalCandidate.direction
+                direction = finalCandidate.direction,
+                language = identifiedWord.language
             )
         )
         return true

@@ -1,18 +1,16 @@
 package br.com.schmittsolucoes.cacainfinita.data.provider
 
+import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.LanguageSelection
+
 /**
  * Interface que define o contrato para fornecimento de Stop Words.
- *
- * **O que são Stop Words?**
- * São palavras que, embora gramaticalmente necessárias para a construção de frases (como artigos,
- * preposições, conjunções e alguns pronomes), não agregam valor semântico significativo para a
- * geração de um caça-palavras. Exemplos: "de", "para", "com", "uma", "os".
  */
 interface StopWordsProvider {
     /**
-     * Retorna um conjunto de palavras consideradas irrelevantes para o idioma especificado.
+     * Retorna um conjunto de palavras consideradas irrelevantes para os idiomas selecionados.
      *
+     * @param config A seleção de idiomas feita pelo usuário.
      * @return Um [Set] contendo as stop words em caixa alta para facilitar a comparação.
      */
-    fun getStopWords(): Set<String>
+    fun getStopWords(config: LanguageSelection): Set<String>
 }

@@ -12,11 +12,12 @@ import br.com.schmittsolucoes.cacainfinita.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.SnackbarManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.TutorialManager
 import br.com.schmittsolucoes.cacainfinita.domain.model.pagination.PaginationConfig
+import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.LanguageSelection
+import br.com.schmittsolucoes.cacainfinita.domain.model.result.puzzle.PuzzleGenerationConfig
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.DeleteWordSearchPuzzleUseCase
-import br.com.schmittsolucoes.cacainfinita.domain.usecase.GenerateImagePuzzleUseCase
-import br.com.schmittsolucoes.cacainfinita.domain.usecase.GeneratePDFPuzzleUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetAllPuzzlesUseCase
-import br.com.schmittsolucoes.cacainfinita.domain.usecase.SaveGeneratedPuzzlesUseCase
+import br.com.schmittsolucoes.cacainfinita.domain.usecase.ImagePuzzleOrchestratorUseCase
+import br.com.schmittsolucoes.cacainfinita.domain.usecase.PDFPuzzleOrchestratorUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.TutorialUseCase
 import br.com.schmittsolucoes.cacainfinita.presentation.CommonViewModel
 import br.com.schmittsolucoes.cacainfinita.presentation.analytics.AnalyticsManager
@@ -34,9 +35,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WordSearchViewModel @Inject constructor(
-    private val generatePdfPuzzleUseCase: GeneratePDFPuzzleUseCase,
-    private val generateImagePuzzleUseCase: GenerateImagePuzzleUseCase,
-    private val saveGeneratedPuzzlesUseCase: SaveGeneratedPuzzlesUseCase,
+    private val pdfPuzzleOrchestratorUseCase: PDFPuzzleOrchestratorUseCase,
+    private val imagePuzzleOrchestratorUseCase: ImagePuzzleOrchestratorUseCase,
     private val deleteWordSearchPuzzleUseCase: DeleteWordSearchPuzzleUseCase,
     private val loadingManager: LoadingManager,
     private val snackbarManager: SnackbarManager,
@@ -45,7 +45,7 @@ class WordSearchViewModel @Inject constructor(
     getAllPuzzlesUseCase: GetAllPuzzlesUseCase,
     private val tutorialUseCase: TutorialUseCase,
     private val tutorialManager: TutorialManager,
-    exceptionRecorderManager: ExceptionRecorderManager
+    exceptionRecorderManager: ExceptionRecorderManager,
 ) : CommonViewModel(exceptionRecorderManager) {
 
     private val _errorMessage = MutableStateFlow<String?>(null)
@@ -73,8 +73,8 @@ class WordSearchViewModel @Inject constructor(
             loadingManager.showLoading()
 
             try {
-                val puzzles = generatePdfPuzzleUseCase(uris)
-                saveGeneratedPuzzlesUseCase(puzzles)
+                val config = PuzzleGenerationConfig(LanguageSelection.BOTH)
+                pdfPuzzleOrchestratorUseCase(uris, config)
                 snackbarManager.showSnackbar(context.getString(R.string.success_puzzle_generated))
             } finally {
                 loadingManager.hideLoading()
@@ -89,8 +89,8 @@ class WordSearchViewModel @Inject constructor(
             loadingManager.showLoading()
 
             try {
-                val puzzles = generateImagePuzzleUseCase(uris, isFromCamera = false)
-                saveGeneratedPuzzlesUseCase(puzzles)
+                val config = PuzzleGenerationConfig(LanguageSelection.BOTH)
+                imagePuzzleOrchestratorUseCase(uris, config, isFromCamera = false)
                 snackbarManager.showSnackbar(context.getString(R.string.success_puzzle_generated))
             } finally {
                 loadingManager.hideLoading()

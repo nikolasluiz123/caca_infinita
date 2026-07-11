@@ -1,38 +1,36 @@
 package br.com.schmittsolucoes.cacainfinita.data.processor.pipeline.steps
 
 import android.util.Log
-import br.com.schmittsolucoes.cacainfinita.domain.exception.NoValidWordsException
+import br.com.schmittsolucoes.cacainfinita.domain.model.result.language.IdentifiedWord
 
 /**
- * Etapa responsável por remover palavras que são subconjuntos de outras palavras maiores.
- *
- * Em um caça-palavras, ter "CASA" e "CASAMENTO" pode ser redundante e confuso.
- * Esta etapa garante que apenas os termos mais longos e abrangentes sejam mantidos.
+ * Etapa responsável por remover palavras que estão contidas dentro de outras palavras mais longas.
+ * Exemplo: Se tivermos "MACA" e "MACARRÃO", "MACA" será removida para evitar redundância na grade.
  */
-class RemoveOverlappingWordsStep : TextResultProcessorStep {
-    override suspend fun process(text: String): String {
+class RemoveOverlappingWordsStep : IdentifiedWordProcessorStep {
+    /**
+     * Filtra a lista removendo termos sobrepostos.
+     *
+     * @param words A lista de palavras a ser filtrada.
+     * @return Uma lista limpa de sobreposições.
+     */
+    override suspend fun process(words: List<IdentifiedWord>): List<IdentifiedWord> {
         val tag = this@RemoveOverlappingWordsStep::class.simpleName
-        Log.d("DEBUG_PROCESS", "$tag: Iniciando remoção de palavras sobrepostas")
 
-        val words = text.split(Regex("\\s+"))
-            .filter { it.isNotBlank() }
-            .distinct()
-            .sortedByDescending { it.length }
+        Log.d("DEBUG_PROCESS", "$tag: Iniciando step RemoveOverlappingWords")
 
-        val result = mutableListOf<String>()
+        val sortedWords = words.sortedByDescending { it.text.length }
+        val result = mutableListOf<IdentifiedWord>()
 
-        for (word in words) {
-            if (result.none { it.contains(word) }) {
+        for (word in sortedWords) {
+            val isOverlap = result.any { existing -> existing.text.contains(word.text) }
+            if (!isOverlap) {
                 result.add(word)
             }
         }
 
-        if (result.isEmpty()) {
-            throw NoValidWordsException()
-        }
-
-        return result.joinToString(" ").also {
-            Log.d("DEBUG_PROCESS", "$tag: Fim da remoção. Palavras restantes: ${result.size}")
+        return result.also {
+            Log.d("DEBUG_PROCESS", "$tag: Fim step RemoveOverlappingWords")
         }
     }
 }

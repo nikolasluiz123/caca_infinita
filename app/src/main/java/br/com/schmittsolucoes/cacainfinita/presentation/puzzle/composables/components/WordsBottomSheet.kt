@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import br.com.schmittsolucoes.cacainfinita.R
 import br.com.schmittsolucoes.cacainfinita.domain.model.Word
 import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.Direction
+import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.Language
 import br.com.schmittsolucoes.cacainfinita.presentation.theme.CacaInfinitaTheme
 import br.com.schmittsolucoes.cacainfinita.presentation.theme.SecondaryTextColor
 import br.com.schmittsolucoes.cacainfinita.presentation.theme.WordSelectionColor
@@ -111,12 +112,12 @@ private fun WordItem(word: Word) {
 @Composable
 private fun WordsBottomSheetPreview() {
     val words = listOf(
-        Word("1", "p1", "KOTLIN", 0, 0, Direction.HORIZONTAL, Instant.now()),
-        Word("2", "p1", "COMPOSE", 1, 0, Direction.VERTICAL),
-        Word("3", "p1", "ANDROID", 2, 0, Direction.DIAGONAL_DOWN_RIGHT),
-        Word("4", "p1", "ROOM", 3, 0, Direction.DIAGONAL_UP_RIGHT, Instant.now()),
-        Word("5", "p1", "HILT", 4, 0, Direction.HORIZONTAL),
-        Word("6", "p1", "RETROFIT", 5, 0, Direction.VERTICAL)
+        Word("1", "p1", "KOTLIN", 0, 0, Direction.HORIZONTAL, Language.PORTUGUESE, Instant.now()),
+        Word("2", "p1", "COMPOSE", 1, 0, Direction.VERTICAL, Language.PORTUGUESE),
+        Word("3", "p1", "ANDROID", 2, 0, Direction.DIAGONAL_DOWN_RIGHT, Language.PORTUGUESE),
+        Word("4", "p1", "ROOM", 3, 0, Direction.DIAGONAL_UP_RIGHT, Language.PORTUGUESE, Instant.now()),
+        Word("5", "p1", "HILT", 4, 0, Direction.HORIZONTAL, Language.PORTUGUESE),
+        Word("6", "p1", "RETROFIT", 5, 0, Direction.VERTICAL, Language.PORTUGUESE)
     )
     CacaInfinitaTheme {
         WordsBottomSheet(

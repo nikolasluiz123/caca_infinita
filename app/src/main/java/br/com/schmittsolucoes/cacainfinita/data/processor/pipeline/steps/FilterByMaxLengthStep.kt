@@ -2,36 +2,28 @@ package br.com.schmittsolucoes.cacainfinita.data.processor.pipeline.steps
 
 import android.util.Log
 import br.com.schmittsolucoes.cacainfinita.domain.exception.NoValidWordsException
+import br.com.schmittsolucoes.cacainfinita.domain.model.result.language.IdentifiedWord
 
 /**
- * Etapa que filtra palavras com base no comprimento máximo permitido pela grade.
+ * Etapa responsável por remover palavras que possuem comprimento maior que o máximo permitido.
  *
- * Esta etapa garante que nenhuma palavra longa demais para caber na diagonal da matriz
- * avance no processo de geração.
- *
- * @property maxAllowedLength O comprimento máximo (geralmente a diagonal da grade).
+ * @param maxAllowedLength O comprimento máximo permitido para uma palavra.
  */
-class FilterByMaxLengthStep(private val maxAllowedLength: Int) : TextResultProcessorStep {
+class FilterByMaxLengthStep(private val maxAllowedLength: Int) : IdentifiedWordProcessorStep {
     /**
-     * Filtra o texto removendo palavras que excedem o limite de caracteres.
+     * Filtra a lista removendo palavras que possuem mais caracteres que o máximo.
      *
-     * O Regex `\\s+` é utilizado para dividir o texto em tokens baseando-se em qualquer
-     * quantidade de espaços em branco. Em seguida, cada token é validado contra o
-     * [maxAllowedLength].
-     *
-     * @param text O texto a ser filtrado.
-     * @return Uma String contendo apenas as palavras que respeitam o limite de tamanho.
+     * @param words A lista de palavras a ser filtrada.
+     * @return Uma lista contendo apenas as palavras que possuem o tamanho máximo permitido.
      */
-    override suspend fun process(text: String): String {
+    override suspend fun process(words: List<IdentifiedWord>): List<IdentifiedWord> {
         val tag = this@FilterByMaxLengthStep::class.simpleName
 
         Log.d("DEBUG_PROCESS", "$tag: Iniciando step FilterByMaxLength (Max: $maxAllowedLength)")
 
-        val result = text.split(Regex("\\s+"))
-            .filter { word -> word.isNotBlank() && word.length <= maxAllowedLength }
-            .joinToString(" ")
+        val result = words.filter { word -> word.text.length <= maxAllowedLength }
 
-        if (result.isBlank()) {
+        if (result.isEmpty()) {
             throw NoValidWordsException()
         }
 
