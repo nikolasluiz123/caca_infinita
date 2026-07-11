@@ -48,6 +48,29 @@ jobs:
           echo "versionCode=${{ github.event.inputs.versionCode }}" > version.properties
           echo "versionName=${{ github.event.inputs.versionName }}" >> version.properties
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+
+      - name: Generate Changelog
+        id: generate_changelog
+        run: |
+          # Garante que todas as tags estão presentes para o cálculo do delta
+          git fetch --tags --force
+          
+          # Gera o changelog antes do commit de bump para garantir que pegamos todos os commits desde a última tag
+          # -u: unreleased (commits desde a última tag até o HEAD)
+          # -v: especifica o nome da versão atual para o cabeçalho
+          CHANGELOG_BODY=$(npx conventional-changelog-cli -p angular -u -v ${{ github.event.inputs.versionName }})
+          
+          echo "Changelog gerado com sucesso."
+          
+          EOF=$(dd if=/dev/urandom bs=15 count=1 2>/dev/null | base64)
+          echo "changelog<<$EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG_BODY" >> $GITHUB_OUTPUT
+          echo "$EOF" >> $GITHUB_OUTPUT
+
       - name: Commit version update
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
@@ -76,22 +99,6 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: '22'
-
-      - name: Generate Changelog
-        id: generate_changelog
-        run: |
-          PREVIOUS_TAG=$(git describe --tags --abbrev=0 2>/dev/null || git rev-list --max-parents=0 HEAD)
-          echo "Gerando changelog a partir de: ${PREVIOUS_TAG}"
-          CHANGELOG_BODY=$(npx conventional-changelog-cli -p angular -u)
-          EOF=$(dd if=/dev/urandom bs=15 count=1 2>/dev/null | base64)
-          echo "changelog<<$EOF" >> $GITHUB_OUTPUT
-          echo "$CHANGELOG_BODY" >> $GITHUB_OUTPUT
-          echo "$EOF" >> $GITHUB_OUTPUT
 
       - name: Upload to Google Play
         uses: r0adkll/upload-google-play@v1
