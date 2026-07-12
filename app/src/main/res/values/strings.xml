@@ -64,4 +64,6 @@
     <string name="tutorial_puzzle_words_list">Clique aqui para ver a lista de palavras que você precisa encontrar.</string>
     <string name="tutorial_puzzle_pause">Seu progresso é salvo automaticamente ao sair. Você pode continuar de onde parou!</string>
     <string name="tutorial_tap_to_continue">Tocar para continuar</string>
+
+    <string name="game_services_project_id" translatable="false">293321681387</string>
 </resources>

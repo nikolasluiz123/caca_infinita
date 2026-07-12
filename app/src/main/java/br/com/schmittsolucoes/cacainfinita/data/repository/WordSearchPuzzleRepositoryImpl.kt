@@ -7,11 +7,13 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import br.com.schmittsolucoes.cacainfinita.R
 import br.com.schmittsolucoes.cacainfinita.core.database.transaction.DatabaseTransaction
-import br.com.schmittsolucoes.cacainfinita.data.database.access.puzzle.WordSearchPuzzleLocalDataSource
-import br.com.schmittsolucoes.cacainfinita.data.database.access.puzzle.word.WordLocalDataSource
-import br.com.schmittsolucoes.cacainfinita.data.database.access.user.UserLocalDataSource
+import br.com.schmittsolucoes.cacainfinita.data.datasource.local.database.access.puzzle.WordSearchPuzzleLocalDataSource
+import br.com.schmittsolucoes.cacainfinita.data.datasource.local.database.access.puzzle.session.PuzzleSessionLocalDataSource
+import br.com.schmittsolucoes.cacainfinita.data.datasource.local.database.access.puzzle.word.WordLocalDataSource
+import br.com.schmittsolucoes.cacainfinita.data.datasource.local.database.access.user.UserLocalDataSource
 import br.com.schmittsolucoes.cacainfinita.data.repository.mapper.toDomain
 import br.com.schmittsolucoes.cacainfinita.data.repository.mapper.toEntity
+import br.com.schmittsolucoes.cacainfinita.domain.model.FullPuzzle
 import br.com.schmittsolucoes.cacainfinita.domain.model.PuzzleRecord
 import br.com.schmittsolucoes.cacainfinita.domain.model.WordSearchPuzzle
 import br.com.schmittsolucoes.cacainfinita.domain.model.WordSearchPuzzleSummary
@@ -29,6 +31,7 @@ class WordSearchPuzzleRepositoryImpl @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val wordSearchPuzzleLocalDataSource: WordSearchPuzzleLocalDataSource,
     private val wordLocalDataSource: WordLocalDataSource,
+    private val puzzleSessionLocalDataSource: PuzzleSessionLocalDataSource,
     private val userLocalDataSource: UserLocalDataSource,
     private val transaction: DatabaseTransaction
 ) : WordSearchPuzzleRepository {
@@ -55,8 +58,48 @@ class WordSearchPuzzleRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun insertFull(puzzles: List<FullPuzzle>) {
+        val userId = userLocalDataSource.selectFirst().id
+        val puzzleEntities = puzzles.map { it.puzzle.toEntity(userId) }
+        val wordEntities = puzzles.flatMap { it.words.map { word -> word.toEntity() } }
+        val sessionEntities = puzzles.flatMap { it.sessions.map { session -> session.toEntity() } }
+
+        wordSearchPuzzleLocalDataSource.upsert(puzzleEntities)
+        wordLocalDataSource.upsert(wordEntities)
+        puzzleSessionLocalDataSource.upsert(sessionEntities)
+    }
+
     override suspend fun getPuzzleBy(id: String): WordSearchPuzzle {
         return wordSearchPuzzleLocalDataSource.selectById(id).toDomain()
+    }
+
+    override suspend fun getFullPuzzlesByIds(ids: List<String>): List<FullPuzzle> {
+        return ids.map { id ->
+            val puzzle = wordSearchPuzzleLocalDataSource.selectById(id)
+            val words = wordLocalDataSource.selectAllBy(id)
+            val sessions = puzzleSessionLocalDataSource.selectAllBy(id)
+
+            FullPuzzle(
+                puzzle = puzzle.toDomain(),
+                words = words.map { it.toDomain() },
+                sessions = sessions.map { it.toDomain() }
+            )
+        }
+    }
+
+    override suspend fun getUnfinishedFullPuzzles(): List<FullPuzzle> {
+        val entities = wordSearchPuzzleLocalDataSource.selectUnfinishedFull()
+
+        return entities.map { puzzle ->
+            val id = puzzle.id
+            val words = wordLocalDataSource.selectAllBy(id)
+            val sessions = puzzleSessionLocalDataSource.selectAllBy(id)
+            FullPuzzle(
+                puzzle = puzzle.toDomain(),
+                words = words.map { it.toDomain() },
+                sessions = sessions.map { it.toDomain() }
+            )
+        }
     }
 
     override fun getAllPuzzles(config: PaginationConfig): Flow<PagingData<WordSearchPuzzleSummary>> {

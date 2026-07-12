@@ -1,6 +1,6 @@
 package br.com.schmittsolucoes.cacainfinita.domain.usecase
 
-import br.com.schmittsolucoes.cacainfinita.data.database.access.TutorialInfoLocalDataSource
+import br.com.schmittsolucoes.cacainfinita.data.datasource.local.database.access.TutorialInfoLocalDataSource
 import br.com.schmittsolucoes.cacainfinita.domain.manager.TutorialManager
 import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseStep
 import kotlinx.coroutines.flow.first

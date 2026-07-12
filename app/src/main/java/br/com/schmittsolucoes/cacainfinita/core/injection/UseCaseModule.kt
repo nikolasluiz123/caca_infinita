@@ -10,6 +10,8 @@ import br.com.schmittsolucoes.cacainfinita.domain.processor.language.LanguageIde
 import br.com.schmittsolucoes.cacainfinita.domain.processor.pipeline.LanguageIdentifierProcessorPipeline
 import br.com.schmittsolucoes.cacainfinita.domain.processor.pipeline.TextProcessorPipeline
 import br.com.schmittsolucoes.cacainfinita.domain.provider.DeviceDimensionsProvider
+import br.com.schmittsolucoes.cacainfinita.domain.manager.PlayGamesManager
+import br.com.schmittsolucoes.cacainfinita.domain.repository.GameSnapshotRepository
 import br.com.schmittsolucoes.cacainfinita.domain.repository.PuzzleSessionRepository
 import br.com.schmittsolucoes.cacainfinita.domain.repository.UserRepository
 import br.com.schmittsolucoes.cacainfinita.domain.repository.WordRepository
@@ -33,7 +35,9 @@ import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetUserUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetWordsFromPuzzleUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.LanguageIdentifierUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.SaveGeneratedPuzzlesUseCase
+import br.com.schmittsolucoes.cacainfinita.domain.usecase.SaveProgressToCloudUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.StartSessionUseCase
+import br.com.schmittsolucoes.cacainfinita.domain.usecase.SyncCloudProgressUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.UpdateFoundWordUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.UpdateUserExperienceUseCase
 import dagger.Module
@@ -174,8 +178,47 @@ object UseCaseModule {
     }
 
     @Provides
-    fun provideEndSessionUseCase(repository: PuzzleSessionRepository): EndSessionUseCase {
-        return EndSessionUseCase(repository)
+    fun provideEndSessionUseCase(
+        repository: PuzzleSessionRepository,
+        saveProgressToCloudUseCase: SaveProgressToCloudUseCase
+    ): EndSessionUseCase {
+        return EndSessionUseCase(repository, saveProgressToCloudUseCase)
+    }
+
+    @Provides
+    fun provideSaveProgressToCloudUseCase(
+        userRepository: UserRepository,
+        wordSearchPuzzleRepository: WordSearchPuzzleRepository,
+        playGamesManager: PlayGamesManager,
+        gameSnapshotRepository: GameSnapshotRepository,
+        getNextUserLevelUseCase: GetNextUserLevelUseCase
+    ): SaveProgressToCloudUseCase {
+        return SaveProgressToCloudUseCase(
+            userRepository,
+            wordSearchPuzzleRepository,
+            playGamesManager,
+            gameSnapshotRepository,
+            getNextUserLevelUseCase
+        )
+    }
+
+    @Provides
+    fun provideSyncCloudProgressUseCase(
+        userRepository: UserRepository,
+        wordSearchPuzzleRepository: WordSearchPuzzleRepository,
+        playGamesManager: PlayGamesManager,
+        gameSnapshotRepository: GameSnapshotRepository,
+        getNextUserLevelUseCase: GetNextUserLevelUseCase,
+        transaction: DatabaseTransaction
+    ): SyncCloudProgressUseCase {
+        return SyncCloudProgressUseCase(
+            userRepository,
+            wordSearchPuzzleRepository,
+            playGamesManager,
+            gameSnapshotRepository,
+            getNextUserLevelUseCase,
+            transaction
+        )
     }
 
     @Provides

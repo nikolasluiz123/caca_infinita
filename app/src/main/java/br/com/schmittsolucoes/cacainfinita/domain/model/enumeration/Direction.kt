@@ -1,5 +1,8 @@
 package br.com.schmittsolucoes.cacainfinita.domain.model.enumeration
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class Direction(val rowStep: Int, val colStep: Int) {
     HORIZONTAL(0, 1),
     VERTICAL(1, 0),

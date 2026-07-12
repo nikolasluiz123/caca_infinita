@@ -5,9 +5,11 @@ import br.com.schmittsolucoes.cacainfinita.R
 import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.PDFTextExtractorManager
+import br.com.schmittsolucoes.cacainfinita.domain.manager.PlayGamesManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.SnackbarManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.TutorialManager
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.CreateUserIfNotExistsUseCase
+import br.com.schmittsolucoes.cacainfinita.domain.usecase.SyncCloudProgressUseCase
 import br.com.schmittsolucoes.cacainfinita.presentation.analytics.AnalyticsManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,11 +20,13 @@ import javax.inject.Inject
 class AppViewModel @Inject constructor(
     private val application: Application,
     private val analyticsManager: AnalyticsManager,
+    private val playGamesManager: PlayGamesManager,
+    private val syncCloudProgressUseCase: SyncCloudProgressUseCase,
+    private val snackbarManager: SnackbarManager,
+    val tutorialManager: TutorialManager,
     createUserIfNotExistsUseCase: CreateUserIfNotExistsUseCase,
     pdfTextExtractorManager: PDFTextExtractorManager,
     loadingManager: LoadingManager,
-    private val snackbarManager: SnackbarManager,
-    val tutorialManager: TutorialManager,
     exceptionRecorderManager: ExceptionRecorderManager
 ) : CommonViewModel(exceptionRecorderManager) {
 
@@ -39,8 +43,12 @@ class AppViewModel @Inject constructor(
 
     init {
         launch {
+            playGamesManager.initialize()
             pdfTextExtractorManager.initialize(application)
+
+            syncCloudProgressUseCase()
             createUserIfNotExistsUseCase()
+
             _isInitializing.value = false
         }
     }

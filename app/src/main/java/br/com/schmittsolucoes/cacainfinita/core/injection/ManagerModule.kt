@@ -5,12 +5,14 @@ import br.com.schmittsolucoes.cacainfinita.data.manager.CrashlyticsExceptionReco
 import br.com.schmittsolucoes.cacainfinita.data.manager.FileHandler
 import br.com.schmittsolucoes.cacainfinita.data.manager.LoadingManagerImpl
 import br.com.schmittsolucoes.cacainfinita.data.manager.PDFBoxTextExtractorManager
+import br.com.schmittsolucoes.cacainfinita.data.manager.PlayGamesManagerImpl
 import br.com.schmittsolucoes.cacainfinita.data.manager.SnackbarManagerImpl
 import br.com.schmittsolucoes.cacainfinita.data.manager.TutorialManagerImpl
 import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.FileManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.LoadingManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.PDFTextExtractorManager
+import br.com.schmittsolucoes.cacainfinita.domain.manager.PlayGamesManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.SnackbarManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.TutorialManager
 import br.com.schmittsolucoes.cacainfinita.presentation.analytics.AnalyticsManager
@@ -47,4 +49,8 @@ abstract class ManagerModule {
 
     @Binds
     abstract fun bindAnalyticsManager(impl: FirebaseAnalyticsManager): AnalyticsManager
+
+    @Binds
+    @Singleton
+    abstract fun bindPlayGamesManager(impl: PlayGamesManagerImpl): PlayGamesManager
 }

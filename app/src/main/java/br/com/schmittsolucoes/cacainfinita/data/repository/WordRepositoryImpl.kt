@@ -1,6 +1,6 @@
 package br.com.schmittsolucoes.cacainfinita.data.repository
 
-import br.com.schmittsolucoes.cacainfinita.data.database.access.puzzle.word.WordLocalDataSource
+import br.com.schmittsolucoes.cacainfinita.data.datasource.local.database.access.puzzle.word.WordLocalDataSource
 import br.com.schmittsolucoes.cacainfinita.data.repository.mapper.toDomain
 import br.com.schmittsolucoes.cacainfinita.data.repository.mapper.toEntity
 import br.com.schmittsolucoes.cacainfinita.domain.model.Word

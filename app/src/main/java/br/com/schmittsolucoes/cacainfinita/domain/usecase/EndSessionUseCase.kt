@@ -6,12 +6,14 @@ import kotlinx.coroutines.withContext
 import java.time.Instant
 
 class EndSessionUseCase(
-    private val puzzleSessionRepository: PuzzleSessionRepository
+    private val puzzleSessionRepository: PuzzleSessionRepository,
+    private val saveProgressToCloudUseCase: SaveProgressToCloudUseCase
 ) {
     suspend operator fun invoke(puzzleId: String) = withContext(IO) {
         puzzleSessionRepository.getActualSessionBy(puzzleId)?.let { actualSession ->
             val endedSession = actualSession.copy(endedAt = Instant.now())
             puzzleSessionRepository.save(endedSession)
+            saveProgressToCloudUseCase()
         }
     }
 }

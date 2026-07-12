@@ -25,6 +25,7 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import br.com.schmittsolucoes.cacainfinita.data.provider.ActivityProvider
 import br.com.schmittsolucoes.cacainfinita.presentation.components.ErrorDialog
 import br.com.schmittsolucoes.cacainfinita.presentation.components.LoadingOverlay
 import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseHost
@@ -35,14 +36,20 @@ import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.navigation.navig
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.navigation.WordSearchGeneratedPuzzlesRoute
 import br.com.schmittsolucoes.cacainfinita.presentation.theme.CacaInfinitaTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val viewModel: AppViewModel by viewModels()
 
+    @Inject
+    lateinit var activityProvider: ActivityProvider
+
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        activityProvider.updateActivity(this)
 
         splashScreen.setKeepOnScreenCondition {
             viewModel.isInitializing.value
@@ -95,6 +102,16 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activityProvider.updateActivity(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        activityProvider.clear()
     }
 }
 

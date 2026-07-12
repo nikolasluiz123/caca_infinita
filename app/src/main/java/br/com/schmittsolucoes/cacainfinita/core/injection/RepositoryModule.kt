@@ -1,9 +1,11 @@
 package br.com.schmittsolucoes.cacainfinita.core.injection
 
+import br.com.schmittsolucoes.cacainfinita.data.repository.GameSnapshotRepositoryImpl
 import br.com.schmittsolucoes.cacainfinita.data.repository.PuzzleSessionRepositoryImpl
 import br.com.schmittsolucoes.cacainfinita.data.repository.UserRepositoryImpl
 import br.com.schmittsolucoes.cacainfinita.data.repository.WordRepositoryImpl
 import br.com.schmittsolucoes.cacainfinita.data.repository.WordSearchPuzzleRepositoryImpl
+import br.com.schmittsolucoes.cacainfinita.domain.repository.GameSnapshotRepository
 import br.com.schmittsolucoes.cacainfinita.domain.repository.PuzzleSessionRepository
 import br.com.schmittsolucoes.cacainfinita.domain.repository.UserRepository
 import br.com.schmittsolucoes.cacainfinita.domain.repository.WordRepository
@@ -34,4 +36,7 @@ abstract class RepositoryModule {
     @Singleton
     abstract fun bindPuzzleSessionRepository(impl: PuzzleSessionRepositoryImpl): PuzzleSessionRepository
 
+    @Binds
+    @Singleton
+    abstract fun bindGameSnapshotRepository(impl: GameSnapshotRepositoryImpl): GameSnapshotRepository
 }

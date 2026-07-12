@@ -1,6 +1,6 @@
 package br.com.schmittsolucoes.cacainfinita.data.repository
 
-import br.com.schmittsolucoes.cacainfinita.data.database.access.puzzle.session.PuzzleSessionLocalDataSource
+import br.com.schmittsolucoes.cacainfinita.data.datasource.local.database.access.puzzle.session.PuzzleSessionLocalDataSource
 import br.com.schmittsolucoes.cacainfinita.data.repository.mapper.toDomain
 import br.com.schmittsolucoes.cacainfinita.data.repository.mapper.toEntity
 import br.com.schmittsolucoes.cacainfinita.domain.model.PuzzleSession
@@ -18,7 +18,7 @@ class PuzzleSessionRepositoryImpl @Inject constructor(
     }
 
     override fun getAllSessionsBy(puzzleId: String): Flow<List<PuzzleSession>> {
-        return puzzleSessionLocalDataSource.selectAllBy(puzzleId).map { entities ->
+        return puzzleSessionLocalDataSource.selectAllByObservable(puzzleId).map { entities ->
             entities.map { it.toDomain() }
         }
     }

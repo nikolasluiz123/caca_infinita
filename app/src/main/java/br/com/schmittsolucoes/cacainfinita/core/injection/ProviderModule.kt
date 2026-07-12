@@ -1,5 +1,7 @@
 package br.com.schmittsolucoes.cacainfinita.core.injection
 
+import br.com.schmittsolucoes.cacainfinita.data.provider.ActivityProvider
+import br.com.schmittsolucoes.cacainfinita.data.provider.AndroidActivityProvider
 import br.com.schmittsolucoes.cacainfinita.data.provider.AndroidDimensionsProvider
 import br.com.schmittsolucoes.cacainfinita.data.provider.AndroidFreeMemoryProvider
 import br.com.schmittsolucoes.cacainfinita.data.provider.AndroidLanguageProvider
@@ -33,4 +35,7 @@ abstract class ProviderModule {
 
     @Binds
     abstract fun bindOrientationProvider(impl: AndroidOrientationProvider): OrientationProvider
+
+    @Binds
+    abstract fun bindActivityProvider(impl: AndroidActivityProvider): ActivityProvider
 }
