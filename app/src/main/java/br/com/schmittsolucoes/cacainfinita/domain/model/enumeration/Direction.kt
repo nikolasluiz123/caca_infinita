@@ -1,7 +1,9 @@
 package br.com.schmittsolucoes.cacainfinita.domain.model.enumeration
 
+import androidx.annotation.Keep
 import kotlinx.serialization.Serializable
 
+@Keep
 @Serializable
 enum class Direction(val rowStep: Int, val colStep: Int) {
     HORIZONTAL(0, 1),

@@ -44,3 +44,12 @@
 # Ignorar avisos de classes opcionais do PDFBox que não estamos usando
 -dontwarn com.gemalto.jp2.JP2Decoder
 -dontwarn com.tom_roush.pdfbox.filter.JPXFilter
+
+# Navigation Type-Safe & Kotlinx Serialization
+# Mantém os nomes originais de classes anotadas com @Serializable para que o Navigation
+# consiga encontrá-las pelo nome completo (FQN) em tempo de execução.
+-keep,allowobfuscation,allowshrinking class * {
+    @kotlinx.serialization.Serializable *;
+}
+-keep class br.com.schmittsolucoes.cacainfinita.presentation.**.navigation.*Route
+-keep class br.com.schmittsolucoes.cacainfinita.presentation.**.navigation.*Route$*

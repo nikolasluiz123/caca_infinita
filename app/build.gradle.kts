@@ -24,12 +24,34 @@ android {
         versionProps.load(versionPropsFile.inputStream())
     }
 
+    val localProps = Properties().apply {
+        val localPropsFile = rootProject.file("local.properties")
+
+        if (localPropsFile.exists()) {
+            load(localPropsFile.inputStream())
+        }
+    }
+
     signingConfigs {
         create("release") {
-            storeFile = file(project.findProperty("KEYSTORE_PATH")?.toString() ?: System.getenv("KEYSTORE_PATH") ?: "keystore.jks")
-            storePassword = project.findProperty("KEYSTORE_PASSWORD")?.toString() ?: System.getenv("KEYSTORE_PASSWORD")
-            keyAlias = project.findProperty("KEY_ALIAS")?.toString() ?: System.getenv("KEY_ALIAS")
-            keyPassword = project.findProperty("KEY_PASSWORD")?.toString() ?: System.getenv("KEY_PASSWORD")
+            storeFile = file(
+                localProps.getProperty("KEYSTORE_PATH")
+                    ?: project.findProperty("KEYSTORE_PATH")?.toString()
+                    ?: System.getenv("KEYSTORE_PATH")
+                    ?: "keystore.jks"
+            )
+
+            storePassword = localProps.getProperty("KEYSTORE_PASSWORD")
+                ?: project.findProperty("KEYSTORE_PASSWORD")?.toString()
+                ?: System.getenv("KEYSTORE_PASSWORD")
+
+            keyAlias = localProps.getProperty("KEY_ALIAS")
+                ?: project.findProperty("KEY_ALIAS")?.toString()
+                ?: System.getenv("KEY_ALIAS")
+
+            keyPassword = localProps.getProperty("KEY_PASSWORD")
+                ?: project.findProperty("KEY_PASSWORD")?.toString()
+                ?: System.getenv("KEY_PASSWORD")
         }
     }
 

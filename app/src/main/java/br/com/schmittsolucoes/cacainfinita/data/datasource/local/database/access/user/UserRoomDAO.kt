@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 interface UserRoomDAO: UserLocalDataSource, RoomLocalDataSource<UserEntity> {
 
     @Query("select * from user limit 1")
-    override fun selectFirstObservable(): Flow<UserEntity>
+    override fun selectFirstObservable(): Flow<UserEntity?>
 
     @Query("select * from user limit 1")
     override fun selectFirst(): UserEntity

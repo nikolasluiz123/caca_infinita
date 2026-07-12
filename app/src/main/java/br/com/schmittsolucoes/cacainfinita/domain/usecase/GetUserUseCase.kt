@@ -8,7 +8,7 @@ class GetUserUseCase(
     private val userRepository: UserRepository,
     private val getNextUserLevelUseCase: GetNextUserLevelUseCase
 ) {
-    fun observable(): Flow<User> {
+    fun observable(): Flow<User?> {
         return userRepository.getFirstObservable { getNextUserLevelUseCase(it) }
     }
 

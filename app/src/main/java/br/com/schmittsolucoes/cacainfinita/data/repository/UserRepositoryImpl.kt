@@ -17,9 +17,9 @@ class UserRepositoryImpl @Inject constructor(
         userLocalDataSource.upsert(listOf(user.toEntity()))
     }
 
-    override fun getFirstObservable(calculateMaxLevelXP: (Long) -> Long): Flow<User> {
+    override fun getFirstObservable(calculateMaxLevelXP: (Long) -> Long): Flow<User?> {
         return userLocalDataSource.selectFirstObservable().map {
-            it.toDomain(calculateMaxLevelXP(it.level))
+            it?.toDomain(calculateMaxLevelXP(it.level))
         }
     }
 

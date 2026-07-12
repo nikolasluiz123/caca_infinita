@@ -1,5 +1,6 @@
 package br.com.schmittsolucoes.cacainfinita.data.datasource.remote
 
+import android.util.Log
 import br.com.schmittsolucoes.cacainfinita.data.model.dto.CloudSaveDTO
 import br.com.schmittsolucoes.cacainfinita.data.provider.ActivityProvider
 import com.google.android.gms.games.PlayGames
@@ -44,16 +45,20 @@ class GooglePlayGamesRemoteDataSource @Inject constructor(
         val activity = activityProvider.getActivity() ?: return null
         val snapshotsClient = PlayGames.getSnapshotsClient(activity)
 
-        val dataOrConflict = snapshotsClient.open(
-            snapshotName,
-            false,
-            SnapshotsClient.RESOLUTION_POLICY_MOST_RECENTLY_MODIFIED
-        ).await()
+        return try {
+            val dataOrConflict = snapshotsClient.open(
+                snapshotName,
+                false,
+                SnapshotsClient.RESOLUTION_POLICY_MOST_RECENTLY_MODIFIED
+            ).await()
 
-        val snapshot = dataOrConflict.data ?: return null
-        val bytes = snapshot.snapshotContents.readFully()
-        val json = String(bytes)
-
-        return Json.decodeFromString<CloudSaveDTO>(json)
+            val snapshot = dataOrConflict.data ?: return null
+            val bytes = snapshot.snapshotContents.readFully()
+            val json = String(bytes)
+            Json.decodeFromString<CloudSaveDTO>(json)
+        } catch (e: Exception) {
+            Log.e("DEBUG_PROCESS", e.message ?: "Unknow Error", e)
+            null
+        }
     }
 }
