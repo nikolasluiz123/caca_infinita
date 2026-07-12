@@ -12,13 +12,13 @@ class GameSnapshotRepositoryImpl @Inject constructor(
     private val remoteDataSource: GameSnapshotRemoteDataSource
 ) : GameSnapshotRepository {
 
-    override suspend fun saveProgress(progress: GameProgress): Boolean {
+    override suspend fun saveProgress(progress: GameProgress) {
         val cloudSaveDTO = CloudSaveDTO(
             user = progress.user.toDTO(),
             puzzles = progress.puzzles.map { it.toDTO(progress.user.id) }
         )
 
-        return remoteDataSource.saveProgress(cloudSaveDTO)
+        remoteDataSource.saveProgress(cloudSaveDTO)
     }
 
     override suspend fun loadProgress(calculateMaxLevelXP: (Long) -> Long): GameProgress? {
