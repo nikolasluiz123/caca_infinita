@@ -56,9 +56,6 @@ jobs:
       - name: Generate Changelog
         id: generate_changelog
         run: |
-          # Garante que todas as tags estão presentes para o cálculo do delta
-          git fetch --tags --force
-          
           # Gera o changelog antes do commit de bump para garantir que pegamos todos os commits desde a última tag
           # -u: unreleased (commits desde a última tag até o HEAD)
           # -v: especifica o nome da versão atual para o cabeçalho
