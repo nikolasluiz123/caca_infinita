@@ -87,8 +87,8 @@ class WordSearchPuzzleRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUnfinishedFullPuzzles(): List<FullPuzzle> {
-        val entities = wordSearchPuzzleLocalDataSource.selectUnfinishedFull()
+    override suspend fun getStartedUnfinishedFullPuzzles(): List<FullPuzzle> {
+        val entities = wordSearchPuzzleLocalDataSource.selectStartedUnfinishedFull()
 
         return entities.map { puzzle ->
             val id = puzzle.id

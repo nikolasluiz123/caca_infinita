@@ -14,7 +14,7 @@ interface WordSearchPuzzleRepository {
     suspend fun insertFull(puzzles: List<FullPuzzle>)
     suspend fun getPuzzleBy(id: String): WordSearchPuzzle
     suspend fun getFullPuzzlesByIds(ids: List<String>): List<FullPuzzle>
-    suspend fun getUnfinishedFullPuzzles(): List<FullPuzzle>
+    suspend fun getStartedUnfinishedFullPuzzles(): List<FullPuzzle>
     fun getAllPuzzles(config: PaginationConfig): Flow<PagingData<WordSearchPuzzleSummary>>
     fun getLastUnfinished(): Flow<String?>
     fun getNextPuzzleToPlay(): Flow<String?>

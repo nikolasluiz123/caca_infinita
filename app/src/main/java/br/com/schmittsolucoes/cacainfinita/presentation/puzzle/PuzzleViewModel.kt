@@ -116,6 +116,7 @@ class PuzzleViewModel @Inject constructor(
 
             getHasWordsToSearchUseCase(puzzleId).collect { hasWords ->
                 if (!hasWords) {
+                    endSessionUseCase(puzzleId)
                     _isPuzzleFinished.value = true
                     snackbarManager.showSnackbar(context.getString(R.string.puzzle_finished_message))
                 }

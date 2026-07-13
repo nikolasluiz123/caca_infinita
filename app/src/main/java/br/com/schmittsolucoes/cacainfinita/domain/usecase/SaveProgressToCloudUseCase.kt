@@ -25,7 +25,7 @@ class SaveProgressToCloudUseCase(
         val recordIds = records.map { it.id }
         val recordPuzzles = wordSearchPuzzleRepository.getFullPuzzlesByIds(recordIds)
         
-        val unfinishedPuzzles = wordSearchPuzzleRepository.getUnfinishedFullPuzzles()
+        val unfinishedPuzzles = wordSearchPuzzleRepository.getStartedUnfinishedFullPuzzles()
         val allPuzzles = (recordPuzzles + unfinishedPuzzles).distinctBy { it.puzzle.id }
 
         val progress = GameProgress(

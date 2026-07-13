@@ -32,9 +32,11 @@ interface WordSearchPuzzleRoomDAO: WordSearchPuzzleLocalDataSource, RoomLocalDat
         select * from word_search_puzzle
         where exists (
             select 1 from word where word.puzzle_id = word_search_puzzle.id and word.found_date is null
+        ) and exists (
+            select 1 from puzzle_session where puzzle_session.puzzle_id = word_search_puzzle.id
         )
     """)
-    override suspend fun selectUnfinishedFull(): List<WordSearchPuzzleEntity>
+    override suspend fun selectStartedUnfinishedFull(): List<WordSearchPuzzleEntity>
 
     @Query("""
         select puzzle.id 

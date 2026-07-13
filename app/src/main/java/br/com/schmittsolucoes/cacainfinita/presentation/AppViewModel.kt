@@ -43,10 +43,10 @@ class AppViewModel @Inject constructor(
 
     init {
         launch {
-//            playGamesManager.initialize()
+            playGamesManager.initialize()
             pdfTextExtractorManager.initialize(application)
 
-//            syncCloudProgressUseCase()
+            syncCloudProgressUseCase()
             createUserIfNotExistsUseCase()
 
             _isInitializing.value = false

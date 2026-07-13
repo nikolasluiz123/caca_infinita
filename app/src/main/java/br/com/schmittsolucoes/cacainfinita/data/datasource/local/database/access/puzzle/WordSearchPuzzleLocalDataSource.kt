@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 interface WordSearchPuzzleLocalDataSource: EntityLocalDataSource<WordSearchPuzzleEntity> {
     suspend fun selectById(id: String): WordSearchPuzzleEntity
     suspend fun selectAllFull(): List<WordSearchPuzzleEntity>
-    suspend fun selectUnfinishedFull(): List<WordSearchPuzzleEntity>
+    suspend fun selectStartedUnfinishedFull(): List<WordSearchPuzzleEntity>
     fun selectAll(): PagingSource<Int, WordSearchPuzzleWithStats>
     fun selectLastUnfinished(): Flow<String?>
     fun selectNextPuzzleToPlay(): Flow<String?>
