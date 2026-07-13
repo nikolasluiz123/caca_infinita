@@ -9,9 +9,7 @@ import com.google.android.gms.games.snapshot.SnapshotMetadataChange
 import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class GooglePlayGamesRemoteDataSource @Inject constructor(
     private val activityProvider: ActivityProvider
 ) : GameSnapshotRemoteDataSource {
