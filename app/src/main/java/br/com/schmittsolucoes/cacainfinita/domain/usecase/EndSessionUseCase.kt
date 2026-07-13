@@ -13,7 +13,7 @@ class EndSessionUseCase(
         puzzleSessionRepository.getActualSessionBy(puzzleId)?.let { actualSession ->
             val endedSession = actualSession.copy(endedAt = Instant.now())
             puzzleSessionRepository.save(endedSession)
-            saveProgressToCloudUseCase()
+//            saveProgressToCloudUseCase()
         }
     }
 }
