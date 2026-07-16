@@ -12,4 +12,7 @@ data class UserEntity(
     override val id: String = Uuid.random().toString(),
     val experience: Long,
     val level: Long,
+    val puzzlesCompleted: Long = 0,
+    val totalWordsFound: Long = 0,
+    val fastestFirstWordMs: Long? = null
 ): UniqueEntity

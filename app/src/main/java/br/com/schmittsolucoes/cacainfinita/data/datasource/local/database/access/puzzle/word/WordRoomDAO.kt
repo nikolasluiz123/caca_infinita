@@ -16,6 +16,9 @@ interface WordRoomDAO: WordLocalDataSource, RoomLocalDataSource<WordEntity> {
     override suspend fun selectCountWords(puzzleId: String): Long
 
     @Query("select count(id) from word where puzzle_id = :puzzleId and found_date is not null")
+    override suspend fun selectCountFoundWords(puzzleId: String): Long
+
+    @Query("select count(id) from word where puzzle_id = :puzzleId and found_date is not null")
     override fun selectCountFoundWordsObservable(puzzleId: String): Flow<Long>
 
     @Query("select count(id) from word where puzzle_id = :puzzleId")

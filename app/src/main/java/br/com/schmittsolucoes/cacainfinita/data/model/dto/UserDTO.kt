@@ -6,5 +6,8 @@ import kotlinx.serialization.Serializable
 data class UserDTO(
     val id: String,
     val experience: Long,
-    val level: Long
+    val level: Long,
+    val puzzlesCompleted: Long = 0,
+    val totalWordsFound: Long = 0,
+    val fastestFirstWordMs: Long? = null
 )

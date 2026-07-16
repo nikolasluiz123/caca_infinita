@@ -18,8 +18,17 @@ object DatabaseMigrations {
         }
     }
 
+    val MIGRATION_3_4 = object : Migration(3, 4) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE user ADD COLUMN puzzlesCompleted INTEGER NOT NULL DEFAULT 0")
+            db.execSQL("ALTER TABLE user ADD COLUMN totalWordsFound INTEGER NOT NULL DEFAULT 0")
+            db.execSQL("ALTER TABLE user ADD COLUMN fastestFirstWordMs INTEGER")
+        }
+    }
+
     fun getAll(): Array<Migration> = arrayOf(
         MIGRATION_1_2,
-        MIGRATION_2_3
+        MIGRATION_2_3,
+        MIGRATION_3_4
     )
 }

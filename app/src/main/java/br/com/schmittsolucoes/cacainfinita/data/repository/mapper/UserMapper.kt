@@ -7,37 +7,55 @@ import br.com.schmittsolucoes.cacainfinita.domain.model.User
 fun User.toEntity() = UserEntity(
     id = id,
     experience = actualExperience,
-    level = level
+    level = level,
+    puzzlesCompleted = puzzlesCompleted,
+    totalWordsFound = totalWordsFound,
+    fastestFirstWordMs = fastestFirstWordMs
 )
 
 fun UserEntity.toDomain(maxLevelExperience: Long) = User(
     id = id,
     actualExperience = experience,
     maxLevelExperience = maxLevelExperience,
-    level = level
+    level = level,
+    puzzlesCompleted = puzzlesCompleted,
+    totalWordsFound = totalWordsFound,
+    fastestFirstWordMs = fastestFirstWordMs
 )
 
 fun User.toDTO() = UserDTO(
     id = id,
     experience = actualExperience,
-    level = level
+    level = level,
+    puzzlesCompleted = puzzlesCompleted,
+    totalWordsFound = totalWordsFound,
+    fastestFirstWordMs = fastestFirstWordMs
 )
 
 fun UserDTO.toDomain(maxLevelExperience: Long) = User(
     id = id,
     actualExperience = experience,
     maxLevelExperience = maxLevelExperience,
-    level = level
+    level = level,
+    puzzlesCompleted = puzzlesCompleted,
+    totalWordsFound = totalWordsFound,
+    fastestFirstWordMs = fastestFirstWordMs
 )
 
 fun UserEntity.toDTO() = UserDTO(
     id = id,
     experience = experience,
-    level = level
+    level = level,
+    puzzlesCompleted = puzzlesCompleted,
+    totalWordsFound = totalWordsFound,
+    fastestFirstWordMs = fastestFirstWordMs
 )
 
 fun UserDTO.toEntity() = UserEntity(
     id = id,
     experience = experience,
-    level = level
+    level = level,
+    puzzlesCompleted = puzzlesCompleted,
+    totalWordsFound = totalWordsFound,
+    fastestFirstWordMs = fastestFirstWordMs
 )

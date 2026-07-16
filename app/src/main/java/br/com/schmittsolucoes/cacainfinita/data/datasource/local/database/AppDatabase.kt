@@ -15,7 +15,7 @@ import br.com.schmittsolucoes.cacainfinita.data.model.converters.DurationConvert
 import br.com.schmittsolucoes.cacainfinita.data.model.converters.InstantConverter
 
 @Database(
-    version = 3,
+    version = 4,
     entities = [
         WordSearchPuzzleEntity::class, WordEntity::class, UserEntity::class, PuzzleSessionEntity::class
     ],

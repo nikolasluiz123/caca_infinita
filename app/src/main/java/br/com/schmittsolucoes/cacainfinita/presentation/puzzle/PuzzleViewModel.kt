@@ -116,7 +116,7 @@ class PuzzleViewModel @Inject constructor(
 
             getHasWordsToSearchUseCase(puzzleId).collect { hasWords ->
                 if (!hasWords) {
-                    endSessionUseCase(puzzleId)
+                    endSessionUseCase(puzzleId, isFinished = true)
                     _isPuzzleFinished.value = true
                     snackbarManager.showSnackbar(context.getString(R.string.puzzle_finished_message))
                 }
@@ -137,7 +137,7 @@ class PuzzleViewModel @Inject constructor(
         selectedWord?.let { word ->
             if (word.foundDate == null) {
                 launch {
-                    val xpGained = updateFoundWordUseCase(word)
+                    val xpGained = updateFoundWordUseCase(word, uiState.value.elapsedTime)
                     val newAnimation = XpAnimationState(id = System.currentTimeMillis(), amount = xpGained)
                     _xpAnimations.value += newAnimation
                 }

@@ -20,6 +20,10 @@ class WordRepositoryImpl @Inject constructor(
         return wordLocalDataSource.selectCountWords(puzzleId)
     }
 
+    override suspend fun getCountFoundWords(puzzleId: String): Long {
+        return wordLocalDataSource.selectCountFoundWords(puzzleId)
+    }
+
     override suspend fun getAllWordsBy(puzzleId: String): List<Word> {
         return wordLocalDataSource.selectAllBy(puzzleId).map { it.toDomain() }
     }

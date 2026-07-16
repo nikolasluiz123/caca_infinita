@@ -18,8 +18,12 @@ class CreateUserIfNotExistsUseCase(
                 id = Uuid.random().toString(),
                 actualExperience = 0L,
                 maxLevelExperience = getNextUserLevelUseCase(level),
-                level = level
+                level = level,
+                puzzlesCompleted = 0,
+                totalWordsFound = 0,
+                fastestFirstWordMs = null
             )
+
             userRepository.save(defaultUser)
         }
     }

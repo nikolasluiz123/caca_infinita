@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface WordRepository {
     suspend fun updateWord(word: Word)
     suspend fun getCountWords(puzzleId: String): Long
+    suspend fun getCountFoundWords(puzzleId: String): Long
     suspend fun getAllWordsBy(puzzleId: String): List<Word>
 
     fun getCountWordsObservable(puzzleId: String): Flow<Long>

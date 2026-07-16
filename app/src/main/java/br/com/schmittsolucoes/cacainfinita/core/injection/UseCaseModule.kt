@@ -4,13 +4,13 @@ import android.net.Uri
 import br.com.schmittsolucoes.cacainfinita.core.database.transaction.DatabaseTransaction
 import br.com.schmittsolucoes.cacainfinita.domain.calculator.GridDimensionCalculator
 import br.com.schmittsolucoes.cacainfinita.domain.generator.PuzzleGenerator
-import br.com.schmittsolucoes.cacainfinita.domain.manager.FileManager
+import br.com.schmittsolucoes.cacainfinita.domain.manager.AchievementsManager
+import br.com.schmittsolucoes.cacainfinita.domain.manager.PlayGamesManager
 import br.com.schmittsolucoes.cacainfinita.domain.processor.input.InputProcessor
 import br.com.schmittsolucoes.cacainfinita.domain.processor.language.LanguageIdentifierProcessor
 import br.com.schmittsolucoes.cacainfinita.domain.processor.pipeline.LanguageIdentifierProcessorPipeline
 import br.com.schmittsolucoes.cacainfinita.domain.processor.pipeline.TextProcessorPipeline
 import br.com.schmittsolucoes.cacainfinita.domain.provider.DeviceDimensionsProvider
-import br.com.schmittsolucoes.cacainfinita.domain.manager.PlayGamesManager
 import br.com.schmittsolucoes.cacainfinita.domain.repository.GameSnapshotRepository
 import br.com.schmittsolucoes.cacainfinita.domain.repository.PuzzleSessionRepository
 import br.com.schmittsolucoes.cacainfinita.domain.repository.UserRepository
@@ -40,6 +40,9 @@ import br.com.schmittsolucoes.cacainfinita.domain.usecase.StartSessionUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.SyncCloudProgressUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.UpdateFoundWordUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.UpdateUserExperienceUseCase
+import br.com.schmittsolucoes.cacainfinita.domain.usecase.achievement.UpdateAgilityAchievementUseCase
+import br.com.schmittsolucoes.cacainfinita.domain.usecase.achievement.UpdatePuzzleCompletionAchievementUseCase
+import br.com.schmittsolucoes.cacainfinita.domain.usecase.achievement.UpdateWordsFoundAchievementUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -180,9 +183,14 @@ object UseCaseModule {
     @Provides
     fun provideEndSessionUseCase(
         repository: PuzzleSessionRepository,
-        saveProgressToCloudUseCase: SaveProgressToCloudUseCase
+        saveProgressToCloudUseCase: SaveProgressToCloudUseCase,
+        updatePuzzleCompletionAchievementUseCase: UpdatePuzzleCompletionAchievementUseCase
     ): EndSessionUseCase {
-        return EndSessionUseCase(repository, saveProgressToCloudUseCase)
+        return EndSessionUseCase(
+            repository,
+            saveProgressToCloudUseCase,
+            updatePuzzleCompletionAchievementUseCase
+        )
     }
 
     @Provides
@@ -237,9 +245,17 @@ object UseCaseModule {
     fun provideUpdateFoundWordUseCase(
         wordRepository: WordRepository,
         updateUserExperienceUseCase: UpdateUserExperienceUseCase,
+        updateAgilityAchievementUseCase: UpdateAgilityAchievementUseCase,
+        updateWordsFoundAchievementUseCase: UpdateWordsFoundAchievementUseCase,
         transaction: DatabaseTransaction
     ): UpdateFoundWordUseCase {
-        return UpdateFoundWordUseCase(wordRepository, updateUserExperienceUseCase, transaction)
+        return UpdateFoundWordUseCase(
+            wordRepository,
+            updateUserExperienceUseCase,
+            updateAgilityAchievementUseCase,
+            updateWordsFoundAchievementUseCase,
+            transaction
+        )
     }
 
     @Provides
@@ -254,6 +270,47 @@ object UseCaseModule {
             userRepository,
             getUserExperienceByFoundWordUseCase,
             getNextUserLevelUseCase
+        )
+    }
+
+    @Provides
+    fun provideUpdatePuzzleCompletionAchievementUseCase(
+        getUserUseCase: GetUserUseCase,
+        userRepository: UserRepository,
+        achievementsManager: AchievementsManager
+    ): UpdatePuzzleCompletionAchievementUseCase {
+        return UpdatePuzzleCompletionAchievementUseCase(
+            getUserUseCase,
+            userRepository,
+            achievementsManager
+        )
+    }
+
+    @Provides
+    fun provideUpdateAgilityAchievementUseCase(
+        getUserUseCase: GetUserUseCase,
+        userRepository: UserRepository,
+        wordRepository: WordRepository,
+        achievementsManager: AchievementsManager
+    ): UpdateAgilityAchievementUseCase {
+        return UpdateAgilityAchievementUseCase(
+            getUserUseCase,
+            userRepository,
+            wordRepository,
+            achievementsManager
+        )
+    }
+
+    @Provides
+    fun provideUpdateWordsFoundAchievementUseCase(
+        getUserUseCase: GetUserUseCase,
+        userRepository: UserRepository,
+        achievementsManager: AchievementsManager
+    ): UpdateWordsFoundAchievementUseCase {
+        return UpdateWordsFoundAchievementUseCase(
+            getUserUseCase,
+            userRepository,
+            achievementsManager
         )
     }
 }

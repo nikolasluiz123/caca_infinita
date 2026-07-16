@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface WordLocalDataSource: EntityLocalDataSource<WordEntity> {
     suspend fun selectCountWords(puzzleId: String): Long
+    suspend fun selectCountFoundWords(puzzleId: String): Long
     suspend fun selectAllBy(puzzleId: String): List<WordEntity>
 
     fun selectCountWordsObservable(puzzleId: String): Flow<Long>

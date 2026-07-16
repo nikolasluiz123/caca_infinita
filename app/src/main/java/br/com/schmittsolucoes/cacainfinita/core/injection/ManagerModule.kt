@@ -1,6 +1,7 @@
 package br.com.schmittsolucoes.cacainfinita.core.injection
 
 import br.com.schmittsolucoes.cacainfinita.data.analytics.FirebaseAnalyticsManager
+import br.com.schmittsolucoes.cacainfinita.data.manager.AchievementsManagerImpl
 import br.com.schmittsolucoes.cacainfinita.data.manager.CrashlyticsExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.data.manager.FileHandler
 import br.com.schmittsolucoes.cacainfinita.data.manager.LoadingManagerImpl
@@ -8,6 +9,7 @@ import br.com.schmittsolucoes.cacainfinita.data.manager.PDFBoxTextExtractorManag
 import br.com.schmittsolucoes.cacainfinita.data.manager.PlayGamesManagerImpl
 import br.com.schmittsolucoes.cacainfinita.data.manager.SnackbarManagerImpl
 import br.com.schmittsolucoes.cacainfinita.data.manager.TutorialManagerImpl
+import br.com.schmittsolucoes.cacainfinita.domain.manager.AchievementsManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.FileManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.LoadingManager
@@ -53,4 +55,8 @@ abstract class ManagerModule {
     @Binds
     @Singleton
     abstract fun bindPlayGamesManager(impl: PlayGamesManagerImpl): PlayGamesManager
+
+    @Binds
+    @Singleton
+    abstract fun bindAchievementsManager(impl: AchievementsManagerImpl): AchievementsManager
 }
