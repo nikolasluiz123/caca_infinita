@@ -27,10 +27,14 @@ import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.show
 import br.com.schmittsolucoes.cacainfinita.presentation.core.RequestAllPermissions
 import br.com.schmittsolucoes.cacainfinita.presentation.home.HomeUIState
 import br.com.schmittsolucoes.cacainfinita.presentation.home.HomeViewModel
+import br.com.schmittsolucoes.cacainfinita.presentation.home.composables.components.AchievementsSection
 import br.com.schmittsolucoes.cacainfinita.presentation.home.composables.components.ContinueGameButton
 import br.com.schmittsolucoes.cacainfinita.presentation.home.composables.components.PersonalRecordsSection
 import br.com.schmittsolucoes.cacainfinita.presentation.home.composables.components.UserLevelStatusCard
 import br.com.schmittsolucoes.cacainfinita.presentation.theme.CacaInfinitaTheme
+import br.com.schmittsolucoes.cacainfinita.domain.model.PuzzleRecord
+import br.com.schmittsolucoes.cacainfinita.domain.model.User
+import kotlin.time.Duration.Companion.minutes
 
 @Composable
 fun HomeScreen(
@@ -96,6 +100,7 @@ fun HomeScreen(
 
             PersonalRecordsSection(
                 records = state.records,
+                user = state.user,
                 modifier = Modifier.showcaseTarget(ShowcaseIds.PERSONAL_RECORDS_SECTION)
             )
 
@@ -117,5 +122,32 @@ fun HomeScreen(
 fun HomeScreenPreview() {
     CacaInfinitaTheme {
         HomeScreen()
+    }
+}
+
+@Preview(name = "With Records Light")
+@Preview(name = "With Records Dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun HomeScreenWithRecordsPreview() {
+    CacaInfinitaTheme {
+        HomeScreen(
+            state = HomeUIState(
+                user = User(
+                    id = "1",
+                    actualExperience = 500,
+                    maxLevelExperience = 1000,
+                    level = 5,
+                    puzzlesCompleted = 10,
+                    totalWordsFound = 150,
+                    fastestFirstWordMs = 2000
+                ),
+                records = listOf(
+                    PuzzleRecord("1", "Puzzle 1", 15, 5.minutes),
+                    PuzzleRecord("2", "Puzzle 2", 20, 10.minutes),
+                    PuzzleRecord("3", "Puzzle 3", 12, 4.minutes)
+                ),
+                puzzleIdToPlay = "1"
+            )
+        )
     }
 }

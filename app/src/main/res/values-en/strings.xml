@@ -5,6 +5,9 @@
     <string name="user_level_status_card_xp_to_next_level">%d / %d XP</string>
     <string name="continue_game">Continue Game</string>
     <string name="new_game">New Game</string>
+    <string name="achievements_resolved">SOLVED</string>
+    <string name="achievements_words">WORDS</string>
+    <string name="achievements_first_word">1ST WORD</string>
     <string name="personal_records">Personal Records</string>
     <string name="words_label">%d words</string>
     <string name="home_tab">Home</string>

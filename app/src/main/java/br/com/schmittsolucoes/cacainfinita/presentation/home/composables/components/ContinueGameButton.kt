@@ -35,7 +35,7 @@ fun ContinueGameButton(
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
-            .height(64.dp),
+            .height(50.dp),
         shape = RoundedCornerShape(32.dp),
         elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp)
     ) {

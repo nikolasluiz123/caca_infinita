@@ -62,7 +62,7 @@ fun UserLevelStatusCard(
                         )
                     )
                 }
-                .padding(24.dp)
+                .padding(18.dp)
         ) {
             Column {
                 Text(
@@ -72,7 +72,7 @@ fun UserLevelStatusCard(
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = stringResource(R.string.user_level_status_card_level_label, level),
-                    style = MaterialTheme.typography.displayMedium.copy(
+                    style = MaterialTheme.typography.displaySmall.copy(
                         fontWeight = FontWeight.ExtraBold,
                     )
                 )

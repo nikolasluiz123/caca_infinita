@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.schmittsolucoes.cacainfinita.R
 import br.com.schmittsolucoes.cacainfinita.domain.model.PuzzleRecord
+import br.com.schmittsolucoes.cacainfinita.domain.model.User
 import br.com.schmittsolucoes.cacainfinita.presentation.formatters.formatToClock
 import br.com.schmittsolucoes.cacainfinita.presentation.theme.Bronze
 import br.com.schmittsolucoes.cacainfinita.presentation.theme.CacaInfinitaTheme
@@ -40,13 +41,23 @@ import kotlin.time.Duration.Companion.seconds
 @Composable
 fun PersonalRecordsSection(
     records: List<PuzzleRecord>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    user: User?
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = stringResource(R.string.personal_records),
             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Medium)
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        AchievementsSection(
+            puzzlesCompleted = user?.puzzlesCompleted ?: 0,
+            totalWordsFound = user?.totalWordsFound ?: 0,
+            fastestFirstWordMs = user?.fastestFirstWordMs
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
 
         if (records.isEmpty()) {
@@ -165,11 +176,21 @@ fun PersonalRecordsSectionPreview() {
                     PuzzleRecord("1", "Exploração Submarina", 15, 272.seconds),
                     PuzzleRecord("2", "Cidades do Mundo", 12, 315.seconds),
                     PuzzleRecord("3", "Animais Selvagens", 10, 230.seconds)
+                ),
+                user = User(
+                    id = "1",
+                    actualExperience = 500,
+                    maxLevelExperience = 1000,
+                    level = 5,
+                    puzzlesCompleted = 10,
+                    totalWordsFound = 150,
+                    fastestFirstWordMs = 2000
                 )
             )
             Spacer(modifier = Modifier.height(32.dp))
             PersonalRecordsSection(
-                records = emptyList()
+                records = emptyList(),
+                user = null
             )
         }
     }
