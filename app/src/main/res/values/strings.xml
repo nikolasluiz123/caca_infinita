@@ -45,6 +45,7 @@
 
     <string name="error_no_text_found">Não foi possível encontrar nenhum texto para gerar o caça-palavras. Tente outro arquivo ou imagem.</string>
     <string name="error_no_valid_words_found">Não encontramos palavras válidas o suficiente para gerar o caça-palavras.</string>
+    <string name="error_no_puzzles_generated">Não conseguimos encaixar as palavras encontradas para criar um desafio. Tente um texto maior ou com palavras diferentes.</string>
     <string name="error_unexpected">Ocorreu um erro inesperado. Tente novamente.</string>
     <string name="error_dialog_title">Erro</string>
     <string name="error_dialog_ok">OK</string>

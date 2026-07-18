@@ -1,6 +1,7 @@
 package br.com.schmittsolucoes.cacainfinita.data.generator
 
 import android.util.Log
+import br.com.schmittsolucoes.cacainfinita.domain.exception.NoPuzzlesGeneratedException
 import br.com.schmittsolucoes.cacainfinita.domain.generator.PuzzleGenerator
 import br.com.schmittsolucoes.cacainfinita.domain.model.GridDimensions
 import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.Direction
@@ -19,30 +20,28 @@ class HeuristicPuzzleGenerator @Inject constructor() : PuzzleGenerator {
 
     companion object {
         /**
-         * Controla a densidade de palavras proporcionalmente ao tamanho da grade (Area / Divisor).
-         * - Valor mais baixo: Aumenta a densidade, tentando encaixar mais palavras em menos espaço (mais difícil).
-         * - Valor mais alto: Diminui a densidade, deixando a grade mais "espaçosa" e fácil.
+         * Fator de densidade que define o alvo de palavras proporcionalmente à área da grade.
+         * Ex: 0.10 significa que tentaremos encaixar 1 palavra para cada 10 células (10% da área).
          */
-        private const val AREA_DIVISOR_FOR_WORD_COUNT = 10
+        private const val DENSITY_FACTOR = 0.10
 
         /**
-         * Define a quantidade mínima de palavras que uma grade deve conter.
-         * - Valor mais alto: Garante um desafio mínimo mesmo em grades pequenas, mas pode dificultar o encaixe.
-         * - Valor mais baixo: Permite a geração de grades mais simples e rápidas de resolver.
+         * Define o limite absoluto mínimo de palavras por grade, independente do tamanho.
+         * Garante que o jogo não seja trivial demais em grades pequenas.
          */
-        private const val MIN_WORDS_PER_PUZZLE = 12
+        private const val ABSOLUTE_MIN_WORDS = 6
 
         /**
          * Define o teto máximo de palavras por grade para evitar poluição visual.
-         * - Valor mais alto: Permite grades extremamente densas e complexas em dispositivos grandes.
-         * - Valor mais baixo: Mantém o jogo mais leve e evita que a busca exaustiva demore demais.
          */
-        private const val MAX_WORDS_PER_PUZZLE = 20
+        private const val ABSOLUTE_MAX_WORDS = 20
     }
 
     /**
      * Gera uma lista de resultados de quebra-cabeça ([PuzzleResult]) a partir de uma lista de palavras.
      * O processo tenta agrupar o máximo de palavras possível em cada grade, respeitando a densidade alvo.
+     * A geração é interrompida se não houver palavras suficientes para atingir o mínimo exigido ou
+     * se uma grade não conseguir comportar a quantidade mínima de palavras.
      *
      * @param words Lista de [IdentifiedWord] a serem inseridas nos caça-palavras.
      * @param dimensions Dimensões da grade (linhas e colunas).
@@ -57,27 +56,28 @@ class HeuristicPuzzleGenerator @Inject constructor() : PuzzleGenerator {
         val allWords = words.shuffled().toMutableList()
 
         val totalArea = dimensions.rows * dimensions.columns
-        val targetWordsPerPuzzle = (totalArea / AREA_DIVISOR_FOR_WORD_COUNT)
-            .coerceIn(MIN_WORDS_PER_PUZZLE, MAX_WORDS_PER_PUZZLE)
+        val minWordsRequired = (totalArea * DENSITY_FACTOR).toInt()
+            .coerceIn(ABSOLUTE_MIN_WORDS, ABSOLUTE_MAX_WORDS)
 
-        while (allWords.isNotEmpty()) {
+        Log.d("DEBUG_PROCESS", "$tag: Área total: $totalArea, Mínimo exigido: $minWordsRequired")
+
+        while (allWords.size >= minWordsRequired) {
             val grid = Array(dimensions.rows) { CharArray(dimensions.columns) { ' ' } }
             val placedWords = mutableListOf<PlacedWord>()
-            val wordsToRemove = mutableListOf<IdentifiedWord>()
+            val currentWordsToRemove = mutableListOf<IdentifiedWord>()
 
             for (identifiedWord in allWords) {
-                if (placedWords.size >= targetWordsPerPuzzle) break
+                if (placedWords.size >= minWordsRequired) break
 
                 val wasPlacedSuccessfully = tryPlaceWord(identifiedWord, grid, dimensions, placedWords)
 
                 if (wasPlacedSuccessfully) {
-                    wordsToRemove.add(identifiedWord)
+                    currentWordsToRemove.add(identifiedWord)
                 }
             }
 
-            allWords.removeAll(wordsToRemove)
-
-            if (placedWords.isNotEmpty()) {
+            if (placedWords.size >= minWordsRequired) {
+                allWords.removeAll(currentWordsToRemove)
                 fillEmptySpaces(grid)
                 results.add(
                     PuzzleResult(
@@ -88,8 +88,13 @@ class HeuristicPuzzleGenerator @Inject constructor() : PuzzleGenerator {
                 )
                 Log.d("DEBUG_PROCESS", "$tag: Novo PuzzleResult gerado com ${placedWords.size} palavras")
             } else {
+                Log.d("DEBUG_PROCESS", "$tag: Falha ao atingir o mínimo de $minWordsRequired palavras. Interrompendo.")
                 break
             }
+        }
+
+        if (results.isEmpty()) {
+            throw NoPuzzlesGeneratedException()
         }
 
         return results

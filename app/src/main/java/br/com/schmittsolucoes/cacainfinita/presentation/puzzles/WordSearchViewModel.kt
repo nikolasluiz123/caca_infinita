@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import br.com.schmittsolucoes.cacainfinita.R
+import br.com.schmittsolucoes.cacainfinita.domain.exception.NoPuzzlesGeneratedException
 import br.com.schmittsolucoes.cacainfinita.domain.exception.NoTextFoundException
 import br.com.schmittsolucoes.cacainfinita.domain.exception.NoValidWordsException
 import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
@@ -104,6 +105,7 @@ class WordSearchViewModel @Inject constructor(
         return when (throwable) {
             is NoTextFoundException -> context.getString(R.string.error_no_text_found)
             is NoValidWordsException -> context.getString(R.string.error_no_valid_words_found)
+            is NoPuzzlesGeneratedException -> context.getString(R.string.error_no_puzzles_generated)
             else -> context.getString(R.string.error_unexpected)
         }
     }

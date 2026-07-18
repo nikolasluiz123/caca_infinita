@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import br.com.schmittsolucoes.cacainfinita.R
 import br.com.schmittsolucoes.cacainfinita.data.analyzer.frame.FrameAnalyzer
 import br.com.schmittsolucoes.cacainfinita.data.analyzer.frame.ImageProxyFrame
+import br.com.schmittsolucoes.cacainfinita.domain.exception.NoPuzzlesGeneratedException
 import br.com.schmittsolucoes.cacainfinita.domain.exception.NoTextFoundException
 import br.com.schmittsolucoes.cacainfinita.domain.exception.NoValidWordsException
 import br.com.schmittsolucoes.cacainfinita.domain.manager.ExceptionRecorderManager
@@ -107,6 +108,7 @@ class CameraViewModel @Inject constructor(
         return when (throwable) {
             is NoTextFoundException -> application.getString(R.string.error_no_text_found)
             is NoValidWordsException -> application.getString(R.string.error_no_valid_words_found)
+            is NoPuzzlesGeneratedException -> application.getString(R.string.error_no_puzzles_generated)
             else -> application.getString(R.string.error_unexpected)
         }
     }

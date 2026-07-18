@@ -45,6 +45,7 @@
 
     <string name="error_no_text_found">We couldn\'t find any text to generate the word search. Try another file or image.</string>
     <string name="error_no_valid_words_found">We didn\'t find enough valid words to generate the word search.</string>
+    <string name="error_no_puzzles_generated">We couldn\'t fit the found words to create a challenge. Try a longer text or different words.</string>
     <string name="error_unexpected">An unexpected error occurred. Please try again.</string>
     <string name="error_dialog_title">Error</string>
     <string name="error_dialog_ok">OK</string>
