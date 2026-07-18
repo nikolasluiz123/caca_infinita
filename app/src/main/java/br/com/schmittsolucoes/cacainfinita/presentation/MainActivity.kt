@@ -25,7 +25,9 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.google.android.play.core.review.ReviewManagerFactory
 import br.com.schmittsolucoes.cacainfinita.data.provider.ActivityProvider
+import br.com.schmittsolucoes.cacainfinita.domain.manager.AppReviewManager
 import br.com.schmittsolucoes.cacainfinita.presentation.components.ErrorDialog
 import br.com.schmittsolucoes.cacainfinita.presentation.components.LoadingOverlay
 import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseHost
@@ -45,6 +47,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var activityProvider: ActivityProvider
 
+    @Inject
+    lateinit var appReviewManager: AppReviewManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         enableEdgeToEdge()
@@ -63,6 +68,20 @@ class MainActivity : ComponentActivity() {
             val snackbarMessage by viewModel.snackbarMessage.collectAsStateWithLifecycle()
 
             val snackbarHostState = remember { SnackbarHostState() }
+            val reviewManager = remember { ReviewManagerFactory.create(this@MainActivity) }
+
+            LaunchedEffect(Unit) {
+                appReviewManager.reviewRequest.collect {
+                    val request = reviewManager.requestReviewFlow()
+
+                    request.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val reviewInfo = task.result
+                            reviewManager.launchReviewFlow(this@MainActivity, reviewInfo)
+                        }
+                    }
+                }
+            }
 
             LaunchedEffect(snackbarMessage) {
                 snackbarMessage?.let {

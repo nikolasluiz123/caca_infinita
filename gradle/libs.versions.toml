@@ -6,6 +6,7 @@ material = "1.14.0"
 mlkitText = "16.0.1"
 mlkitLanguageId = "17.0.6"
 camerax = "1.6.1"
+reviewKtx = "2.0.2"
 room = "2.8.4"
 kspVersion = "2.3.9"
 lifecycleRuntimeKtx = "2.11.0"
@@ -33,6 +34,7 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
+review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "reviewKtx" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }

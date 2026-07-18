@@ -163,6 +163,7 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
     implementation(libs.play.services.games.v2)
+    implementation(libs.review.ktx)
 
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 }

@@ -5,6 +5,7 @@ import br.com.schmittsolucoes.cacainfinita.core.database.transaction.DatabaseTra
 import br.com.schmittsolucoes.cacainfinita.domain.calculator.GridDimensionCalculator
 import br.com.schmittsolucoes.cacainfinita.domain.generator.PuzzleGenerator
 import br.com.schmittsolucoes.cacainfinita.domain.manager.AchievementsManager
+import br.com.schmittsolucoes.cacainfinita.domain.manager.AppReviewManager
 import br.com.schmittsolucoes.cacainfinita.domain.manager.PlayGamesManager
 import br.com.schmittsolucoes.cacainfinita.domain.processor.input.InputProcessor
 import br.com.schmittsolucoes.cacainfinita.domain.processor.language.LanguageIdentifierProcessor
@@ -277,12 +278,14 @@ object UseCaseModule {
     fun provideUpdatePuzzleCompletionAchievementUseCase(
         getUserUseCase: GetUserUseCase,
         userRepository: UserRepository,
-        achievementsManager: AchievementsManager
+        achievementsManager: AchievementsManager,
+        appReviewManager: AppReviewManager
     ): UpdatePuzzleCompletionAchievementUseCase {
         return UpdatePuzzleCompletionAchievementUseCase(
             getUserUseCase,
             userRepository,
-            achievementsManager
+            achievementsManager,
+            appReviewManager
         )
     }
 
