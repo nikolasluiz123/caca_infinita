@@ -29,7 +29,7 @@ class HeuristicPuzzleGenerator @Inject constructor() : PuzzleGenerator {
          * Define o limite absoluto mínimo de palavras por grade, independente do tamanho.
          * Garante que o jogo não seja trivial demais em grades pequenas.
          */
-        private const val ABSOLUTE_MIN_WORDS = 6
+        private const val ABSOLUTE_MIN_WORDS = 4
 
         /**
          * Define o teto máximo de palavras por grade para evitar poluição visual.
