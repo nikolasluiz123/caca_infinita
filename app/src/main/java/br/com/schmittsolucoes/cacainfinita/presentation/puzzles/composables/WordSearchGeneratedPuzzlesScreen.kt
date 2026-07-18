@@ -3,12 +3,16 @@ package br.com.schmittsolucoes.cacainfinita.presentation.puzzles.composables
 import android.content.res.Configuration
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -19,6 +23,7 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -142,19 +147,32 @@ fun WordSearchGeneratedPuzzlesScreen(
     var showAddBottomSheet by remember { mutableStateOf(value = false) }
     var showConfigBottomSheet by remember { mutableStateOf(value = false) }
     var selectedOption by remember { mutableStateOf<String?>(null) }
+    val gridState = rememberLazyGridState()
+
+    val isFabVisible by remember {
+        derivedStateOf {
+            gridState.firstVisibleItemIndex == 0 || !gridState.isScrollInProgress
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
             contentWindowInsets = WindowInsets(),
             floatingActionButton = {
-                FloatingActionButton(
-                    onClick = {
-                        onAddWordSearchClick()
-                        showAddBottomSheet = true
-                    },
-                    modifier = Modifier.showcaseTarget(ShowcaseIds.ADD_PUZZLE_FAB)
+                AnimatedVisibility(
+                    visible = isFabVisible,
+                    enter = scaleIn(),
+                    exit = scaleOut()
                 ) {
-                    Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = null)
+                    FloatingActionButton(
+                        onClick = {
+                            onAddWordSearchClick()
+                            showAddBottomSheet = true
+                        },
+                        modifier = Modifier.showcaseTarget(ShowcaseIds.ADD_PUZZLE_FAB)
+                    ) {
+                        Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = null)
+                    }
                 }
             }
         ) { paddingValues ->
@@ -165,9 +183,10 @@ fun WordSearchGeneratedPuzzlesScreen(
             ) {
                 PagedGrid(
                     items = puzzles,
+                    state = gridState,
                     columns = if (isExpanded) GridCells.Adaptive(400.dp) else GridCells.Fixed(1),
                     emptyContent = { EmptyWordSearchList() },
-                    contentPadding = PaddingValues(16.dp),
+                    contentPadding = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 80.dp),
                 ) { index, puzzle ->
                     puzzle?.let {
                         WordSearchItem(
