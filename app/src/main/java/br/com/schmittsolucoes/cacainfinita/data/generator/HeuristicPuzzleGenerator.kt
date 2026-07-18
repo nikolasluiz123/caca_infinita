@@ -191,8 +191,7 @@ class HeuristicPuzzleGenerator @Inject constructor() : PuzzleGenerator {
         var score = overlapScore * overlapWeight
 
         score += when (direction) {
-            Direction.HORIZONTAL -> 10
-            Direction.VERTICAL -> 5
+            Direction.HORIZONTAL, Direction.VERTICAL -> 3
             Direction.HORIZONTAL_REVERSE -> 25
             Direction.VERTICAL_REVERSE -> 20
             Direction.DIAGONAL_DOWN_RIGHT, Direction.DIAGONAL_UP_RIGHT -> 35
