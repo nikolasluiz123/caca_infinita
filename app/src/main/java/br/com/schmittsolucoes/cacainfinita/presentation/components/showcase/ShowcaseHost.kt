@@ -9,9 +9,11 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -110,6 +112,8 @@ fun ShowcaseHost(
             }
 
             if (targetRect != Rect.Zero) {
+                val safeDrawing = WindowInsets.safeDrawing
+                
                 ShowcaseTooltip(
                     text = currentStep.text,
                     modifier = Modifier
@@ -117,27 +121,20 @@ fun ShowcaseHost(
                         .padding(horizontal = 32.dp)
                         .layout { measurable, constraints ->
                             val placeable = measurable.measure(constraints)
-                            val tooltipHeight = placeable.height
 
-                            val spaceAbove = targetRect.top
-                            val spaceBelow = constraints.maxHeight - targetRect.bottom
-
-                            val y = if (spaceBelow >= tooltipHeight + padding * 4) {
-                                targetRect.bottom + padding * 3
-                            } else if (spaceAbove >= tooltipHeight + padding * 4) {
-                                targetRect.top - tooltipHeight - padding * 3
-                            } else {
-                                if (spaceBelow > spaceAbove) {
-                                    (constraints.maxHeight - tooltipHeight - padding * 3).coerceAtLeast(0f)
-                                } else {
-                                    (padding * 3).coerceAtMost(constraints.maxHeight - tooltipHeight - padding * 3)
-                                }
-                            }
+                            val y = calculateTooltipY(
+                                targetRect = targetRect,
+                                tooltipHeight = placeable.height,
+                                containerHeight = constraints.maxHeight,
+                                safeTopInset = safeDrawing.getTop(this).toFloat(),
+                                safeBottomInset = safeDrawing.getBottom(this).toFloat(),
+                                paddingPx = padding
+                            )
 
                             layout(placeable.width, placeable.height) {
                                 placeable.placeRelative(
                                     x = (constraints.maxWidth - placeable.width) / 2,
-                                    y = y.toInt()
+                                    y = y
                                 )
                             }
                         }
@@ -145,6 +142,44 @@ fun ShowcaseHost(
             }
         }
     }
+}
+
+private fun calculateTooltipY(
+    targetRect: Rect,
+    tooltipHeight: Int,
+    containerHeight: Int,
+    safeTopInset: Float,
+    safeBottomInset: Float,
+    paddingPx: Float
+): Int {
+    val usableBottom = containerHeight - safeBottomInset
+
+    val spaceAbove = (targetRect.top - safeTopInset).coerceAtLeast(0f)
+    val spaceBelow = (usableBottom - targetRect.bottom).coerceAtLeast(0f)
+
+    val requiredSpace = tooltipHeight + paddingPx * 4
+
+    val canPlaceBelow = spaceBelow >= requiredSpace
+    val canPlaceAbove = spaceAbove >= requiredSpace
+
+    val positionBelowTarget = targetRect.bottom + paddingPx * 3
+    val positionAboveTarget = targetRect.top - tooltipHeight - paddingPx * 3
+
+    val y = when {
+        canPlaceBelow -> positionBelowTarget
+        canPlaceAbove -> positionAboveTarget
+        else -> {
+            val hasMoreSpaceBelowThanAbove = spaceBelow > spaceAbove
+
+            if (hasMoreSpaceBelowThanAbove) {
+                (usableBottom - tooltipHeight - paddingPx * 3).coerceAtLeast(safeTopInset)
+            } else {
+                (safeTopInset + paddingPx * 3).coerceAtMost(usableBottom - tooltipHeight)
+            }
+        }
+    }
+    
+    return y.toInt()
 }
 
 @Composable
