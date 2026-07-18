@@ -5,16 +5,18 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -22,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,7 +36,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.schmittsolucoes.cacainfinita.R
 import br.com.schmittsolucoes.cacainfinita.domain.model.WordSearchPuzzleSummary
 import br.com.schmittsolucoes.cacainfinita.presentation.components.ErrorDialog
-import br.com.schmittsolucoes.cacainfinita.presentation.components.PagedList
+import br.com.schmittsolucoes.cacainfinita.presentation.components.PagedGrid
 import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseIds
 import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.showcaseTarget
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.WordSearchAnalytics
@@ -47,7 +50,9 @@ import br.com.schmittsolucoes.cacainfinita.presentation.theme.CacaInfinitaTheme
 import br.com.schmittsolucoes.cacainfinita.domain.model.result.puzzle.PuzzleGenerationConfig
 import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.LanguageSelection
 import br.com.schmittsolucoes.cacainfinita.domain.model.enumeration.GridOrientation
+import androidx.activity.ComponentActivity
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun WordSearchGeneratedPuzzlesScreen(
     viewModel: WordSearchViewModel,
@@ -56,6 +61,11 @@ fun WordSearchGeneratedPuzzlesScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val puzzles = state.puzzles.collectAsLazyPagingItems()
+
+    val context = LocalContext.current
+    val windowSizeClass = if (context is ComponentActivity) {
+        calculateWindowSizeClass(context)
+    } else null
 
     LifecycleEventEffect(Lifecycle.Event.ON_START) {
         viewModel.startTutorialIfNeeded(puzzles.itemCount)
@@ -87,6 +97,8 @@ fun WordSearchGeneratedPuzzlesScreen(
 
     WordSearchGeneratedPuzzlesScreen(
         state = state,
+        isExpanded = windowSizeClass?.widthSizeClass == WindowWidthSizeClass.Expanded ||
+                windowSizeClass?.widthSizeClass == WindowWidthSizeClass.Medium,
         onLoadImageClick = { config ->
             pendingConfig = config
             imagePickerLauncher.launch(arrayOf("image/*"))
@@ -114,6 +126,7 @@ fun WordSearchGeneratedPuzzlesScreen(
 @Composable
 fun WordSearchGeneratedPuzzlesScreen(
     state: WordSearchUiState,
+    isExpanded: Boolean = false,
     onOpenCameraClick: (LanguageSelection, GridOrientation) -> Unit = { _, _ -> },
     onLoadImageClick: (PuzzleGenerationConfig) -> Unit = {},
     onLoadPdfClick: (PuzzleGenerationConfig) -> Unit = {},
@@ -150,8 +163,9 @@ fun WordSearchGeneratedPuzzlesScreen(
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                PagedList(
+                PagedGrid(
                     items = puzzles,
+                    columns = if (isExpanded) GridCells.Adaptive(400.dp) else GridCells.Fixed(1),
                     emptyContent = { EmptyWordSearchList() },
                     contentPadding = PaddingValues(16.dp),
                 ) { index, puzzle ->
@@ -163,7 +177,6 @@ fun WordSearchGeneratedPuzzlesScreen(
                             statusModifier = if (index == 0) Modifier.showcaseTarget(ShowcaseIds.PUZZLE_ITEM_STATUS) else Modifier,
                             deleteModifier = if (index == 0) Modifier.showcaseTarget(ShowcaseIds.PUZZLE_ITEM_DELETE) else Modifier
                         )
-                        Spacer(modifier = Modifier.height(12.dp))
                     }
                 }
             }
@@ -218,11 +231,24 @@ fun WordSearchGeneratedPuzzlesScreen(
 
 @Preview(name = "Light Mode")
 @Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(name = "Expanded", widthDp = 800)
 @Composable
 private fun WordSearchGeneratedPuzzlesScreenPreview() {
     CacaInfinitaTheme {
         WordSearchGeneratedPuzzlesScreen(
             state = WordSearchUiState(),
+            isExpanded = false
+        )
+    }
+}
+
+@Preview(name = "Expanded Content", widthDp = 800)
+@Composable
+private fun WordSearchGeneratedPuzzlesScreenExpandedPreview() {
+    CacaInfinitaTheme {
+        WordSearchGeneratedPuzzlesScreen(
+            state = WordSearchUiState(),
+            isExpanded = true
         )
     }
 }
