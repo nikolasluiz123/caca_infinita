@@ -47,6 +47,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         activityProvider.updateActivity(this)
@@ -55,7 +56,6 @@ class MainActivity : ComponentActivity() {
             viewModel.isInitializing.value
         }
 
-        enableEdgeToEdge()
         setContent {
             val appErrorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
             val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
