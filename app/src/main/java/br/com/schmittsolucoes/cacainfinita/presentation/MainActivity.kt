@@ -129,6 +129,7 @@ fun App(
     val isWordSearchRoute = destination?.hasRoute<WordSearchGeneratedPuzzlesRoute>() ?: false
 
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         bottomBar = {
             if (isHomeRoute || isWordSearchRoute) {
                 HomeBottomNavBar(
@@ -148,6 +149,7 @@ fun App(
     ) { paddingValues ->
         Box(
             modifier = Modifier
+                .fillMaxSize()
                 .padding(paddingValues)
                 .consumeWindowInsets(paddingValues)
         ) {

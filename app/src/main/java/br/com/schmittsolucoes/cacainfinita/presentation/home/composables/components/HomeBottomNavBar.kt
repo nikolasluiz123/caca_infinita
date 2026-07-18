@@ -1,6 +1,11 @@
 package br.com.schmittsolucoes.cacainfinita.presentation.home.composables.components
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -27,8 +32,10 @@ fun HomeBottomNavBar(
 ) {
     NavigationBar(
         modifier = modifier
+            .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal))
             .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
             .showcaseTarget(ShowcaseIds.BOTTOM_NAV_BAR),
+        windowInsets = WindowInsets.navigationBars.only(WindowInsetsSides.Bottom)
     ) {
         NavigationBarItem(
             selected = isHomeSelected,

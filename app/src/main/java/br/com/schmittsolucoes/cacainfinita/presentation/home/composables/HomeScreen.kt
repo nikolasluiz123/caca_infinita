@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,7 +28,6 @@ import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.show
 import br.com.schmittsolucoes.cacainfinita.presentation.core.RequestAllPermissions
 import br.com.schmittsolucoes.cacainfinita.presentation.home.HomeUIState
 import br.com.schmittsolucoes.cacainfinita.presentation.home.HomeViewModel
-import br.com.schmittsolucoes.cacainfinita.presentation.home.composables.components.AchievementsSection
 import br.com.schmittsolucoes.cacainfinita.presentation.home.composables.components.ContinueGameButton
 import br.com.schmittsolucoes.cacainfinita.presentation.home.composables.components.PersonalRecordsSection
 import br.com.schmittsolucoes.cacainfinita.presentation.home.composables.components.UserLevelStatusCard
@@ -64,7 +64,9 @@ fun HomeScreen(
 ) {
     RequestAllPermissions(context = LocalContext.current)
 
-    Scaffold { paddingValues ->
+    Scaffold(
+        contentWindowInsets = WindowInsets()
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
