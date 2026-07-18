@@ -22,6 +22,6 @@ class ImageLanguageIdentifierProcessorPipeline @Inject constructor() : LanguageI
     }
 
     companion object {
-        private const val MIN_LENGTH = 5
+        private const val MIN_LENGTH = 3
     }
 }
