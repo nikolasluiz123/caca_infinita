@@ -42,7 +42,7 @@ import br.com.schmittsolucoes.cacainfinita.R
 import br.com.schmittsolucoes.cacainfinita.domain.model.WordSearchPuzzleSummary
 import br.com.schmittsolucoes.cacainfinita.presentation.components.ErrorDialog
 import br.com.schmittsolucoes.cacainfinita.presentation.components.PagedGrid
-import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseIds
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.AppTutorial
 import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.showcaseTarget
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.WordSearchAnalytics
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzles.WordSearchUiState
@@ -169,7 +169,7 @@ fun WordSearchGeneratedPuzzlesScreen(
                             onAddWordSearchClick()
                             showAddBottomSheet = true
                         },
-                        modifier = Modifier.showcaseTarget(ShowcaseIds.ADD_PUZZLE_FAB)
+                        modifier = Modifier.showcaseTarget(AppTutorial.WordSearchList.ADD_PUZZLE_FAB)
                     ) {
                         Icon(painterResource(R.drawable.ic_add_24dp), contentDescription = null)
                     }
@@ -193,8 +193,8 @@ fun WordSearchGeneratedPuzzlesScreen(
                             puzzle = it,
                             onClick = onPuzzleClick,
                             onDeleteClick = onDeletePuzzleClick,
-                            statusModifier = if (index == 0) Modifier.showcaseTarget(ShowcaseIds.PUZZLE_ITEM_STATUS) else Modifier,
-                            deleteModifier = if (index == 0) Modifier.showcaseTarget(ShowcaseIds.PUZZLE_ITEM_DELETE) else Modifier
+                            statusModifier = if (index == 0) Modifier.showcaseTarget(AppTutorial.WordSearchItem.PUZZLE_ITEM_STATUS) else Modifier,
+                            deleteModifier = if (index == 0) Modifier.showcaseTarget(AppTutorial.WordSearchItem.PUZZLE_ITEM_DELETE) else Modifier
                         )
                     }
                 }

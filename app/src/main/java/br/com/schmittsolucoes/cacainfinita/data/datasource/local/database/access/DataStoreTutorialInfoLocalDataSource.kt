@@ -17,15 +17,15 @@ class DataStoreTutorialInfoLocalDataSource @Inject constructor(
     @param:ApplicationContext private val context: Context
 ) : TutorialInfoLocalDataSource {
 
-    override fun isTutorialShown(tutorialId: String): Flow<Boolean> {
-        val key = booleanPreferencesKey(tutorialId)
+    override fun isShowcaseShown(showcaseId: String): Flow<Boolean> {
+        val key = booleanPreferencesKey(showcaseId)
         return context.dataStore.data.map { preferences ->
             preferences[key] ?: false
         }
     }
 
-    override suspend fun markTutorialAsShown(tutorialId: String) {
-        val key = booleanPreferencesKey(tutorialId)
+    override suspend fun markShowcaseAsShown(showcaseId: String) {
+        val key = booleanPreferencesKey(showcaseId)
         context.dataStore.edit { preferences ->
             preferences[key] = true
         }

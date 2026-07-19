@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.schmittsolucoes.cacainfinita.R
-import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseIds
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.AppTutorial
 import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.showcaseTarget
 import br.com.schmittsolucoes.cacainfinita.presentation.theme.CacaInfinitaTheme
 
@@ -34,7 +34,7 @@ fun HomeBottomNavBar(
         modifier = modifier
             .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal))
             .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-            .showcaseTarget(ShowcaseIds.BOTTOM_NAV_BAR),
+            .showcaseTarget(AppTutorial.Home.BOTTOM_NAV_BAR),
         windowInsets = WindowInsets.navigationBars.only(WindowInsetsSides.Bottom)
     ) {
         NavigationBarItem(

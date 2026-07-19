@@ -23,7 +23,7 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.schmittsolucoes.cacainfinita.R
 import br.com.schmittsolucoes.cacainfinita.presentation.components.ErrorDialog
-import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseIds
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.AppTutorial
 import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.showcaseTarget
 import br.com.schmittsolucoes.cacainfinita.presentation.core.RequestAllPermissions
 import br.com.schmittsolucoes.cacainfinita.presentation.home.HomeUIState
@@ -81,7 +81,7 @@ fun HomeScreen(
                 level = state.user?.level ?: 0,
                 xp = state.user?.actualExperience ?: 0,
                 xpToNextLevel = state.user?.maxLevelExperience ?: 0,
-                modifier = Modifier.showcaseTarget(ShowcaseIds.USER_LEVEL_CARD)
+                modifier = Modifier.showcaseTarget(AppTutorial.Home.USER_LEVEL_CARD)
             )
 
             state.puzzleIdToPlay?.let { puzzleId ->
@@ -103,7 +103,7 @@ fun HomeScreen(
             PersonalRecordsSection(
                 records = state.records,
                 user = state.user,
-                modifier = Modifier.showcaseTarget(ShowcaseIds.PERSONAL_RECORDS_SECTION)
+                modifier = Modifier.showcaseTarget(AppTutorial.Home.PERSONAL_RECORDS_SECTION)
             )
 
             Spacer(modifier = Modifier.height(24.dp))

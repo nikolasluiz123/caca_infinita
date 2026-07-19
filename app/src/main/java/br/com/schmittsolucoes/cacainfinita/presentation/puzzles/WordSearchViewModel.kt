@@ -22,9 +22,7 @@ import br.com.schmittsolucoes.cacainfinita.domain.usecase.PDFPuzzleOrchestratorU
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.TutorialUseCase
 import br.com.schmittsolucoes.cacainfinita.presentation.CommonViewModel
 import br.com.schmittsolucoes.cacainfinita.presentation.analytics.AnalyticsManager
-import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseIds
-import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseStep
-import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.TutorialIds
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.AppTutorial
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -161,30 +159,10 @@ class WordSearchViewModel @Inject constructor(
         if (tutorialManager.currentSteps.value != null) return
 
         launch {
-            tutorialUseCase.checkAndStartTutorial(
-                tutorialId = TutorialIds.WORD_SEARCH_LIST,
-                steps = listOf(
-                    ShowcaseStep(
-                        targetId = ShowcaseIds.ADD_PUZZLE_FAB,
-                        text = context.getString(R.string.tutorial_puzzles_add)
-                    )
-                )
-            )
+            tutorialUseCase.checkAndStartTutorial(AppTutorial.WordSearchList.getSteps(context))
 
             if (itemCount > 0) {
-                tutorialUseCase.checkAndStartTutorial(
-                    tutorialId = TutorialIds.WORD_SEARCH_ITEM,
-                    steps = listOf(
-                        ShowcaseStep(
-                            targetId = ShowcaseIds.PUZZLE_ITEM_STATUS,
-                            text = context.getString(R.string.tutorial_puzzles_item_status)
-                        ),
-                        ShowcaseStep(
-                            targetId = ShowcaseIds.PUZZLE_ITEM_DELETE,
-                            text = context.getString(R.string.tutorial_puzzles_item_delete)
-                        )
-                    )
-                )
+                tutorialUseCase.checkAndStartTutorial(AppTutorial.WordSearchItem.getSteps(context))
             }
         }
     }

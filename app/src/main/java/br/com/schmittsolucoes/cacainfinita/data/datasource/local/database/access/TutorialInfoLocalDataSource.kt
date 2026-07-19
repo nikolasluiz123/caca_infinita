@@ -3,6 +3,6 @@ package br.com.schmittsolucoes.cacainfinita.data.datasource.local.database.acces
 import kotlinx.coroutines.flow.Flow
 
 interface TutorialInfoLocalDataSource {
-    fun isTutorialShown(tutorialId: String): Flow<Boolean>
-    suspend fun markTutorialAsShown(tutorialId: String)
+    fun isShowcaseShown(showcaseId: String): Flow<Boolean>
+    suspend fun markShowcaseAsShown(showcaseId: String)
 }

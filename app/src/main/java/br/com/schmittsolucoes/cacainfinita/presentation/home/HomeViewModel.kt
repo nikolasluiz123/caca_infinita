@@ -11,9 +11,7 @@ import br.com.schmittsolucoes.cacainfinita.domain.usecase.GetUserUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.TutorialUseCase
 import br.com.schmittsolucoes.cacainfinita.presentation.CommonViewModel
 import br.com.schmittsolucoes.cacainfinita.presentation.analytics.AnalyticsManager
-import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseIds
-import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseStep
-import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.TutorialIds
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.AppTutorial
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -82,23 +80,7 @@ class HomeViewModel @Inject constructor(
 
     fun startTutorialIfNeeded() {
         launch {
-            tutorialUseCase.checkAndStartTutorial(
-                tutorialId = TutorialIds.HOME,
-                steps = listOf(
-                    ShowcaseStep(
-                        targetId = ShowcaseIds.USER_LEVEL_CARD,
-                        text = context.getString(R.string.tutorial_home_level_card)
-                    ),
-                    ShowcaseStep(
-                        targetId = ShowcaseIds.PERSONAL_RECORDS_SECTION,
-                        text = context.getString(R.string.tutorial_home_records_section)
-                    ),
-                    ShowcaseStep(
-                        targetId = ShowcaseIds.BOTTOM_NAV_BAR,
-                        text = context.getString(R.string.tutorial_home_bottom_nav)
-                    )
-                )
-            )
+            tutorialUseCase.checkAndStartTutorial(AppTutorial.Home.getSteps(context))
         }
     }
 }

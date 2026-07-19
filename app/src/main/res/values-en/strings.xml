@@ -56,7 +56,7 @@
     <string name="success_puzzle_generated">Word search generated successfully!</string>
 
     <string name="tutorial_home_level_card">Here you can see your current level and how much XP you have for the next level.</string>
-    <string name="tutorial_home_records_section">In this area you will see your top 3 times and word counts solved.</string>
+    <string name="tutorial_home_records_section">In this area you will see a summary of your achievements and your top 3 word search times.</string>
     <string name="tutorial_home_bottom_nav">Use this bar to navigate between the home screen and your word search list.</string>
 
     <string name="tutorial_puzzles_add">Click here to add new word searches via Camera, Image or PDF.</string>

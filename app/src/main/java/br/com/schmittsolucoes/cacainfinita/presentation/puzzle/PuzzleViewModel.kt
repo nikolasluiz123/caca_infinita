@@ -22,9 +22,7 @@ import br.com.schmittsolucoes.cacainfinita.domain.usecase.TutorialUseCase
 import br.com.schmittsolucoes.cacainfinita.domain.usecase.UpdateFoundWordUseCase
 import br.com.schmittsolucoes.cacainfinita.presentation.CommonViewModel
 import br.com.schmittsolucoes.cacainfinita.presentation.analytics.AnalyticsManager
-import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseIds
-import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.ShowcaseStep
-import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.TutorialIds
+import br.com.schmittsolucoes.cacainfinita.presentation.components.showcase.AppTutorial
 import br.com.schmittsolucoes.cacainfinita.presentation.formatters.formatToClock
 import br.com.schmittsolucoes.cacainfinita.presentation.puzzle.navigation.PuzzleRoute
 import androidx.navigation.toRoute
@@ -171,27 +169,7 @@ class PuzzleViewModel @Inject constructor(
     }
 
     private suspend fun showTutorialIfNeeded() {
-        tutorialUseCase.checkAndStartTutorial(
-            tutorialId = TutorialIds.PUZZLE_GAME,
-            steps = listOf(
-                ShowcaseStep(
-                    targetId = ShowcaseIds.PUZZLE_TIMER,
-                    text = context.getString(R.string.tutorial_puzzle_timer)
-                ),
-                ShowcaseStep(
-                    targetId = ShowcaseIds.PUZZLE_GRID,
-                    text = context.getString(R.string.tutorial_puzzle_gestures)
-                ),
-                ShowcaseStep(
-                    targetId = ShowcaseIds.PUZZLE_WORDS_FAB,
-                    text = context.getString(R.string.tutorial_puzzle_words_list)
-                ),
-                ShowcaseStep(
-                    targetId = ShowcaseIds.PUZZLE_GRID,
-                    text = context.getString(R.string.tutorial_puzzle_pause)
-                )
-            )
-        )
+        tutorialUseCase.checkAndStartTutorial(AppTutorial.PuzzleGame.getSteps(context))
     }
 
     override fun getErrorMessageFrom(throwable: Throwable): String {

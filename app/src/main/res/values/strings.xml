@@ -56,7 +56,7 @@
     <string name="success_puzzle_generated">Caça-palavras gerado com sucesso!</string>
 
     <string name="tutorial_home_level_card">Aqui você pode ver o seu nível atual e quanto XP possui para o próximo nível.</string>
-    <string name="tutorial_home_records_section">Nesta área você verá seus 3 melhores tempos e quantidades de palavras resolvidas.</string>
+    <string name="tutorial_home_records_section">Nesta área você verá o resumo de suas conquistas e seus 3 melhores tempos em caça-palavras.</string>
     <string name="tutorial_home_bottom_nav">Use esta barra para navegar entre a tela inicial e sua lista de caça-palavras.</string>
 
     <string name="tutorial_puzzles_add">Clique aqui para adicionar novos caça-palavras via Câmera, Imagem ou PDF.</string>
